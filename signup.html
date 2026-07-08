@@ -87,8 +87,11 @@
         <!-- Right Side (40%) -->
         <div class="login-right">
             <div class="login-form-container" style="max-width: 480px;">
-                <div class="brand">
-                    <img src="logo-movclin.png" alt="MovClin" style="height: 56px; width: auto; max-width: none; display: block; margin-left: -8px;" class="brand-logo">
+                <div class="brand" style="display:flex; align-items:center; gap: 12px; margin-bottom: 8px;">
+                    <div style="width: 126px; height: 100px; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
+                        <img src="logo-movia.png" alt="MovClin Icon" style="height: 100px; width: auto; max-width: none; display: block;">
+                    </div>
+                    <span style="font-size: 3.5rem; font-weight: 800; color: #111827; letter-spacing: -0.05em; line-height: 1; margin-left: -6px;">MovClin</span>
                 </div>
                 
                 <div class="form-header">
@@ -171,24 +174,44 @@
                     <div class="form-group" style="margin-bottom: 24px;">
                         <label>Escolha o seu plano:</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;" class="plan-option" id="label-teste">
-                                <span style="display:flex; align-items:center; gap: 8px;"><input type="radio" name="selectedPlan" value="teste" checked> <strong style="color:#111827; font-size: 0.9rem;">Testar Grátis</strong></span>
+                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-teste">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="teste" checked> <strong style="color:#111827; font-size: 0.9rem;">Demonstração</strong></span>
                                 <span style="font-size: 0.75rem; color: #6B7280; margin-left: 20px;">Livre por 7 dias</span>
+                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #6B7280; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i> <span>Acesso total liberado</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i> <span>Uso sem compromisso</span></li>
+                                </ul>
                             </label>
                             
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;" class="plan-option" id="label-essencial">
-                                <span style="display:flex; align-items:center; gap: 8px;"><input type="radio" name="selectedPlan" value="essencial"> <strong style="color:#111827; font-size: 0.9rem;">Essencial</strong></span>
-                                <span style="font-size: 0.75rem; color: #4F46E5; font-weight: 500; margin-left: 20px;">R$ 69,90 / mês</span>
+                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-essencial">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="essencial"> <strong style="color:#111827; font-size: 0.9rem;">Essencial</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 69,90 / mês</span>
+                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Até 50 alunos</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Agenda Prática</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>1 Profissional</span></li>
+                                </ul>
                             </label>
 
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;" class="plan-option" id="label-avancado">
-                                <span style="display:flex; align-items:center; gap: 8px;"><input type="radio" name="selectedPlan" value="avancado"> <strong style="color:#111827; font-size: 0.9rem;">Avançado</strong></span>
-                                <span style="font-size: 0.75rem; color: #4F46E5; font-weight: 500; margin-left: 20px;">R$ 119,90 / mês</span>
+                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-avancado">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="avancado"> <strong style="color:#111827; font-size: 0.9rem;">Avançado</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 119,90 / mês</span>
+                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Até 200 alunos</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Financeiro e Cobranças</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Acesso p/ 3 Profissionais</span></li>
+                                </ul>
                             </label>
 
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s;" class="plan-option" id="label-premium">
-                                <span style="display:flex; align-items:center; gap: 8px;"><input type="radio" name="selectedPlan" value="premium"> <strong style="color:#111827; font-size: 0.9rem;">Premium</strong></span>
-                                <span style="font-size: 0.75rem; color: #4F46E5; font-weight: 500; margin-left: 20px;">R$ 179,90 / mês</span>
+                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-premium">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="premium"> <strong style="color:#111827; font-size: 0.9rem;">Premium</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 179,90 / mês</span>
+                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="star" style="width:12px; height:12px; color:#F59E0B; flex-shrink: 0;"></i> <span>Alunos Ilimitados</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Relatórios de BI</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Profissionais Ilimitados</span></li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Suporte VIP Prioritário</span></li>
+                                </ul>
                             </label>
                         </div>
                     </div>
