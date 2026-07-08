@@ -215,6 +215,10 @@
             lucide.createIcons();
         });
 
+        // Verifica se o usuário escolheu um plano na landing page
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan');
+
         // Configuração do Supabase
         // IMPORTANTE: Insira sua URL do Supabase gerada no painel! (ex: https://abcedf.supabase.co)
         const SUPABASE_URL = 'https://lwzcinuzqgogrgsgfnjf.supabase.co'; 
@@ -316,8 +320,17 @@
                         throw dbError;
                     }
 
-                    // 5. Entrar direto no sistema da empresa
-                    window.location.href = 'dashboard.html';
+                    // 5. Redirecionar para o Checkout do Stripe baseado no plano
+                    if (selectedPlan === 'essencial') {
+                        window.location.href = 'LINK_STRIPE_ESSENCIAL_AQUI';
+                    } else if (selectedPlan === 'avancado') {
+                        window.location.href = 'LINK_STRIPE_AVANCADO_AQUI';
+                    } else if (selectedPlan === 'premium') {
+                        window.location.href = 'LINK_STRIPE_PREMIUM_AQUI';
+                    } else {
+                        // Se por acaso entrou sem plano associado, joga pro dashboard provisório ou pede checkout
+                        window.location.href = 'dashboard.html';
+                    }
                 }
             } catch (error) {
                 alert("Erro no cadastro: " + (error.message || "Tente conectar sua URL do Supabase"));
