@@ -173,7 +173,11 @@
                         <input type="text" id="promo" placeholder="Ex: MOVIA10">
                     </div>
 
-                    <button type="submit" class="btn-primary" style="margin-top: 0.5rem; font-size: 1.05rem;">Quero experimentar grátis por 7 dias</button>
+                    <button type="submit" id="mainSubmitBtn" class="btn-primary" style="margin-top: 0.5rem; font-size: 1.05rem;">Quero experimentar grátis por 7 dias</button>
+                    
+                    <div id="trialAlternative" style="display: none; text-align: center; margin-top: 6px; margin-bottom: 4px;">
+                        <a href="signup.html" style="font-size: 0.9rem; color: #4F46E5; text-decoration: underline; font-weight: 500;">Prefiro começar meus 7 dias grátis antes de pagar</a>
+                    </div>
                     
                     <p style="font-size: 0.75rem; color: #6B7280; text-align: center; margin-top: -0.25rem; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.4;">
                         <i data-lucide="shield-check" style="width:14px; height: 14px; color: #10B981;"></i>
@@ -218,6 +222,11 @@
         // Verifica se o usuário escolheu um plano na landing page
         const urlParams = new URLSearchParams(window.location.search);
         const selectedPlan = urlParams.get('plan');
+
+        if (selectedPlan) {
+            document.getElementById('mainSubmitBtn').innerText = 'Continuar para Pagamento Seguro';
+            document.getElementById('trialAlternative').style.display = 'block';
+        }
 
         // Configuração do Supabase
         // IMPORTANTE: Insira sua URL do Supabase gerada no painel! (ex: https://abcedf.supabase.co)
