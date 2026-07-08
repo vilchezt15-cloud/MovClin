@@ -1386,10 +1386,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         td.appendChild(noteDiv);
                     });
+                } else {
+                    td.onclick = () => window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
                 }
-                
-                // Allow clicking the cell to add MORE students even if it already has some
-                td.onclick = () => window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
                 
                 tr.appendChild(td);
             });
