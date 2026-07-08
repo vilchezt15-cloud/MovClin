@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movia — Solicite Aqui</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Pequeno ajuste para o scroll caso a tela seja menor do que o form extenso */
+        .login-right {
+            overflow-y: auto;
+            align-items: flex-start; /* Permite scroll no form extenso */
+        }
+        .login-form-container {
+            margin: auto 0;
+            padding: 2rem 0;
+        }
+        @media (max-width: 768px) {
+            .login-right {
+                align-items: center;
+                overflow-y: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-layout">
+        <!-- Left Side (60%) -->
+        <div class="login-left">
+            <a href="index.html" class="back-to-home">
+                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                Início
+            </a>
+            <div class="bg-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="cross-pattern"></div>
+            </div>
+            
+            <div class="left-content">
+                <div class="hero-image-wrapper">
+                    <img src="pilates_teacher.png" alt="Professora de Pilates utilizando tablet" class="illustrative-photo">
+                    <div class="floating-badge">
+                        <i data-lucide="activity"></i>
+                        <span>Saúde & Tecnologia</span>
+                    </div>
+                </div>
+
+                <div class="text-content">
+                    <h1 class="left-title">Simplifique a gestão <br><span>da sua clínica.</span></h1>
+                    <h2 class="left-highlight">Tudo em um só lugar.</h2>
+                    <p class="left-desc">
+                        O Movia ajuda fisioterapeutas, educadores físicos, estúdios de Pilates e academias a organizar atendimentos, controlar pagamentos, gerenciar pacientes e acompanhar o crescimento do negócio de forma simples.
+                    </p>
+                    
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <i data-lucide="calendar-check" class="benefit-icon"></i>
+                            <span>Agenda Inteligente</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="pie-chart" class="benefit-icon"></i>
+                            <span>Gestão Financeira</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="clipboard-list" class="benefit-icon"></i>
+                            <span>Prontuário Digital</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i data-lucide="bar-chart-2" class="benefit-icon"></i>
+                            <span>Relatórios e Indicadores</span>
+                        </div>
+                    </div>
+                    
+                    <div class="security-card">
+                        <div class="security-icon-wrapper">
+                            <i data-lucide="shield-check" class="security-icon"></i>
+                        </div>
+                        <span>Tecnologia segura para impulsionar sua clínica.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side (40%) -->
+        <div class="login-right">
+            <div class="login-form-container" style="max-width: 480px;">
+                <div class="brand">
+                    <img src="logo-movia.png" alt="Movia" style="height: 38px; width: auto; max-width: 200px; display: block; margin-left: -8px;" class="brand-logo">
+                </div>
+                
+                <div class="form-header">
+                    <h2>Solicite sua conta</h2>
+                    <p>Faça parte da nova era de gestão.</p>
+                </div>
+                
+                <form class="login-form" id="signupForm" style="gap: 1rem;">
+                    
+                    <div class="form-group">
+                        <label for="name">Nome completo</label>
+                        <input type="text" id="name" placeholder="Ex: Ana Silva" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Nome do estúdio, clínica ou academia</label>
+                        <input type="text" id="company" placeholder="Ex: Studio Movia Pilates" required>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" placeholder="nome@exemplo.com" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="phone">Telefone</label>
+                            <input type="text" id="phone" placeholder="(11) 99999-9999" required>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="width: 30%;">
+                            <label for="uf">UF</label>
+                            <select id="uf" required>
+                                <option value="">Sel...</option>
+                                <option value="AC">AC</option><option value="AL">AL</option>
+                                <option value="AP">AP</option><option value="AM">AM</option>
+                                <option value="BA">BA</option><option value="CE">CE</option>
+                                <option value="DF">DF</option><option value="ES">ES</option>
+                                <option value="GO">GO</option><option value="MA">MA</option>
+                                <option value="MT">MT</option><option value="MS">MS</option>
+                                <option value="MG">MG</option><option value="PA">PA</option>
+                                <option value="PB">PB</option><option value="PR">PR</option>
+                                <option value="PE">PE</option><option value="PI">PI</option>
+                                <option value="RJ">RJ</option><option value="RN">RN</option>
+                                <option value="RS">RS</option><option value="RO">RO</option>
+                                <option value="RR">RR</option><option value="SC">SC</option>
+                                <option value="SP">SP</option><option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="city">Cidade</label>
+                            <input type="text" id="city" placeholder="Sua cidade" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Crie uma senha segura" required>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i data-lucide="eye" id="eyeIcon" class="icon-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="source">Como conheceu o Movia?</label>
+                        <select id="source" required>
+                            <option value="">Selecione...</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Google">Pesquisa no Google</option>
+                            <option value="Indicacao">Indicação de amigo</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promo">Código promocional (se possui)</label>
+                        <input type="text" id="promo" placeholder="Ex: MOVIA10">
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 0.5rem; font-size: 1.05rem;">Quero experimentar grátis por 7 dias</button>
+                    
+                    <p style="font-size: 0.75rem; color: #6B7280; text-align: center; margin-top: -0.25rem; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.4;">
+                        <i data-lucide="shield-check" style="width:14px; height: 14px; color: #10B981;"></i>
+                        Prometemos não utilizar suas informações de contato para enviar qualquer tipo de SPAM.
+                    </p>
+                </form>
+                
+                <div class="signup-prompt" style="margin-top: 1.5rem;">
+                    <span>Já possui uma conta?</span>
+                    <a href="login.html" class="btn-secondary">Entrar</a>
+                </div>
+                
+                <footer class="login-footer">
+                    <p>&copy; 2026 Movia. Todos os direitos reservados.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <!-- Integrando Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize icons
+        lucide.createIcons();
+
+        // Setup password toggle
+        const toggleBtn = document.getElementById('togglePassword');
+        const inputField = document.getElementById('password');
+        const iconField = document.getElementById('eyeIcon');
+
+        toggleBtn.addEventListener('click', function () {
+            const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputField.setAttribute('type', type);
+            
+            if (type === 'password') {
+                iconField.setAttribute('data-lucide', 'eye');
+            } else {
+                iconField.setAttribute('data-lucide', 'eye-off');
+            }
+            lucide.createIcons();
+        });
+
+        // Configuração do Supabase
+        // IMPORTANTE: Insira sua URL do Supabase gerada no painel! (ex: https://abcedf.supabase.co)
+        const SUPABASE_URL = 'https://lwzcinuzqgogrgsgfnjf.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_yu0syRT8oiLCD2tz-K8ipA_KUiyFrbU';
+        
+        let supabaseApp = null;
+        try {
+            if(SUPABASE_URL.startsWith('http')) {
+                supabaseApp = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch(e) {
+            console.warn("Supabase não carregado: URL inválida.");
+        }
+
+        // Submissão do Formulário de Cadastro
+        const form = document.getElementById('signupForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Processando...';
+            btn.disabled = true;
+
+            if (!supabaseApp) {
+                alert("🔔 MODO DEMONSTRAÇÃO 🔔\n\nAviso: URL do Supabase desconectada.\n\nPara visualizar o fluxo da plataforma, você será redirecionado direto para o sistema (dashboard) logo em seguida!");
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                return;
+            }
+
+            try {
+                // 1. Pegar IP Público (para o bloqueio de abuso de IP)
+                let userIp = '0.0.0.0';
+                try {
+                    const ipRes = await fetch('https://api.ipify.org?format=json');
+                    const ipData = await ipRes.json();
+                    userIp = ipData.ip;
+                } catch(ipErr) {
+                    console.log('Aviso: IP não rastreado.');
+                }
+
+                // 2. Coletar Inputs
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const name = document.getElementById('name').value;
+                const company = document.getElementById('company').value;
+                const phone = document.getElementById('phone').value;
+                const uf = document.getElementById('uf').value;
+                const city = document.getElementById('city').value;
+                const source = document.getElementById('source').value;
+                const promo = document.getElementById('promo').value;
+        // Persist registration data locally for quick access or debugging
+        const clientData = {
+          email,
+          password,
+          name,
+          company,
+          phone,
+          uf,
+          city,
+          source,
+          promo
+        };
+        try {
+          localStorage.setItem('movia_signup_data', JSON.stringify(clientData));
+        } catch(e) { console.warn('Failed to store signup data', e); }
+
+                // 3. Cadastrar Autenticação
+                const { data: authData, error: authError } = await supabaseApp.auth.signUp({
+                    email,
+                    password
+                });
+
+                if (authError) throw authError;
+
+                if (authData.user) {
+                    // 4. Inserir Dados Extra na tabela que você criou lá no SQL
+                    const { error: dbError } = await supabaseApp
+                        .from('usuarios_clinica')
+                        .insert([{
+                            id: authData.user.id,
+                            nome: name,
+                            clinica: company,
+                            telefone: phone,
+                            uf,
+                            cidade: city,
+                            como_conheceu: source,
+                            codigo_promo: promo,
+                            ip_cadastro: userIp
+                        }]);
+                    
+                    if (dbError) {
+                        // Se violar restrição UNIQUE de IP
+                        if (dbError.code === '23505') {
+                            throw new Error("Ops! Sua máquina já foi vinculada a um trial de 7 dias.");
+                        }
+                        throw dbError;
+                    }
+
+                    // 5. Entrar direto no sistema da empresa
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                alert("Erro no cadastro: " + (error.message || "Tente conectar sua URL do Supabase"));
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

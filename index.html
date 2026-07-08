@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movia — Onde a Gestão Acelera</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="landing-body">
+    
+    <!-- Animated Premium Orbs Background -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="saas-nav">
+        <div class="nav-container">
+            <div class="brand">
+                <img src="logo-movia.png" alt="Movia" style="height: 32px; width: auto; max-width: 200px; display: block; margin-left: -8px;" class="brand-logo">
+            </div>
+            
+            <nav class="nav-center">
+                <a href="#">Produto</a>
+                <a href="#">Soluções</a>
+                <a href="#planos">Preços</a>
+                <a href="#">Changelog</a>
+            </nav>
+
+            <div class="nav-right">
+                <!-- Login redireciona para login limpo -->
+                <a href="login.html" class="nav-link">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge fade-in-up">Movia 2.0 acabou de lançar <i data-lucide="arrow-right" class="icon-xs"></i></div>
+            <h1 class="hero-title fade-in-up" style="animation-delay: 0.1s;">O padrão moderno <br>para gestão de <span>movimento.</span></h1>
+            <p class="hero-subtitle fade-in-up" style="animation-delay: 0.2s;">Esqueça os sistemas antigos. O Movia traz a simplicidade que você precisa e a performance imbatível para administrar sua escola, estúdio ou clínica hoje mesmo.</p>
+            
+            <div class="hero-actions fade-in-up" style="animation-delay: 0.3s;">
+                <div class="hero-cta-group" style="display: flex; gap: 16px; justify-content: center; align-items: center;">
+                    <a href="signup.html" class="btn-dark" style="padding: 0.85rem 2rem; font-size: 1.1rem; border-radius: 99px; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">Começar Teste Grátis</a>
+                    <a href="#planos" class="btn-outline" style="padding: 0.85rem 2rem; font-size: 1.1rem; border-radius: 99px; background: transparent; border: 1px solid #D1D5DB; color: #374151; text-decoration: none; font-weight: 500;">Conhecer Planos</a>
+                </div>
+                <p class="hero-hint">Sem burocracia. O primeiro passo da revolução.</p>
+            </div>
+
+            <!-- Abstract Dashboard Preview -->
+            <div class="hero-preview-wrapper shadow-hero mt-12 fade-in-up" style="animation-delay: 0.4s;">
+                <div class="mac-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="preview-content">
+                    <div class="preview-sidebar">
+                        <div class="mock-nav"></div><div class="mock-nav"></div><div class="mock-nav"></div>
+                    </div>
+                    <div class="preview-main">
+                        <div class="mock-header"></div>
+                        <div class="mock-grid">
+                            <div class="mock-card sm shadow-sm"></div>
+                            <div class="mock-card sm shadow-sm"></div>
+                            <div class="mock-card lg shadow-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bento Features Grid (Stripe/Framer Style) -->
+        <section class="features">
+            <div class="features-header">
+                <h2>Feito para a velocidade.</h2>
+                <p>Nenhuma tela desnecessária. Apenas a tecnologia para fazer sua empresa decolar.</p>
+            </div>
+            <div class="bento-layout">
+                <div class="bento-box bento-large">
+                    <div class="bento-icon bg-blue-light text-blue"><i data-lucide="pie-chart"></i></div>
+                    <h3>Financeiro Descomplicado</h3>
+                    <p>O fluxo de caixa inteiro em uma só tela. Receba pagamentos, emita cobranças automáticas e pare a inadimplência com zero esforço.</p>
+                    <div class="bento-graphic graphic-finance"></div>
+                </div>
+                <div class="bento-box">
+                    <div class="bento-icon bg-gray-light"><i data-lucide="users"></i></div>
+                    <h3>CRM Inteligente</h3>
+                    <p>Cada aluno é um cartão único com histórico detalhado e integração instantânea via WhatsApp.</p>
+                </div>
+                <div class="bento-box">
+                    <div class="bento-icon bg-green-light text-green"><i data-lucide="calendar-check"></i></div>
+                    <h3>Agenda Fluida</h3>
+                    <p>Calendário otimizado onde você arrasta, solta, filtra turmas e confirma presenças num piscar de olhos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Princing Section -->
+        <section class="pricing" id="planos">
+            <div class="features-header">
+                <h2>Planos simples. Proporções épicas.</h2>
+                <p>Mude de plano ou cancele a qualquer momento com 1 clique.</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Basic -->
+                <div class="price-card">
+                    <h3>Basic</h3>
+                    <div class="price"><span>R$</span>69<span>,90</span></div>
+                    <p>Ideal para estúdios e clínicas iniciantes que buscam organização imediata.</p>
+                    <ul>
+                        <li><i data-lucide="check"></i> Até 50 alunos ativos</li>
+                        <li><i data-lucide="check"></i> Agenda Inteligente</li>
+                        <li><i data-lucide="check"></i> Acesso para 1 Profissional</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn-outline w-full text-center p-3 font-medium">Assinar Basic</a>
+                </div>
+                
+                <!-- Medium (Popular) -->
+                <div class="price-card popular">
+                    <div class="popular-badge">Mais Escolhido</div>
+                    <h3>Medium</h3>
+                    <div class="price"><span>R$</span>119<span>,90</span></div>
+                    <p>Tecnologia completa para estúdios em crescimento acelerado.</p>
+                    <ul>
+                        <li><i data-lucide="check"></i> Até 200 alunos ativos</li>
+                        <li><i data-lucide="check"></i> Financeiro Automático</li>
+                        <li><i data-lucide="check"></i> Cobrança simplificada Whatsapp</li>
+                        <li><i data-lucide="check"></i> Acesso para 3 Profissionais</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn-dark w-full text-center p-3 font-bold" style="justify-content: center;">Assinar Medium</a>
+                </div>
+
+                <!-- StudioMax -->
+                <div class="price-card">
+                    <h3>StudioMax</h3>
+                    <div class="price"><span>R$</span>179<span>,90</span></div>
+                    <p>Potência sem limites para redes robustas ou clínicas de alto tráfego.</p>
+                    <ul>
+                        <li><i data-lucide="check"></i> Número de alunos Ilimitado</li>
+                        <li><i data-lucide="check"></i> Relatórios Avançados (B.I.)</li>
+                        <li><i data-lucide="check"></i> Profissionais Ilimitados</li>
+                        <li><i data-lucide="check"></i> Suporte Prioritário VIP</li>
+                    </ul>
+                    <a href="dashboard.html" class="btn-outline w-full text-center p-3 font-medium">Assinar StudioMax</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof Minimalist -->
+        <section class="social-proof">
+            <div class="metric">
+                <span class="metric-number text-blue">+2M</span>
+                <span class="metric-text">Agendamentos criados</span>
+            </div>
+            <div class="divider-y"></div>
+            <div class="metric">
+                <span class="metric-number">99.9%</span>
+                <span class="metric-text">Uptime garantido</span>
+            </div>
+            <div class="divider-y"></div>
+            <div class="metric">
+                <span class="metric-number">0s</span>
+                <span class="metric-text">Curva de aprendizado</span>
+            </div>
+        </section>
+
+        <!-- Bottom CTA -->
+        <section class="cta-bottom">
+            <h2>Pronto para organizar seu estúdio sem estresse?</h2>
+            <br>
+            <a href="dashboard.html" class="btn-dark btn-lg shadow-hero" style="display: inline-flex; font-size: 1.1rem; padding: 1rem 2rem;">
+                Quero 7 dias grátis <i data-lucide="arrow-right" style="margin-left:8px"></i>
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="saas-footer">
+        <div class="footer-brand">
+            <div class="brand">
+                <img src="logo-movia.png" alt="Movia Tech" style="height: 28px; width: auto; max-width: 200px; display: block; margin-left: -8px;" class="brand-logo">
+            </div>
+            <p>© 2026 Movia. Todos os direitos reservados. Feito para o movimento.</p>
+        </div>
+    </footer>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
