@@ -255,7 +255,6 @@ body, html {
     align-items: center;
     justify-content: center;
     padding: 3rem;
-    position: relative;
 }
 
 .login-form-container {

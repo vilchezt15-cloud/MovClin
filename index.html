@@ -20,15 +20,55 @@
     <!-- Navbar -->
     <header class="saas-nav">
         <div class="nav-container">
-            <div class="brand">
-                <img src="logo-movclin.png" alt="MovClin" style="height: 32px; width: auto; max-width: 200px; display: block; margin-left: -8px;" class="brand-logo">
+            <div class="brand" style="display:flex; align-items:center; gap: 12px; margin-top: 2px;">
+                <div style="width: 75px; height: 60px; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
+                    <img src="logo-movia.png" alt="MovClin Icon" style="height: 60px; width: auto; max-width: none; display: block;">
+                </div>
+                <span style="font-size: 2.2rem; font-weight: 800; color: #111827; letter-spacing: -0.05em; line-height: 1; margin-left: -4px;">MovClin</span>
             </div>
             
             <nav class="nav-center">
-                <a href="#">Produto</a>
-                <a href="#">Soluções</a>
-                <a href="#planos">Preços</a>
-                <a href="#">Changelog</a>
+                <!-- Dropdown Produto -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="#">Produto <i data-lucide="chevron-down" style="width:14px; margin-top:2px;" stroke-width="1.5"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="#"><i data-lucide="layout-dashboard" class="text-blue" stroke-width="1.5"></i> Visão Geral</a>
+                        <a href="#"><i data-lucide="pie-chart" class="text-green" stroke-width="1.5"></i> Financeiro Automático</a>
+                        <a href="#"><i data-lucide="users" style="color:#6366F1;" stroke-width="1.5"></i> Gestão de Alunos</a>
+                        <a href="#"><i data-lucide="calendar" style="color:#8B5CF6;" stroke-width="1.5"></i> Agenda Prática</a>
+                        <a href="#"><i data-lucide="smartphone" class="text-blue" stroke-width="1.5"></i> Aplicativo Mobile</a>
+                    </div>
+                </div>
+
+                <!-- Dropdown Soluções -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="#">Soluções <i data-lucide="chevron-down" style="width:14px; margin-top:2px;" stroke-width="1.5"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="#"><i data-lucide="activity" class="text-green" stroke-width="1.5"></i> Para Clínicas</a>
+                        <a href="#"><i data-lucide="dumbbell" class="text-blue" stroke-width="1.5"></i> Para Estúdios</a>
+                        <a href="#"><i data-lucide="building" style="color:#6366F1;" stroke-width="1.5"></i> Para Franquias</a>
+                        <a href="#"><i data-lucide="stethoscope" style="color:#8B5CF6;" stroke-width="1.5"></i> Profissionais Independentes</a>
+                    </div>
+                </div>
+
+                <!-- Dropdown Preços -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="#planos">Preços <i data-lucide="chevron-down" style="width:14px; margin-top:2px;" stroke-width="1.5"></i></a>
+                    <div class="nav-dropdown-menu">
+                        <a href="signup.html?plan=essencial"><i data-lucide="check-circle" class="text-green" stroke-width="1.5"></i> Plano Essencial</a>
+                        <a href="signup.html?plan=avancado"><i data-lucide="zap" class="text-blue" stroke-width="1.5"></i> Plano Avançado</a>
+                        <a href="signup.html?plan=premium"><i data-lucide="star" style="color:#8B5CF6;" stroke-width="1.5"></i> Plano Premium</a>
+                    </div>
+                </div>
+
+                <!-- Dropdown Teste Grátis -->
+                <div class="nav-dropdown-wrapper">
+                    <a href="signup.html" class="text-blue">Teste 7 dias grátis <i data-lucide="chevron-down" style="width:14px; margin-top:2px;" stroke-width="1.5"></i></a>
+                    <div class="nav-dropdown-menu" style="min-width: 220px;">
+                        <a href="signup.html"><i data-lucide="rocket" class="text-blue" stroke-width="1.5"></i> Criar minha conta</a>
+                        <a href="#"><i data-lucide="message-circle" class="text-green" stroke-width="1.5"></i> Falar com consultor</a>
+                    </div>
+                </div>
             </nav>
 
             <div class="nav-right">
@@ -168,8 +208,11 @@
 
     <footer class="saas-footer">
         <div class="footer-brand">
-            <div class="brand">
-                <img src="logo-movclin.png" alt="MovClin Tech" style="height: 28px; width: auto; max-width: 200px; display: block; margin-left: -8px;" class="brand-logo">
+            <div class="brand" style="display:flex; align-items:center; gap: 8px;">
+                <div style="width: 50px; height: 40px; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
+                    <img src="logo-movia.png" alt="MovClin Icon" style="height: 40px; width: auto; max-width: none; display: block;">
+                </div>
+                <span style="font-size: 1.4rem; font-weight: 800; color: #111827; letter-spacing: -0.05em; line-height: 1; margin-left: -2px;">MovClin</span>
             </div>
             <p>© 2026 MovClin. Todos os direitos reservados. Feito para o movimento.</p>
         </div>

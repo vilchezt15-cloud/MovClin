@@ -91,6 +91,9 @@
             <main class="main-surface">
                 <!-- Topbar Minimal -->
                 <header class="topbar-minimal" style="justify-content: space-between;">
+                    <button class="btn-icon mobile-menu-btn" style="display:none; color: var(--dark);" onclick="toggleMobileMenu()">
+                        <i data-lucide="menu"></i>
+                    </button>
                     <div class="breadcrumb text-sm font-medium text-muted"
                         style="display:flex; align-items:center; gap:8px;">
                         Você está em: <span style="color:#111827;">Inicial</span>
@@ -2962,6 +2965,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             carregarKanbanDoLocalStorage();
         });
+
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar-fixed');
+            if (sidebar) sidebar.classList.toggle('mobile-open');
+            let overlay = document.getElementById('mobile-overlay');
+            if(!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'mobile-overlay';
+                overlay.style = 'position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:999; display:none;';
+                overlay.onclick = toggleMobileMenu;
+                document.body.appendChild(overlay);
+            }
+            if (sidebar && sidebar.classList.contains('mobile-open')) {
+                overlay.style.display = 'block';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>

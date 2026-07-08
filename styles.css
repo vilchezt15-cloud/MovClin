@@ -382,3 +382,79 @@ input:checked + .slider-toggle {
 input:checked + .slider-toggle::before {
     transform: translateX(20px);
 }
+
+/* -----------------------------
+   RESPONSIVIDADE MOBILE
+----------------------------- */
+@media (max-width: 768px) {
+    .sidebar-fixed {
+        left: -260px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    }
+    .sidebar-fixed.mobile-open {
+        left: 0;
+    }
+    .main-surface {
+        margin-left: 0 !important;
+        width: 100vw;
+        padding-left: 0;
+    }
+    .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+    .breadcrumb {
+        display: none !important;
+    }
+    .topbar-minimal {
+        padding: 0 1rem;
+        justify-content: flex-start !important;
+    }
+    .topbar-minimal > div:nth-child(3) {
+        margin-left: auto;
+        margin-right: 0px;
+        text-align: right !important;
+    }
+    .kpi-grid, .dash-container {
+        flex-direction: column;
+    }
+    .kpi-card, .dash-col-left, .dash-col-right {
+        width: 100%;
+    }
+    .acesso-rapido-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .kanban-board {
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+    .kanban-col {
+        min-width: 100%;
+        margin-bottom: 1rem;
+    }
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .panel-header > div {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    #agenda-filters-row {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    #agenda-filters-row > div, #agenda-filters-row .search-command-modern {
+        width: 100% !important;
+    }
+}
+@media (max-width: 480px) {
+    .acesso-rapido-grid {
+        grid-template-columns: 1fr;
+    }
+}
