@@ -385,6 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             views.forEach(view => view.classList.add('hidden'));
 
             item.classList.add('active');
+            localStorage.setItem('movia_last_tab', targetId);
             const targetView = document.getElementById('view-' + targetId);
             if (targetView) targetView.classList.remove('hidden');
             
@@ -443,6 +444,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    const savedTab = localStorage.getItem('movia_last_tab');
+    if (savedTab) {
+        const savedItem = document.querySelector(`.sidebar-fixed .nav-item[data-target="${savedTab}"]`) || document.querySelector(`.sidebar-slim .nav-item[data-target="${savedTab}"]`);
+        if (savedItem) setTimeout(() => savedItem.click(), 50);
+    }
 
     // 3. Slide-over Modal Logic
     const novoBtn = document.getElementById('btn-novo');
@@ -1249,13 +1255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cell.onclick = (e) => {
                 if(e.target.closest('.note-bubble')) return;
-                document.getElementById('ipt-agenda-data').value = dateStr;
-                document.getElementById('ipt-agenda-hora').value = '';
-                document.getElementById('ipt-agenda-servico').value = '';
-                document.getElementById('ipt-agenda-texto').value = '';
-                document.getElementById('ipt-agenda-id').value = '';
-                slideAgenda.classList.remove('hidden-overlay');
-                setTimeout(() => slideAgenda.classList.add('open'), 10);
+                window.abrirModalNovaAula({ data_evento: dateStr });
             };
 
             cell.appendChild(dayNum);
@@ -1277,13 +1277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 bbl.onclick = (e) => {
                     e.stopPropagation();
-                    document.getElementById('ipt-agenda-data').value = note.data_evento;
-                    document.getElementById('ipt-agenda-hora').value = note.hora_inicio || '';
-                    document.getElementById('ipt-agenda-servico').value = note.servico || '';
-                    document.getElementById('ipt-agenda-texto').value = note.texto;
-                    document.getElementById('ipt-agenda-id').value = note.id || note.localId;
-                    slideAgenda.classList.remove('hidden-overlay');
-                    setTimeout(() => slideAgenda.classList.add('open'), 10);
+                    window.abrirModalNovaAula(note);
                 };
                 notesContainer.appendChild(bbl);
             });
@@ -1386,9 +1380,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         td.appendChild(noteDiv);
                     });
-                } else {
-                    td.onclick = () => window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
                 }
+                
+                td.onclick = (e) => {
+                     if(e.target === td) window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
+                };
                 
                 tr.appendChild(td);
             });
