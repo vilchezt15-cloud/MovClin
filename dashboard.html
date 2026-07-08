@@ -421,7 +421,7 @@
                                                     <div class="integ-radio"></div> Agendamento Online
                                                 </div>
                                                 <div class="integ-item" id="integ-moviapay">
-                                                    <div class="integ-radio"></div> Movia Pay
+                                                    <div class="integ-radio"></div> MovClin Pay
                                                 </div>
                                                 <div class="integ-item" id="integ-site">
                                                     <div class="integ-radio"></div> Seu site
@@ -442,7 +442,7 @@
                                             style="width:160px; height:160px; color:white;"></i></div>
                                     <div style="z-index: 2;">
                                         <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
-                                            <i data-lucide="compass" style="width:20px;"></i> Primeiros passos na Movia
+                                            <i data-lucide="compass" style="width:20px;"></i> Primeiros passos na MovClin
                                         </h3>
                                         <p style="font-size:0.85rem; opacity:0.9; line-height: 1.5; max-width: 500px;">
                                             Bem-vindo ao seu novo painel gerencial! Preparamos um tour guiado rápido para te ajudar a configurar sua agenda, importar seus alunos e dominar todas as funcionalidades financeiras.
@@ -451,7 +451,7 @@
                                     <div style="z-index: 2;">
                                         <button id="btn-start-tour"
                                             style="background:white; color:#4F46E5; padding:10px 18px; border-radius:8px; font-weight:800; font-size:0.85rem; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display:flex; align-items:center; gap:8px;"
-                                            onclick="iniciarTourMovia()">
+                                            onclick="iniciarTourMovClin()">
                                             <i data-lucide="play" style="width:16px;"></i> Fazer um Tour
                                         </button>
                                     </div>
@@ -460,7 +460,7 @@
                                 <div style="margin-top:2rem; margin-bottom:1.5rem;">
                                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                                         <h3 style="font-size:1.2rem; font-weight:800; color:var(--dark); display:flex; align-items:center; gap:8px;">
-                                            <i data-lucide="youtube" style="color:#EF4444; width:22px;"></i> Aprenda com a Movia
+                                            <i data-lucide="youtube" style="color:#EF4444; width:22px;"></i> Aprenda com a MovClin
                                         </h3>
                                         <button style="background:transparent; border:none; color:#4F46E5; font-size:0.85rem; font-weight:700; cursor:pointer;" onclick="window.open('https://youtube.com', '_blank')">Ver canal <i data-lucide="arrow-right" style="width:14px; vertical-align:-3px;"></i></button>
                                     </div>
@@ -1671,7 +1671,7 @@
                                         estúdio no TotalPass.<br>
                                         2. Insira as credenciais à esquerda e ligue o switch de ativação.<br>
                                         3. O sistema receberá as validações de passes de alunos e registrará na lista de
-                                        check-ins automáticos do Movia.
+                                        check-ins automáticos do MovClin.
                                     </p>
                                 </div>
                                 <div class="card" style="padding: 1.25rem;">
@@ -2514,7 +2514,7 @@
                         </div>
                     </label>
                     <label style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:10px 14px; border:1px solid #E2E8F0; border-radius:8px; transition:all 0.2s; background:#F8FAFC;">
-                        <span style="font-size:0.85rem; font-weight:600; color:var(--dark); display:flex; align-items:center; gap:8px;">Movia Pay</span>
+                        <span style="font-size:0.85rem; font-weight:600; color:var(--dark); display:flex; align-items:center; gap:8px;">MovClin Pay</span>
                         <div style="position:relative; display:inline-block; width:36px; height:20px;">
                             <input type="checkbox" onchange="toggleVisibilidadeAtalho('integ-moviapay', this.checked, event)" checked style="opacity: 0; width: 0; height: 0;">
                             <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #10B981; transition: .3s; border-radius: 20px;" class="slider-toggle custom-slider-checked"></span>
@@ -2648,7 +2648,7 @@
     <script src="app.js"></script>
     <script>
         window.onerror = function(msg, url, lineNo, columnNo, error) {
-            alert("Movia Debug - Erro: " + msg + " (Linha: " + lineNo + "). Print isso para o suporte.");
+            alert("MovClin Debug - Erro: " + msg + " (Linha: " + lineNo + "). Print isso para o suporte.");
             return false;
         };
 
@@ -2666,7 +2666,7 @@
                 e.target.nextElementSibling.style.backgroundColor = isVisible ? '#10B981' : '#ccc';
             }
         }
-        function iniciarTourMovia() {
+        function iniciarTourMovClin() {
             const driver = window.driver.js.driver;
             const driverObj = driver({
                 showProgress: true,
