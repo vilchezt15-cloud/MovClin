@@ -1575,15 +1575,13 @@ document.addEventListener('DOMContentLoaded', () => {
              }
         }
         
-        if (selProf && selProf.options.length <= 1) {
-            selProf.innerHTML = '<option value="Cadastro de cliente/aluno">Cadastro de cliente/aluno</option>';
-        }
+        // Campo profissional agora é input livre
 
         document.getElementById('ipt-agenda-id').value = dadosPre.id || dadosPre.localId || '';
         document.getElementById('ipt-agenda-data').value = dadosPre.data_evento || '';
         document.getElementById('ipt-agenda-hora-ini').value = dadosPre.hora_inicio || '';
         document.getElementById('ipt-agenda-hora-fim').value = dadosPre.hora_fim || '';
-        if(selProf) selProf.value = dadosPre.profissional || 'Cadastro de cliente/aluno';
+        if(selProf) selProf.value = (dadosPre.profissional && dadosPre.profissional !== 'Cadastro de cliente/aluno') ? dadosPre.profissional : '';
         document.getElementById('ipt-agenda-servico').value = dadosPre.servico || '';
         document.getElementById('ipt-agenda-observacao').value = dadosPre.observacao || '';
         if(selCliente) selCliente.value = dadosPre.texto || ''; 
