@@ -482,10 +482,7 @@
                                             <button class="btn-primary"
                                                 style="background:#8224E3; box-shadow:none; border-radius:6px; font-weight:700; padding:8px 16px; font-size:0.8rem;">Dashboard
                                                 Gerencial</button>
-                                            <button class="btn-outline"
-                                                style="border-radius:6px; font-weight:700; padding:8px 16px; font-size:0.8rem;"
-                                                onclick="abrirModalAtalhos()">Editar
-                                                atalhos</button>
+                                            <!-- Botão dashboard mantido -->
                                         </div>
                                     </div>
                                     <div class="acesso-rapido-container">
@@ -521,40 +518,7 @@
                                                 <span>Lojinha</span>
                                             </div>
                                         </div>
-                                        <div class="integracoes-panel">
-                                            <h4
-                                                style="font-size:0.9rem; font-weight:800; color:var(--dark); margin-bottom:1rem;">
-                                                Integrações</h4>
-                                            <div class="integracoes-list">
-                                                <div class="integ-item" id="integ-wellhub"
-                                                    onclick="document.querySelector('[data-target=\'integracao-wellhub\']').click()">
-                                                    <div class="integ-radio"></div> Wellhub
-                                                </div>
-                                                <div class="integ-item" id="integ-instagram"
-                                                    onclick="document.querySelector('[data-target=\'integracao-instagram\']').click()">
-                                                    <div class="integ-radio"></div> Instagram
-                                                </div>
-                                                <div class="integ-item" id="integ-totalpass"
-                                                    onclick="document.querySelector('[data-target=\'integracao-totalpass\']').click()">
-                                                    <div class="integ-radio"></div> TotalPass
-                                                </div>
-                                                <div class="integ-item" id="integ-agendamento">
-                                                    <div class="integ-radio"></div> Agendamento Online
-                                                </div>
-                                                <div class="integ-item" id="integ-moviapay">
-                                                    <div class="integ-radio"></div> MovClin Pay
-                                                </div>
-                                                <div class="integ-item" id="integ-site">
-                                                    <div class="integ-radio"></div> Seu site
-                                                </div>
-                                                <div class="integ-item" id="integ-notas">
-                                                    <div class="integ-radio"></div> Notas Fiscais (NFS-e)
-                                                </div>
-                                                <div class="integ-item" id="integ-nps">
-                                                    <div class="integ-radio"></div> NPS - Pesquisas
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <!-- Integrações Panel removido -->
                                     </div>
                                 </div>
 
@@ -707,41 +671,116 @@
                                 </div>
                             </div>
 
-                            <!-- Direita -->
-                            <div class="dash-col-right" id="container-integracao-instagram">
+                            <!-- Direita: Widget Agenda -->
+                            <div class="dash-col-right">
                                 <div class="card p-0"
-                                    style="overflow:hidden; border:none; box-shadow: 0 4px 20px rgba(0,0,0,0.04); display:flex; flex-direction:column; position:relative; background: #ffffff;">
-                                    <div
-                                        style="padding: 1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-soft);">
-                                        <div style="display:flex; align-items:center; gap:8px;">
-                                            <i data-lucide="instagram"
-                                                style="color:#E1306C; width:18px; height:18px;"></i>
-                                            <span
-                                                style="font-weight:700; font-size:0.95rem; color:#262626; letter-spacing:-0.02em;">Instagram</span>
+                                    style="border:none; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 2rem; background: white; overflow: hidden; border-radius: 14px;">
+                                    <div class="panel-header"
+                                        style="border-bottom: 1px solid var(--border-soft); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                        <h3
+                                            style="font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:10px; color: var(--dark); margin:0;">
+                                            <i data-lucide="calendar-clock" style="color:#4F46E5; width:20px;"></i>
+                                            Agenda de Hoje
+                                        </h3>
+                                        <div
+                                            style="font-size:0.75rem; font-weight:700; color:#4F46E5; background:#EEF2FF; padding:4px 10px; border-radius:99px;">
+                                            3 Aulas
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; flex-direction:column; padding: 10px 0;">
+                                        <!-- Aula 1 -->
+                                        <div style="padding: 12px 1.5rem; display:flex; align-items:center; gap: 1rem; border-bottom: 1px solid #F1F5F9; transition: background 0.2s; cursor: pointer;"
+                                            onmouseover="this.style.background='#F8FAFC'"
+                                            onmouseout="this.style.background='transparent'">
+                                            <div
+                                                style="display:flex; flex-direction:column; align-items:center; min-width: 50px;">
+                                                <span
+                                                    style="font-size: 1rem; font-weight: 800; color: var(--dark); line-height:1;">08:00</span>
+                                                <span
+                                                    style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top:2px;">45
+                                                    min</span>
+                                            </div>
+                                            <div
+                                                style="width: 4px; height: 35px; background: #10B981; border-radius: 4px;">
+                                            </div>
+                                            <div style="flex:1;">
+                                                <h4
+                                                    style="font-size:0.95rem; font-weight:700; color:var(--dark); margin:0;">
+                                                    Maria Silva</h4>
+                                                <p
+                                                    style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
+                                                    <i data-lucide="activity" style="width:12px; color:#10B981;"></i>
+                                                    Pilates Solo</p>
+                                            </div>
+                                            <button class="btn-icon"
+                                                style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
+                                                    data-lucide="chevron-right" style="width:14px;"></i></button>
+                                        </div>
+
+                                        <!-- Aula 2 -->
+                                        <div style="padding: 12px 1.5rem; display:flex; align-items:center; gap: 1rem; border-bottom: 1px solid #F1F5F9; transition: background 0.2s; cursor: pointer;"
+                                            onmouseover="this.style.background='#F8FAFC'"
+                                            onmouseout="this.style.background='transparent'">
+                                            <div
+                                                style="display:flex; flex-direction:column; align-items:center; min-width: 50px;">
+                                                <span
+                                                    style="font-size: 1rem; font-weight: 800; color: var(--dark); line-height:1;">09:00</span>
+                                                <span
+                                                    style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top:2px;">60
+                                                    min</span>
+                                            </div>
+                                            <div
+                                                style="width: 4px; height: 35px; background: #3B82F6; border-radius: 4px;">
+                                            </div>
+                                            <div style="flex:1;">
+                                                <h4
+                                                    style="font-size:0.95rem; font-weight:700; color:var(--dark); margin:0;">
+                                                    Thiago Castro</h4>
+                                                <p
+                                                    style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
+                                                    <i data-lucide="dumbbell" style="width:12px; color:#3B82F6;"></i>
+                                                    Funcional</p>
+                                            </div>
+                                            <button class="btn-icon"
+                                                style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
+                                                    data-lucide="chevron-right" style="width:14px;"></i></button>
+                                        </div>
+
+                                        <!-- Aula 3 -->
+                                        <div style="padding: 12px 1.5rem; display:flex; align-items:center; gap: 1rem; border-bottom: 1px solid #F1F5F9; transition: background 0.2s; cursor: pointer;"
+                                            onmouseover="this.style.background='#F8FAFC'"
+                                            onmouseout="this.style.background='transparent'">
+                                            <div
+                                                style="display:flex; flex-direction:column; align-items:center; min-width: 50px;">
+                                                <span
+                                                    style="font-size: 1rem; font-weight: 800; color: var(--dark); line-height:1;">14:30</span>
+                                                <span
+                                                    style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top:2px;">60
+                                                    min</span>
+                                            </div>
+                                            <div
+                                                style="width: 4px; height: 35px; background: #8B5CF6; border-radius: 4px;">
+                                            </div>
+                                            <div style="flex:1;">
+                                                <h4
+                                                    style="font-size:0.95rem; font-weight:700; color:var(--dark); margin:0;">
+                                                    Ana Beatriz</h4>
+                                                <p
+                                                    style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
+                                                    <i data-lucide="clipboard-list"
+                                                        style="width:12px; color:#8B5CF6;"></i> Avaliação Física</p>
+                                            </div>
+                                            <button class="btn-icon"
+                                                style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
+                                                    data-lucide="chevron-right" style="width:14px;"></i></button>
                                         </div>
                                     </div>
                                     <div
-                                        style="padding:3.5rem 2rem; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-                                        <div
-                                            style="background: rgba(225, 48, 108, 0.1); width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
-                                            <i data-lucide="instagram"
-                                                style="color:#E1306C; width:32px; height:32px;"></i>
-                                        </div>
-                                        <h4
-                                            style="font-weight:800; color:var(--dark); font-size:1.1rem; margin-bottom:8px;">
-                                            Conecte seu Instagram</h4>
-                                        <p
-                                            style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:1.5rem;">
-                                            Sincronize sua conta profissional para exibir sua vitrine e ver suas
-                                            métricas diretamente aqui no painel.</p>
-                                        <button class="btn-primary"
-                                            style="background:#0095f6; border:none; width:100%; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; font-weight:700; transition:all 0.2s;"
-                                            onclick="const btn=this; btn.innerHTML='<i data-lucide=\'loader-2\' class=\'spin\' style=\'width:16px;\'></i> Conectando API...'; btn.style.opacity='0.7'; setTimeout(()=>{alert('A integração nativa (OAuth) com a API do Instagram está sendo configurada. Em breve você fará login diretamente aqui!'); btn.innerHTML='Vincular Conta Oficial'; btn.style.opacity='1';}, 1200);">
-                                            Vincular Conta Oficial
-                                        </button>
+                                        style="padding: 1rem 1.5rem; background: #F8FAFC; border-top: 1px solid var(--border-soft); text-align: center;">
                                         <a href="#"
-                                            style="font-size:0.75rem; color:var(--text-muted); margin-top:1.25rem; font-weight:600; text-decoration:underline;">Saber
-                                            mais sobre a integração</a>
+                                            style="font-size: 0.85rem; font-weight: 700; color: #4F46E5; text-decoration: none;"
+                                            onclick="document.querySelector('[data-target=\'agenda\']').click()">Acessar
+                                            Agenda Completa &rarr;</a>
                                     </div>
                                 </div>
                             </div>
@@ -1051,8 +1090,10 @@
                     <div
                         style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 2rem; padding: 0 1.5rem;">
                         <div style="padding-left: 1rem;">
-                            <h3 style="font-size: 1.35rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px;"><i data-lucide="wallet" class="icon-sm"
-                                    style="color: var(--primary);"></i> Fluxo de Caixa</h3>
+                            <h3
+                                style="font-size: 1.35rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px;">
+                                <i data-lucide="wallet" class="icon-sm" style="color: var(--primary);"></i> Fluxo de
+                                Caixa</h3>
                             <p class="text-muted mt-1" style="font-size: 0.9rem;">Visão geral das suas receitas e
                                 despesas do mês atual.</p>
                         </div>
@@ -1584,7 +1625,8 @@
                                             1200</span>
                                         <div
                                             style="display:flex; align-items:center; gap: 4px; color: #64748B; font-size: 0.7rem;">
-                                            <i data-lucide="clock" style="width:12px;"></i> Hoje</div>
+                                            <i data-lucide="clock" style="width:12px;"></i> Hoje
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="lead-2" class="card p-0 kanban-card example-card" data-valor="180"
@@ -1605,7 +1647,8 @@
                                         <span style="font-size: 0.8rem; font-weight: 600; color: #10B981;">R$ 180</span>
                                         <div
                                             style="display:flex; align-items:center; gap: 4px; color: #64748B; font-size: 0.7rem;">
-                                            <i data-lucide="clock" style="width:12px;"></i> 2 dias</div>
+                                            <i data-lucide="clock" style="width:12px;"></i> 2 dias
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1648,7 +1691,8 @@
                                             2400</span>
                                         <div
                                             style="display:flex; align-items:center; gap: 4px; color: #64748B; font-size: 0.7rem;">
-                                            <i data-lucide="clock" style="width:12px;"></i> Follow-up hoje</div>
+                                            <i data-lucide="clock" style="width:12px;"></i> Follow-up hoje
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1799,10 +1843,11 @@
                 <!-- Ficha do Aluno / CRM Completo -->
                 <section id="view-ficha-aluno" class="view hidden fade-in"
                     style="background:#F8FAFC; overflow-y: auto; overflow-x: hidden; width: 100%; padding: 0 0 8rem 0; display:flex; flex-direction:column;">
-                    
+
                     <div style="width: 100%;">
                         <!-- Back button only - Alinhado no topo e na foto -->
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-top:0; padding-left: 2rem;">
+                        <div
+                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-top:0; padding-left: 2rem;">
                             <button class="btn-icon" id="btn-voltar-alunos"
                                 style="background:transparent; border:none; color:var(--primary); font-size:0.85rem; font-weight:700; cursor:pointer; padding:6px 12px; border-radius:8px; transition:all 0.2s;"
                                 onmouseover="this.style.background='#EFF6FF';"
@@ -1822,219 +1867,240 @@
                                     <div style="position:relative;">
                                         <img src="" id="ficha-aluno-avatar"
                                             style="width:80px; height:80px; border-radius:12px; object-fit:cover; background:#E2E8F0;">
-                                    <div style="position:absolute; bottom:-6px; right:-6px; background:#1E293B; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
-                                        title="Alterar Foto de Perfil" id="btn-troca-foto-cliente">
-                                        <i data-lucide="camera" style="width:12px;"></i>
-                                    </div>
-                                    <input type="file" id="ipt-ficha-upload-foto" accept="image/*"
-                                        style="display:none;">
-                                </div>
-                                <div style="display:flex; flex-direction:column; justify-content:center; gap:2px;">
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <div style="width:12px; height:12px; border-radius:50%; background:#38BDF8;">
+                                        <div style="position:absolute; bottom:-6px; right:-6px; background:#1E293B; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                            title="Alterar Foto de Perfil" id="btn-troca-foto-cliente">
+                                            <i data-lucide="camera" style="width:12px;"></i>
                                         </div>
-                                        <h2 id="ficha-aluno-nome"
-                                            style="font-size:1.4rem; font-weight:800; color:var(--dark); margin:0;">
-                                            Carregando...</h2>
+                                        <input type="file" id="ipt-ficha-upload-foto" accept="image/*"
+                                            style="display:none;">
                                     </div>
-                                    <div
-                                        style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;">
-                                        Matrícula: <input type="text" id="ficha-aluno-id" class="input-base"
-                                            style="width:80px; font-weight:800; color:var(--primary); padding:4px 8px; font-size:0.85rem; border:1px solid #CBD5E1; background:#F8FAFC; border-radius:6px;"
-                                            placeholder="Nº 123"></div>
-                                    <div style="font-size:0.8rem; color:var(--dark); font-weight:500; margin-top:4px;"
-                                        id="ficha-aluno-idade">-- anos</div>
-                                    <div style="font-size:0.8rem; color:var(--dark); font-weight:500;"
-                                        id="ficha-aluno-telefone">(-) ---- - ----</div>
-                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">
-                                        Contato/Responsável: <span id="ficha-aluno-resp"
-                                            style="color:var(--dark);">Próprio</span></div>
-                                </div>
-                            </div>
-
-                            <!-- Coluna Meio: Nivel & Interesses -->
-                            <div style="display:flex; flex-direction:column; gap:12px; min-width:260px;">
-                                <div>
-                                    <label
-                                        style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px; display:block;">Nível</label>
-                                    <select class="input-base"
-                                        style="width:100%; border:none; border-bottom:1px solid #E2E8F0; padding:4px 0; border-radius:0; background:transparent; font-weight:600; font-size:0.9rem;"
-                                        id="ficha-aluno-nivel">
-                                        <option value="Iniciante">Iniciante</option>
-                                        <option value="Intermediário" selected>Intermediário</option>
-                                        <option value="Avançado">Avançado</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px; display:block;">Interesses</label>
-                                    <select class="input-base"
-                                        style="width:100%; border:none; border-bottom:1px solid #E2E8F0; padding:4px 0; border-radius:0; background:transparent; font-weight:600; font-size:0.9rem;"
-                                        id="ficha-aluno-interesses">
-                                        <option value="Alongamento" selected>Alongamento ⊗</option>
-                                        <option value="Hipertrofia">Hipertrofia</option>
-                                        <option value="Emagrecimento">Emagrecimento</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Coluna Dir: Ações Rápidas -->
-                            <div style="display:flex; flex-direction:column; gap:12px; justify-content:flex-start;">
-                                <button class="btn-icon" onclick="window.print();"
-                                    style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; color:#475569; background:transparent; border:none; cursor:pointer;"><i
-                                        data-lucide="printer" style="width:16px;"></i> Imprimir Ficha Cadastral</button>
-                                <button class="btn-icon"
-                                    style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; color:#475569; background:transparent; border:none; cursor:pointer;"
-                                    id="btn-ficha-wpp"
-                                    onclick="if(this.dataset.fone) window.open('https://wa.me/55' + this.dataset.fone.replace(/\\D/g,''), '_blank');"><i
-                                        data-lucide="message-circle" style="width:16px;"></i> Dar boas vindas</button>
-                            </div>
-                        </div>
-
-
-
-                        <!-- Ficha de Edição Direta -->
-                        <div style="padding:2rem;">
-                            <!-- Bloco 1: Contato e Pessoal -->
-                            <div
-                                style="background:#F9FAFB; border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; border:1px solid #E5E7EB;">
-                                <h4
-                                    style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1.25rem; display:flex; align-items:center;">
-                                    <i data-lucide="user" style="width:16px; margin-right:8px;"></i> Dados de Contato e
-                                    Pessoal</h4>
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Telefone/WhatsApp</label>
-                                        <input type="text" id="ficha-ipt-telefone" class="input-base"
-                                            placeholder="Ex: (11) 99999-9999">
-                                    </div>
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">E-mail</label>
-                                        <input type="email" id="ficha-ipt-email" class="input-base"
-                                            placeholder="Ex: aluno@email.com">
-                                    </div>
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">CPF</label>
-                                        <input type="text" id="ficha-ipt-cpf" class="input-base"
-                                            placeholder="Ex: 000.000.000-00">
-                                    </div>
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Data de Nascimento</label>
-                                        <input type="date" id="ficha-ipt-nasc" class="input-base">
-                                    </div>
-                                    <div style="grid-column: span 2;">
-                                        <label class="label-sm" style="font-size:0.75rem;">Endereço Completo</label>
-                                        <input type="text" id="ficha-ipt-endereco" class="input-base"
-                                            placeholder="Ex: Rua das Flores, 123">
-                                    </div>
-                                    <div style="grid-column: span 2;">
-                                        <label class="label-sm" style="font-size:0.75rem;">Contato de Emergência</label>
-                                        <input type="text" id="ficha-ipt-emergencia" class="input-base"
-                                            placeholder="Ex: (11) 99999-9999">
+                                    <div style="display:flex; flex-direction:column; justify-content:center; gap:2px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <div
+                                                style="width:12px; height:12px; border-radius:50%; background:#38BDF8;">
+                                            </div>
+                                            <h2 id="ficha-aluno-nome"
+                                                style="font-size:1.4rem; font-weight:800; color:var(--dark); margin:0;">
+                                                Carregando...</h2>
+                                        </div>
+                                        <div
+                                            style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;">
+                                            Matrícula: <input type="text" id="ficha-aluno-id" class="input-base"
+                                                style="width:80px; font-weight:800; color:var(--primary); padding:4px 8px; font-size:0.85rem; border:1px solid #CBD5E1; background:#F8FAFC; border-radius:6px;"
+                                                placeholder="Nº 123"></div>
+                                        <div style="font-size:0.8rem; color:var(--dark); font-weight:500; margin-top:4px;"
+                                            id="ficha-aluno-idade">-- anos</div>
+                                        <div style="font-size:0.8rem; color:var(--dark); font-weight:500;"
+                                            id="ficha-aluno-telefone">(-) ---- - ----</div>
+                                        <div style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">
+                                            Contato/Responsável: <span id="ficha-aluno-resp"
+                                                style="color:var(--dark);">Próprio</span></div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Bloco 2: Assinatura e Financeiro -->
-                            <div
-                                style="background:#F9FAFB; border-radius:12px; padding:2rem; margin-bottom:2.5rem; border:1px solid #E5E7EB;">
-                                <h4
-                                    style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1.25rem; display:flex; align-items:center;">
-                                    <i data-lucide="credit-card" style="width:16px; margin-right:8px;"></i> Plano e
-                                    Mensalidade</h4>
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
+                                <!-- Coluna Meio: Nivel & Interesses -->
+                                <div style="display:flex; flex-direction:column; gap:12px; min-width:260px;">
                                     <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Data de Início</label>
-                                        <input type="date" id="ficha-ipt-data-inicio" class="input-base">
-                                    </div>
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Plano / Modalidade</label>
-                                        <select id="ficha-ipt-plano" class="input-base">
-                                            <option value="Pilates 1x na semana">Pilates 1x na semana</option>
-                                            <option value="Pilates 2x na semana">Pilates 2x na semana</option>
-                                            <option value="Pilates 3x na semana">Pilates 3x na semana</option>
-                                            <option value="Funcional / Solo">Funcional / Solo</option>
-                                            <option value="Fisioterapia / Reabilitação">Fisioterapia / Reabilitação</option>
-                                            <option value="Sessão Avulsa">Sessão Avulsa</option>
-                                            <option value="Aula Experimental">Aula Experimental</option>
-                                            <option value="Customizado">Customizado</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Modalidade de Pagamento</label>
-                                        <select id="ficha-ipt-pagamento" class="input-base">
-                                            <option value="Mensal">Mensal</option>
-                                            <option value="Trimestral">Trimestral</option>
-                                            <option value="Semestral">Semestral</option>
-                                            <option value="Anual">Anual</option>
-                                            <option value="Avulso / Pacote">Avulso / Pacote</option>
+                                        <label
+                                            style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px; display:block;">Nível</label>
+                                        <select class="input-base"
+                                            style="width:100%; border:none; border-bottom:1px solid #E2E8F0; padding:4px 0; border-radius:0; background:transparent; font-weight:600; font-size:0.9rem;"
+                                            id="ficha-aluno-nivel">
+                                            <option value="Iniciante">Iniciante</option>
+                                            <option value="Intermediário" selected>Intermediário</option>
+                                            <option value="Avançado">Avançado</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Valor do Plano (R$)</label>
-                                        <div style="position:relative;">
-                                            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-weight:600;">R$</span>
-                                            <input type="text" id="ficha-ipt-valor" class="input-base" style="padding-left:36px;" placeholder="0,00">
+                                        <label
+                                            style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:4px; display:block;">Interesses</label>
+                                        <select class="input-base"
+                                            style="width:100%; border:none; border-bottom:1px solid #E2E8F0; padding:4px 0; border-radius:0; background:transparent; font-weight:600; font-size:0.9rem;"
+                                            id="ficha-aluno-interesses">
+                                            <option value="Alongamento" selected>Alongamento ⊗</option>
+                                            <option value="Hipertrofia">Hipertrofia</option>
+                                            <option value="Emagrecimento">Emagrecimento</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Coluna Dir: Ações Rápidas -->
+                                <div style="display:flex; flex-direction:column; gap:12px; justify-content:flex-start;">
+                                    <button class="btn-icon" onclick="window.print();"
+                                        style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; color:#475569; background:transparent; border:none; cursor:pointer;"><i
+                                            data-lucide="printer" style="width:16px;"></i> Imprimir Ficha
+                                        Cadastral</button>
+                                    <button class="btn-icon"
+                                        style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; color:#475569; background:transparent; border:none; cursor:pointer;"
+                                        id="btn-ficha-wpp"
+                                        onclick="if(this.dataset.fone) window.open('https://wa.me/55' + this.dataset.fone.replace(/\\D/g,''), '_blank');"><i
+                                            data-lucide="message-circle" style="width:16px;"></i> Dar boas
+                                        vindas</button>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Ficha de Edição Direta -->
+                            <div style="padding:2rem;">
+                                <!-- Bloco 1: Contato e Pessoal -->
+                                <div
+                                    style="background:#F9FAFB; border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; border:1px solid #E5E7EB;">
+                                    <h4
+                                        style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1.25rem; display:flex; align-items:center;">
+                                        <i data-lucide="user" style="width:16px; margin-right:8px;"></i> Dados de
+                                        Contato e
+                                        Pessoal
+                                    </h4>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Telefone/WhatsApp</label>
+                                            <input type="text" id="ficha-ipt-telefone" class="input-base"
+                                                placeholder="Ex: (11) 99999-9999">
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">E-mail</label>
+                                            <input type="email" id="ficha-ipt-email" class="input-base"
+                                                placeholder="Ex: aluno@email.com">
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">CPF</label>
+                                            <input type="text" id="ficha-ipt-cpf" class="input-base"
+                                                placeholder="Ex: 000.000.000-00">
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Data de
+                                                Nascimento</label>
+                                            <input type="date" id="ficha-ipt-nasc" class="input-base">
+                                        </div>
+                                        <div style="grid-column: span 2;">
+                                            <label class="label-sm" style="font-size:0.75rem;">Endereço Completo</label>
+                                            <input type="text" id="ficha-ipt-endereco" class="input-base"
+                                                placeholder="Ex: Rua das Flores, 123">
+                                        </div>
+                                        <div style="grid-column: span 2;">
+                                            <label class="label-sm" style="font-size:0.75rem;">Contato de
+                                                Emergência</label>
+                                            <input type="text" id="ficha-ipt-emergencia" class="input-base"
+                                                placeholder="Ex: (11) 99999-9999">
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Dia de vencimento / Data base</label>
-                                        <input type="date" id="ficha-ipt-vencimento" class="input-base">
-                                    </div>
-                                    <div>
-                                        <label class="label-sm" style="font-size:0.75rem;">Instrutor responsável</label>
-                                        <input type="text" id="ficha-ipt-instrutor" class="input-base" placeholder="Nome do Professor">
-                                    </div>
+                                <!-- Bloco 2: Assinatura e Financeiro -->
+                                <div
+                                    style="background:#F9FAFB; border-radius:12px; padding:2rem; margin-bottom:2.5rem; border:1px solid #E5E7EB;">
+                                    <h4
+                                        style="font-size:0.85rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1.25rem; display:flex; align-items:center;">
+                                        <i data-lucide="credit-card" style="width:16px; margin-right:8px;"></i> Plano e
+                                        Mensalidade
+                                    </h4>
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Data de Início</label>
+                                            <input type="date" id="ficha-ipt-data-inicio" class="input-base">
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Plano /
+                                                Modalidade</label>
+                                            <select id="ficha-ipt-plano" class="input-base">
+                                                <option value="Pilates 1x na semana">Pilates 1x na semana</option>
+                                                <option value="Pilates 2x na semana">Pilates 2x na semana</option>
+                                                <option value="Pilates 3x na semana">Pilates 3x na semana</option>
+                                                <option value="Funcional / Solo">Funcional / Solo</option>
+                                                <option value="Fisioterapia / Reabilitação">Fisioterapia / Reabilitação
+                                                </option>
+                                                <option value="Sessão Avulsa">Sessão Avulsa</option>
+                                                <option value="Aula Experimental">Aula Experimental</option>
+                                                <option value="Customizado">Customizado</option>
+                                            </select>
+                                        </div>
 
-                                    <div style="grid-column: span 2;">
-                                        <label class="label-sm" style="font-size:0.75rem;">Status Atual</label>
-                                        <select id="ficha-ipt-status" class="input-base">
-                                            <option value="Ativo">🟢 Ativo e Cursando</option>
-                                            <option value="Em Débito">⚠️ Em Débito / Pendência</option>
-                                            <option value="Em Férias">🏖️ Trancado / Férias</option>
-                                            <option value="Inativo">🔴 Inativo / Cancelou</option>
-                                            <option value="Avaliação">📝 Fase de Avaliação</option>
-                                        </select>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Modalidade de
+                                                Pagamento</label>
+                                            <select id="ficha-ipt-pagamento" class="input-base">
+                                                <option value="Mensal">Mensal</option>
+                                                <option value="Trimestral">Trimestral</option>
+                                                <option value="Semestral">Semestral</option>
+                                                <option value="Anual">Anual</option>
+                                                <option value="Avulso / Pacote">Avulso / Pacote</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Valor do Plano
+                                                (R$)</label>
+                                            <div style="position:relative;">
+                                                <span
+                                                    style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-weight:600;">R$</span>
+                                                <input type="text" id="ficha-ipt-valor" class="input-base"
+                                                    style="padding-left:36px;" placeholder="0,00">
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Dia de vencimento / Data
+                                                base</label>
+                                            <input type="date" id="ficha-ipt-vencimento" class="input-base">
+                                        </div>
+                                        <div>
+                                            <label class="label-sm" style="font-size:0.75rem;">Instrutor
+                                                responsável</label>
+                                            <input type="text" id="ficha-ipt-instrutor" class="input-base"
+                                                placeholder="Nome do Professor">
+                                        </div>
+
+                                        <div style="grid-column: span 2;">
+                                            <label class="label-sm" style="font-size:0.75rem;">Status Atual</label>
+                                            <select id="ficha-ipt-status" class="input-base">
+                                                <option value="Ativo">🟢 Ativo e Cursando</option>
+                                                <option value="Em Débito">⚠️ Em Débito / Pendência</option>
+                                                <option value="Em Férias">🏖️ Trancado / Férias</option>
+                                                <option value="Inativo">🔴 Inativo / Cancelou</option>
+                                                <option value="Avaliação">📝 Fase de Avaliação</option>
+                                            </select>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <!-- Bloco 3: Saúde e Observações -->
+                                <div>
+                                    <label class="label-sm"
+                                        style="font-size:0.75rem; color:var(--text-muted);">Observações
+                                        de Saúde e Anamnese</label>
+                                    <textarea id="ficha-ipt-saude" class="input-base"
+                                        style="resize:vertical; min-height:60px;"
+                                        placeholder="Ex: Histórico de lesão, dores articulares..."></textarea>
+                                </div>
+
+                                <!-- Bloco 4: Prontuário e Evoluções -->
+                                <div style="margin-top:1.5rem; border-top:1px dashed #E2E8F0; padding-top:1.5rem;">
+                                    <label class="label-sm"
+                                        style="font-size:0.8rem; color:var(--primary); display:flex; align-items:center; gap:6px; font-weight:700; text-transform:uppercase;"><i
+                                            data-lucide="activity" style="width:16px;"></i> Evolução Diária / Prontuário
+                                        de
+                                        Sessões</label>
+                                    <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">Registre
+                                        aqui
+                                        a evolução passo a passo dos treinos/fisioterapia do seu paciente.</p>
+                                    <textarea id="ficha-ipt-evolucoes" class="input-base"
+                                        style="resize:vertical; min-height:180px; background:#F8FAFC; border:1px solid #E2E8F0; line-height: 1.5; padding: 12px;"
+                                        placeholder="Ex:&#10;09/07 - Paciente relata diminuição da dor. Fizemos liberação miofascial...&#10;11/07 - Foco em estabilização pélvica..."></textarea>
+                                </div>
+
+                                <!-- Ação de Salvamento Rápido -->
+                                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:2rem;">
+                                    <div id="ficha-feedback-save"
+                                        style="color:#10B981; font-weight:600; font-size:0.9rem; align-items:center; gap:6px; display:none;">
+                                        <i data-lucide="check-circle" style="width:16px;"></i> Salvo!
+                                    </div>
+                                    <button class="btn-primary" id="btn-ficha-salvar-dados"
+                                        style="display:flex; align-items:center; gap:8px; padding:0 24px; font-weight:700;"><i
+                                            data-lucide="save" style="width:16px;"></i> Salvar Alterações</button>
                                 </div>
                             </div>
 
-                            <!-- Bloco 3: Saúde e Observações -->
-                            <div>
-                                <label class="label-sm" style="font-size:0.75rem; color:var(--text-muted);">Observações
-                                    de Saúde e Anamnese</label>
-                                <textarea id="ficha-ipt-saude" class="input-base"
-                                    style="resize:vertical; min-height:60px;"
-                                    placeholder="Ex: Histórico de lesão, dores articulares..."></textarea>
-                            </div>
-
-                            <!-- Bloco 4: Prontuário e Evoluções -->
-                            <div style="margin-top:1.5rem; border-top:1px dashed #E2E8F0; padding-top:1.5rem;">
-                                <label class="label-sm"
-                                    style="font-size:0.8rem; color:var(--primary); display:flex; align-items:center; gap:6px; font-weight:700; text-transform:uppercase;"><i
-                                        data-lucide="activity" style="width:16px;"></i> Evolução Diária / Prontuário de
-                                    Sessões</label>
-                                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px;">Registre aqui
-                                    a evolução passo a passo dos treinos/fisioterapia do seu paciente.</p>
-                                <textarea id="ficha-ipt-evolucoes" class="input-base"
-                                    style="resize:vertical; min-height:180px; background:#F8FAFC; border:1px solid #E2E8F0; line-height: 1.5; padding: 12px;"
-                                    placeholder="Ex:&#10;09/07 - Paciente relata diminuição da dor. Fizemos liberação miofascial...&#10;11/07 - Foco em estabilização pélvica..."></textarea>
-                            </div>
-
-                            <!-- Ação de Salvamento Rápido -->
-                            <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:2rem;">
-                                <div id="ficha-feedback-save"
-                                    style="color:#10B981; font-weight:600; font-size:0.9rem; align-items:center; gap:6px; display:none;">
-                                    <i data-lucide="check-circle" style="width:16px;"></i> Salvo!</div>
-                                <button class="btn-primary" id="btn-ficha-salvar-dados"
-                                    style="display:flex; align-items:center; gap:8px; padding:0 24px; font-weight:700;"><i
-                                        data-lucide="save" style="width:16px;"></i> Salvar Alterações</button>
-                            </div>
                         </div>
-
-                    </div>
                 </section>
 
                 <!-- Visão Integração Wellhub -->
