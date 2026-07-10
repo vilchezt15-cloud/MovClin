@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Funções Globais (Ações de Tabela) ---
     window.deletarCliente = async (id, element) => {
-        if(!confirm('Tem certeza que deseja excluir permanentemente este cliente?')) return;
-        
+        if (!confirm('Tem certeza que deseja excluir permanentemente este cliente?')) return;
+
         element.style.opacity = '0.5';
         element.style.pointerEvents = 'none';
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { error } = await supabase.from('alunos').delete().eq('id', id);
                 if (error) throw error;
-            } catch(e) {
+            } catch (e) {
                 console.error("Erro ao excluir do Supabase", e);
                 alert("Erro ao excluir do banco de dados.");
                 element.style.opacity = '1';
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         }
-        
+
         element.remove();
         const lblAlunos = document.getElementById('kpi-alunos');
         if (lblAlunos) {
@@ -37,18 +37,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.editarCliente = (clienteDataStr) => {
         let c;
-        try { c = JSON.parse(decodeURIComponent(clienteDataStr)); } catch(e) { return; }
+        try { c = JSON.parse(decodeURIComponent(clienteDataStr)); } catch (e) { return; }
         const id = c.id;
         if (!id || id === 'null') { alert('Erro: Cliente sem ID no banco remoto.'); return; }
         const slideOver = document.getElementById('slide-over-novo');
         if (!slideOver) return;
-        
+
         const title = slideOver.querySelector('h2');
         if (title) title.innerText = 'Editar Cadastro';
 
         const setVal = (elmId, val) => {
             const el = document.getElementById(elmId);
-            if(el) el.value = (val !== null && val !== undefined && val !== 'null') ? val : '';
+            if (el) el.value = (val !== null && val !== undefined && val !== 'null') ? val : '';
         };
 
         setVal('ipt-nome', c.nome);
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setVal('ipt-vencimento', c.dia_vencimento);
         setVal('ipt-instrutor', c.instrutor);
         setVal('ipt-saude', c.observacoes_saude);
-        
+
         const iptModal = document.getElementById('ipt-modalidade');
         if (iptModal) {
             const exists = Array.from(iptModal.options).some(o => o.value === c.plano);
@@ -71,13 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const iptPag = document.getElementById('ipt-pagamento');
         if (iptPag) iptPag.value = c.modalidade_pagamento || "Mensal";
-        
+
         const iptStatus = document.getElementById('ipt-status');
         if (iptStatus && c.status) iptStatus.value = c.status;
-        
+
         const btnSalvar = document.getElementById('btn-registar-aluno');
         if (btnSalvar) btnSalvar.dataset.editId = id;
-        
+
         slideOver.classList.remove('hidden-overlay');
         setTimeout(() => { slideOver.classList.add('open'); }, 10);
     };
@@ -89,17 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (p.length === 3) return `${p[2]}/${p[1]}/${p[0]}`;
         }
         if (v.length === 8 && !v.includes('/')) {
-            return `${v.substring(0,2)}/${v.substring(2,4)}/${v.substring(4)}`;
+            return `${v.substring(0, 2)}/${v.substring(2, 4)}/${v.substring(4)}`;
         }
         return v;
     };
 
     const formatPhoneBR = (v) => {
         if (!v) return '';
-        const d = v.replace(/\D/g, ''); 
-        if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
-        if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
-        return v; 
+        const d = v.replace(/\D/g, '');
+        if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+        if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+        return v;
     };
 
     // Live mask bindings for editing form
@@ -107,113 +107,236 @@ document.addEventListener('DOMContentLoaded', () => {
         let v = e.target.value.replace(/\D/g, '');
         if (v.length > 11) v = v.slice(0, 11);
         if (v.length > 10) {
-            e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+            e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
         } else if (v.length > 6) {
-            e.target.value = `(${v.slice(0,2)}) ${v.slice(2,6)}-${v.slice(6)}`;
+            e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 6)}-${v.slice(6)}`;
         } else if (v.length > 2) {
-            e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+            e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
         } else if (v.length > 0) {
             e.target.value = `(${v}`;
         }
     };
-    
+
     document.getElementById('ipt-telefone').addEventListener('input', applyPhoneMask);
     document.getElementById('ipt-emergencia').addEventListener('input', applyPhoneMask);
 
     window.verPerfilCompleto = (clienteDataStr) => {
         let c;
-        try { c = JSON.parse(decodeURIComponent(clienteDataStr)); } catch(e) { return; }
-        
-        const slide = document.getElementById('slide-over-perfil');
-        if(!slide) return;
-        
-        const content = document.getElementById('perfil-content-area');
-        content.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; text-align:center; margin-bottom:2rem;">
-                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(c.nome || 'Sem')}&background=1E3A8A&color=fff&size=80" style="width:80px; height:80px; border-radius:30px; margin-bottom:1rem; box-shadow: 0 10px 25px rgba(30,58,138,0.2);">
-                <h3 style="font-size:1.4rem; color:var(--dark); margin-bottom:0.2rem;">${c.nome || 'Nome Indisponível'}</h3>
-                <div style="display:flex; justify-content:center; gap:8px; align-items:center; margin-top:0.5rem;">
-                    <span style="background: rgba(37,99,235,0.1); color: var(--primary); padding: 4px 12px; border-radius: 99px; font-weight:700; font-size:0.75rem;">${c.plano || 'Sem Plano'}</span>
-                    <span style="background: ${c.status === 'Inativo' ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)'}; color: ${c.status === 'Inativo' ? 'var(--danger)' : 'var(--success)'}; padding: 4px 12px; border-radius: 99px; font-weight:700; font-size:0.75rem;">${c.status || 'Ativo'}</span>
-                </div>
-            </div>
-            
-            <div style="background:#F9FAFB; border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; border:1px solid #E5E7EB;">
-                <h4 style="font-size:0.8rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1rem; letter-spacing:0.05em; display:flex; align-items:center;"><i data-lucide="user" style="width:14px; margin-right:6px;"></i> Contato e Pessoal</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Telefone/WhatsApp</div>
-                        <div style="font-weight:600; color:var(--dark);">${formatPhoneBR(c.telefone) || '---'}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">E-mail</div>
-                        <div style="font-weight:600; color:var(--dark); word-break:break-all;">${c.email || '---'}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">CPF</div>
-                        <div style="font-weight:600; color:var(--dark);">${c.cpf || '---'}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Data de Nascimento</div>
-                        <div style="font-weight:600; color:var(--dark);">${formatDataBR(c.data_nascimento) || '---'}</div>
-                    </div>
-                    <div style="grid-column: span 2;">
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Endereço Completo</div>
-                        <div style="font-weight:600; color:var(--dark);">${c.endereco || '---'}</div>
-                    </div>
-                    <div style="grid-column: span 2;">
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Contato de Emergência</div>
-                        <div style="font-weight:600; color:var(--dark);">${formatPhoneBR(c.contato_emergencia) || '---'}</div>
-                    </div>
-                </div>
-            </div>
+        try { c = JSON.parse(decodeURIComponent(clienteDataStr)); } catch (e) { return; }
 
-            <div style="background:#F9FAFB; border-radius:12px; padding:1.5rem; margin-bottom:1.5rem; border:1px solid #E5E7EB;">
-                <h4 style="font-size:0.8rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; margin-bottom:1rem; letter-spacing:0.05em; display:flex; align-items:center;"><i data-lucide="credit-card" style="width:14px; margin-right:6px;"></i> Assinatura e Financeiro</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Plano / Modalidade</div>
-                        <div style="font-weight:600; color:var(--dark);">${c.plano || 'Customizado'}</div>
-                        ${c.instrutor ? `<div style="font-size:0.75rem; color:var(--primary); font-weight:600; margin-top:3px;">Instrutor: ${c.instrutor}</div>` : ''}
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Valor (R$)</div>
-                        <div style="font-weight:600; color:var(--primary); font-size:1.1rem;">R$ ${c.valor_ciclo || '0,00'}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Frequência de Pag.</div>
-                        <div style="font-weight:600; color:var(--dark);">${c.modalidade_pagamento || 'Mensal'}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">Vencimento (Dia)</div>
-                        <div style="font-weight:600; color:var(--dark);">${formatDataBR(c.dia_vencimento) || '---'}</div>
-                    </div>
-                </div>
-            </div>
+        // Esconder todas as views ativas e tirar highlight do menu
+        document.querySelectorAll('main.main-surface > .view, .view').forEach(view => view.classList.add('hidden'));
+        document.querySelectorAll('.sidebar-fixed .nav-item, .sidebar-slim .nav-item').forEach(nav => nav.classList.remove('active'));
 
-            ${c.observacoes_saude ? `
-            <div style="background:#FEF2F2; border-radius:12px; padding:1.5rem; border:1px solid #FECACA;">
-                <h4 style="font-size:0.8rem; text-transform:uppercase; color:#B91C1C; font-weight:700; margin-bottom:0.5rem; letter-spacing:0.05em; display:flex; align-items:center;"><i data-lucide="alert-circle" style="width:14px; margin-right:6px;"></i> Observações de Saúde</h4>
-                <div style="font-size:0.9rem; color:#7F1D1D; line-height:1.5;">${c.observacoes_saude}</div>
-            </div>
-            ` : ''}
-        `;
-        
-        lucide.createIcons({ root: slide });
-        
-        const btnEdit = document.getElementById('btn-edit-from-profile');
-        if(btnEdit) {
-            btnEdit.onclick = () => {
-                slide.classList.remove('open');
-                setTimeout(() => {
-                    slide.classList.add('hidden-overlay');
-                    window.editarCliente(clienteDataStr);
-                }, 300);
+        // Mostrar Ficha do Aluno
+        const fichaView = document.getElementById('view-ficha-aluno');
+        if (!fichaView) return;
+        fichaView.classList.remove('hidden');
+
+        // Renderizar Informações do Cliente no Topo
+        const avt = document.getElementById('ficha-aluno-avatar');
+        if (avt) avt.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.nome || 'Sem')}&background=E0F2FE&color=0284C7&size=200`;
+
+        const elNome = document.getElementById('ficha-aluno-nome');
+        if (elNome) elNome.innerText = c.nome || 'Nome Indisponível';
+
+        const elId = document.getElementById('ficha-aluno-id');
+        if (elId) {
+            const savedMat = localStorage.getItem(`movia_aluno_matricula_${c.id}`);
+            elId.value = savedMat || c.id || (Math.floor(Math.random() * 90) + 10);
+            elId.onchange = (e) => {
+                if (e.target.value) {
+                    localStorage.setItem(`movia_aluno_matricula_${c.id}`, e.target.value);
+                    if (typeof loadClientes === 'function') loadClientes();
+                }
             };
         }
 
-        slide.classList.remove('hidden-overlay');
-        setTimeout(() => { slide.classList.add('open'); }, 10);
+        const elIdade = document.getElementById('ficha-aluno-idade');
+        if (elIdade && c.data_nascimento) {
+            let age = '--';
+            if (c.data_nascimento.includes('-')) {
+                const parts = c.data_nascimento.split('-');
+                if (parts[0].length === 4) {
+                    age = new Date().getFullYear() - parseInt(parts[0]);
+                }
+            } else if (c.data_nascimento.length >= 8) {
+                // ddmmaaaa format
+                const yr = c.data_nascimento.substring(4);
+                age = new Date().getFullYear() - parseInt(yr);
+            }
+            elIdade.innerText = (!isNaN(age) && age > 5 && age < 100) ? `${age} anos` : '-- anos';
+        } else if (elIdade) {
+            elIdade.innerText = '-- anos';
+        }
+
+        const elTel = document.getElementById('ficha-aluno-telefone');
+        if (elTel) elTel.innerText = formatPhoneBR(c.telefone) || '(Sem telefone)';
+
+        const elResp = document.getElementById('ficha-aluno-resp');
+        if (elResp) elResp.innerText = c.contato_emergencia ? 'Familiar Cadastrado' : 'Próprio';
+
+        const btnWpp = document.getElementById('btn-ficha-wpp');
+        if (btnWpp) btnWpp.dataset.fone = c.telefone;
+
+        // <--- Persistencia de Nível e Interesses via LocalStorage --->
+        const elNivel = document.getElementById('ficha-aluno-nivel');
+        if (elNivel) {
+            const savedNivel = localStorage.getItem(`movia_aluno_nivel_${c.id}`);
+            if (savedNivel) elNivel.value = savedNivel;
+            elNivel.onchange = (e) => localStorage.setItem(`movia_aluno_nivel_${c.id}`, e.target.value);
+        }
+
+        const elInteresse = document.getElementById('ficha-aluno-interesses');
+        if (elInteresse) {
+            const savedInt = localStorage.getItem(`movia_aluno_interesses_${c.id}`);
+            if (savedInt) elInteresse.value = savedInt;
+            elInteresse.onchange = (e) => localStorage.setItem(`movia_aluno_interesses_${c.id}`, e.target.value);
+        }
+
+        // <--- Lógica de Troca de Foto de Perfil do Cliente --->
+        const btnUploadPic = document.getElementById('btn-troca-foto-cliente');
+        const iptUploadPic = document.getElementById('ipt-ficha-upload-foto');
+        if (avt) {
+            // Tentar puxar foto local
+            const savedPic = localStorage.getItem(`movia_aluno_avatar_${c.id}`);
+            if (savedPic) avt.src = savedPic;
+
+            if (btnUploadPic && iptUploadPic) {
+                btnUploadPic.onclick = () => iptUploadPic.click();
+                iptUploadPic.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const b64 = ev.target.result;
+                        avt.src = b64;
+                        try {
+                            localStorage.setItem(`movia_aluno_avatar_${c.id}`, b64);
+                        } catch (err) {
+                            alert("A imagem é muito grande para salvar no cache do navegador. Tente uma com tamanho menor.");
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                };
+            }
+        }
+
+        // Ligar Botão Voltar
+        const btnVoltar = document.getElementById('btn-voltar-alunos');
+        if (btnVoltar) {
+            btnVoltar.onclick = () => {
+                fichaView.classList.add('hidden');
+                const targetView = document.getElementById('view-alunos');
+                if (targetView) targetView.classList.remove('hidden');
+                const itemAlunos = document.querySelector('.nav-item[data-target="alunos"]');
+                if (itemAlunos) itemAlunos.classList.add('active');
+            };
+        }
+
+        const btnEdit = document.getElementById('btn-ficha-editar');
+        if (btnEdit) {
+            btnEdit.onclick = () => { window.editarCliente(clienteDataStr); };
+        }
+
+        const btnDel = document.getElementById('btn-ficha-excluir');
+        if (btnDel) {
+            btnDel.onclick = () => { alert("Utilize o menu lateral na tabela Base de Alunos para remover clientes em definitivo."); };
+        }
+
+        // Preencher Ficha de Edição Direta
+        document.getElementById('ficha-ipt-telefone').value = formatPhoneBR(c.telefone) || '';
+        document.getElementById('ficha-ipt-email').value = c.email || '';
+        document.getElementById('ficha-ipt-cpf').value = c.cpf || '';
+        document.getElementById('ficha-ipt-nasc').value = c.data_nascimento || '';
+        document.getElementById('ficha-ipt-endereco').value = c.endereco || '';
+        document.getElementById('ficha-ipt-emergencia').value = formatPhoneBR(c.contato_emergencia) || '';
+
+        document.getElementById('ficha-ipt-plano').value = c.plano || 'Customizado';
+        document.getElementById('ficha-ipt-instrutor').value = c.instrutor || '';
+        document.getElementById('ficha-ipt-valor').value = c.valor_ciclo ? c.valor_ciclo : '';
+        document.getElementById('ficha-ipt-status').value = c.status || 'Ativo';
+        document.getElementById('ficha-ipt-saude').value = c.observacoes_saude || '';
+
+        const fichaEvol = document.getElementById('ficha-ipt-evolucoes');
+        if (fichaEvol) fichaEvol.value = localStorage.getItem(`movia_aluno_evolucoes_${c.id}`) || '';
+
+        // Botão Salvar Alterações da Ficha Direta
+        const btnFichaSalvar = document.getElementById('btn-ficha-salvar-dados');
+        if (btnFichaSalvar) {
+            btnFichaSalvar.onclick = async () => {
+                const oldText = btnFichaSalvar.innerHTML;
+                btnFichaSalvar.innerHTML = 'Salvando...'
+                btnFichaSalvar.style.opacity = '0.5';
+
+                try {
+                    const rawVal = document.getElementById('ficha-ipt-valor').value;
+                    let cleanVal = rawVal;
+                    if (rawVal && rawVal.includes(',')) {
+                        cleanVal = rawVal.replace(/\./g, "").replace(",", ".");
+                    }
+
+                    const updatePayload = {
+                        telefone: document.getElementById('ficha-ipt-telefone').value.replace(/\D/g, '').substring(0, 11),
+                        email: document.getElementById('ficha-ipt-email').value,
+                        cpf: document.getElementById('ficha-ipt-cpf').value,
+                        data_nascimento: document.getElementById('ficha-ipt-nasc').value,
+                        endereco: document.getElementById('ficha-ipt-endereco').value,
+                        contato_emergencia: document.getElementById('ficha-ipt-emergencia').value.replace(/\D/g, '').substring(0, 11),
+                        plano: document.getElementById('ficha-ipt-plano').value,
+                        instrutor: document.getElementById('ficha-ipt-instrutor').value,
+                        valor_ciclo: cleanVal,
+                        status: document.getElementById('ficha-ipt-status').value,
+                        observacoes_saude: document.getElementById('ficha-ipt-saude').value
+                    };
+
+                    const fichaEvol = document.getElementById('ficha-ipt-evolucoes');
+                    if (fichaEvol) localStorage.setItem(`movia_aluno_evolucoes_${c.id}`, fichaEvol.value);
+
+                    if (supabase) {
+                        const { error } = await supabase.from('alunos').update(updatePayload).eq('id', c.id);
+                        if (error) throw error;
+                    }
+
+                    // Mutação otimista no cliente (DB_ALUNOS array master)
+                    Object.assign(c, updatePayload);
+
+                    // Atualiza a grid via fetch (re-load silencioso) se loadClientes existir
+                    if (typeof loadClientes === 'function') {
+                        loadClientes();
+                    }
+
+                    // Mostra feedback de sucesso
+                    const fb = document.getElementById('ficha-feedback-save');
+                    if (fb) {
+                        fb.style.display = 'flex';
+                        setTimeout(() => { fb.style.display = 'none'; }, 3000);
+                    }
+
+                    // Update header in real time (best effort)
+                    const elNome = document.getElementById('ficha-aluno-nome');
+                    if (elNome) elNome.innerText = document.getElementById('ficha-ipt-email').value.split('@')[0] || c.nome;
+                    const elTelLocal = document.getElementById('ficha-aluno-telefone');
+                    if (elTelLocal) elTelLocal.innerText = document.getElementById('ficha-ipt-telefone').value;
+
+                } catch (e) {
+                    alert("Erro ao salvar no banco: " + e.message);
+                } finally {
+                    btnFichaSalvar.innerHTML = oldText;
+                    btnFichaSalvar.style.opacity = '1';
+                }
+            };
+        }
+
+        // Clock header dinamico
+        const clockData = document.getElementById('ficha-aluno-header-date');
+        if (clockData) {
+            const d = new Date();
+            const dias = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+            const dateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+            const timeStr = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+            clockData.innerText = `${dias[d.getDay()]}, ${dateStr} - ${timeStr}`;
+        }
     };
 
     // Close logic for new profile slide 
@@ -221,8 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             const over = e.target.closest('.slide-over-overlay');
             if (over) {
-                 over.classList.remove('open');
-                 setTimeout(() => over.classList.add('hidden-overlay'), 300);
+                over.classList.remove('open');
+                setTimeout(() => over.classList.add('hidden-overlay'), 300);
             }
         });
     });
@@ -238,24 +361,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const tr = document.createElement('tr');
         tr.className = 'crm-row';
         tr.style.cssText = 'border-bottom: 1px solid var(--border-soft); cursor: pointer; animation: fadeIn 0.4s ease-out;';
-        
+
         const nomeParam = encodeURIComponent(c.nome || 'Sem Nome');
         const cStr = encodeURIComponent(JSON.stringify(c));
-        
+
         tr.addEventListener('click', (e) => {
             if (!e.target.closest('.btn-icon')) {
                 window.verPerfilCompleto(cStr);
             }
         });
-        
+
+        const savedPic = localStorage.getItem(`movia_aluno_avatar_${c.id}`);
+        const savedMat = localStorage.getItem(`movia_aluno_matricula_${c.id}`) || c.id || '--';
+        const avatarSrc = savedPic ? savedPic : `https://ui-avatars.com/api/?name=${nomeParam}&background=10B981&color=fff&size=40`;
+
+        let ageStr = '--';
+        if (c.data_nascimento) {
+            if (c.data_nascimento.includes('-')) {
+                const parts = c.data_nascimento.split('-');
+                if (parts[0].length === 4) {
+                    ageStr = (new Date().getFullYear() - parseInt(parts[0])) + ' anos';
+                }
+            } else if (c.data_nascimento.length >= 8) {
+                const yr = c.data_nascimento.substring(4);
+                ageStr = (new Date().getFullYear() - parseInt(yr)) + ' anos';
+            }
+        }
+
         tr.innerHTML = `
             <td style="padding: 1rem 2rem;">
                 <div style="display:flex; align-items:center; gap: 14px;">
-                    <img src="https://ui-avatars.com/api/?name=${nomeParam}&background=10B981&color=fff&size=40" style="width:40px; height:40px; border-radius:12px;">
-                    <div style="display:flex; flex-direction:column; gap:2px;">
+                    <img src="${avatarSrc}" style="width:40px; height:40px; border-radius:12px; object-fit:cover;">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
                         <div style="font-weight: 600; font-size: 0.95rem; color: var(--dark);">${c.nome || 'Sem Nome'}</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; align-items:center; gap:4px; margin-top:2px;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; align-items:center; gap:6px;">
                             <span style="background: ${c.status === 'Inativo' ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)'}; color: ${c.status === 'Inativo' ? 'var(--danger)' : 'var(--success)'}; padding: 2px 8px; border-radius: 99px; font-weight:700;">${c.status || 'Ativo'}</span>
+                            <span style="color:var(--text-lighter); font-weight:600;"><i data-lucide="hash" style="width:10px; display:inline-block; vertical-align:middle;"></i> Matrícula: ${savedMat}</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight:500;">
+                            Idade: <span style="color:var(--dark); font-weight:600;">${ageStr}</span>
                         </div>
                     </div>
                 </div>
@@ -282,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </td>
         `;
-        
+
         tbody.insertBefore(tr, tbody.firstChild);
         return tr;
     };
@@ -291,14 +435,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!supabase) return;
         try {
             const tbody = document.querySelector('table tbody');
-            
+
             const { data: clientes, error } = await supabase.from('alunos').select('*').order('created_at', { ascending: true });
-            
+
             if (error) throw error;
-            
+
             if (clientes && clientes.length > 0) {
                 if (tbody) tbody.innerHTML = '';
-                
+
                 clientes.forEach(c => {
                     renderClienteRow(c);
                 });
@@ -312,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const today = new Date();
                     const monthsNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
                     let labels = [];
-                    for(let i = 5; i >= 0; i--) {
+                    for (let i = 5; i >= 0; i--) {
                         let d = new Date(today.getFullYear(), today.getMonth() - i, 1);
                         labels.push(monthsNames[d.getMonth()]);
                     }
@@ -325,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             counts[5 - monthDiff]++;
                         }
                     });
-                    
+
                     window.growthChartInstance.data.datasets[0].data = counts;
                     window.growthChartInstance.update();
                 }
@@ -363,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn("Dica de Banco: Tabela alunos não acessível ainda.", err);
         }
     };
-    
+
     // Iniciar carregamento imediatamente
     loadClientes();
     // 2. SPA Sidebar Navigation Logic
@@ -378,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = item.dataset.target;
-            
+
             navItems.forEach(nav => nav.classList.remove('active'));
             if (dropdownTrigger) dropdownTrigger.classList.remove('active');
             dropdownSubItems.forEach(sub => sub.classList.remove('active'));
@@ -388,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('movia_last_tab', targetId);
             const targetView = document.getElementById('view-' + targetId);
             if (targetView) targetView.classList.remove('hidden');
-            
+
             const breadcrumbCurrent = document.querySelector('.breadcrumb span');
             if (breadcrumbCurrent) {
                 const labelElement = item.querySelector('.nav-label');
@@ -396,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     breadcrumbCurrent.innerText = labelElement.innerText;
                 }
             }
-            
+
             if (targetId === 'agenda' && typeof window.renderCalendar === 'function') {
                 const subAgenda = document.getElementById('btn-sub-agenda');
                 if (subAgenda && subAgenda.classList.contains('active')) {
@@ -434,13 +578,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             subItem.classList.add('active');
             if (dropdownTrigger) dropdownTrigger.classList.add('active');
-            
+
             const targetView = document.getElementById('view-' + targetId);
             if (targetView) targetView.classList.remove('hidden');
 
             const breadcrumbCurrent = document.querySelector('.breadcrumb span');
             if (breadcrumbCurrent) {
-                breadcrumbCurrent.innerText = targetId === 'integracao-wellhub' ? 'Integração Wellhub' : 'Integração TotalPass';
+                let text = '';
+                if (targetId === 'integracao-wellhub') text = 'Integração Wellhub';
+                if (targetId === 'integracao-totalpass') text = 'Integração TotalPass';
+                if (targetId === 'integracao-instagram') text = 'Integração Instagram';
+                breadcrumbCurrent.innerText = text;
             }
         });
     });
@@ -462,16 +610,16 @@ document.addEventListener('DOMContentLoaded', () => {
         novoBtn.addEventListener('click', () => {
             const title = slideOver.querySelector('h2');
             if (title) title.innerText = 'Novo Cadastro';
-            
+
             const btnSalvar = document.getElementById('btn-registar-aluno');
             if (btnSalvar) delete btnSalvar.dataset.editId;
-            
+
             ['ipt-nome', 'ipt-telefone', 'ipt-email', 'ipt-valor', 'ipt-inicio', 'ipt-nascimento', 'ipt-cpf', 'ipt-endereco', 'ipt-emergencia', 'ipt-vencimento', 'ipt-instrutor', 'ipt-saude'].forEach(id => {
                 const el = document.getElementById(id);
-                if(el) el.value = '';
+                if (el) el.value = '';
             });
             const opt = document.getElementById('ipt-modalidade');
-            if(opt) opt.value = '';
+            if (opt) opt.value = '';
 
             slideOver.classList.remove('hidden-overlay');
             setTimeout(() => { slideOver.classList.add('open'); }, 10);
@@ -495,28 +643,28 @@ document.addEventListener('DOMContentLoaded', () => {
         btnRegistrar.addEventListener('click', async () => {
             // Coletar todos os dados
             const getVal = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-            
+
             let vlrRaw = getVal('ipt-valor');
             let valorFloat = vlrRaw ? parseFloat(vlrRaw.replace(/\./g, '').replace(',', '.')) : null;
 
             const payload = {
-                nome: getVal('ipt-nome') || 'Novo Cliente', 
-                telefone: getVal('ipt-telefone'), 
+                nome: getVal('ipt-nome') || 'Novo Cliente',
+                telefone: getVal('ipt-telefone'),
                 plano: getVal('ipt-modalidade') || '',
-                data_nascimento: getVal('ipt-nascimento'), 
-                cpf: getVal('ipt-cpf'), 
+                data_nascimento: getVal('ipt-nascimento'),
+                cpf: getVal('ipt-cpf'),
                 email: getVal('ipt-email'),
-                endereco: getVal('ipt-endereco'), 
+                endereco: getVal('ipt-endereco'),
                 contato_emergencia: getVal('ipt-emergencia'),
-                data_inicio: getVal('ipt-inicio'), 
+                data_inicio: getVal('ipt-inicio'),
                 modalidade_pagamento: getVal('ipt-pagamento') || 'Mensal',
-                valor_ciclo: valorFloat, 
+                valor_ciclo: valorFloat,
                 dia_vencimento: getVal('ipt-vencimento'),
-                instrutor: getVal('ipt-instrutor'), 
+                instrutor: getVal('ipt-instrutor'),
                 observacoes_saude: getVal('ipt-saude'),
                 status: getVal('ipt-status') || 'Ativo'
             };
-            
+
             const btnOriginalText = btnRegistrar.innerHTML;
             btnRegistrar.innerHTML = 'Salvando...';
             btnRegistrar.style.opacity = '0.7';
@@ -576,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Limpar campos
                 ['ipt-nome', 'ipt-telefone', 'ipt-email', 'ipt-valor', 'ipt-inicio'].forEach(id => {
                     const el = document.getElementById(id);
-                    if(el) el.value = '';
+                    if (el) el.value = '';
                 });
                 btnRegistrar.innerHTML = btnOriginalText;
                 btnRegistrar.style.background = 'var(--primary)';
@@ -612,7 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         bodyFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' },
                         displayColors: false,
                         callbacks: {
-                            label: function(context) { return context.raw + ' alunos'; }
+                            label: function (context) { return context.raw + ' alunos'; }
                         }
                     }
                 },
@@ -620,12 +768,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     y: {
                         beginAtZero: true,
                         grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
-                        border: { display:false },
+                        border: { display: false },
                         ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#9CA3AF', padding: 10 }
                     },
                     x: {
                         grid: { display: false, drawBorder: false },
-                        border: { display:false },
+                        border: { display: false },
                         ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#9CA3AF', padding: 10 }
                     }
                 },
@@ -650,15 +798,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnImportMenu && importSlide) {
         btnImportMenu.addEventListener('click', () => {
-             // Reset UI
-             importState1.style.display = 'block';
-             importState2.style.display = 'none';
-             btnExecutarImport.style.display = 'none';
-             if(uploader) uploader.value = '';
-             importPayloadData = [];
-             
-             importSlide.classList.remove('hidden-overlay');
-             setTimeout(() => importSlide.classList.add('open'), 10);
+            // Reset UI
+            importState1.style.display = 'block';
+            importState2.style.display = 'none';
+            btnExecutarImport.style.display = 'none';
+            if (uploader) uploader.value = '';
+            importPayloadData = [];
+
+            importSlide.classList.remove('hidden-overlay');
+            setTimeout(() => importSlide.classList.add('open'), 10);
         });
     }
 
@@ -688,14 +836,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
                     const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
+
                     importPayloadData = [];
                     previewTbody.innerHTML = '';
 
                     for (let i = 0; i < rows.length; i++) {
                         const cols = rows[i];
                         if (!cols || cols.length === 0) continue;
-                        
+
                         const str0 = String(cols[0] || '').trim();
                         if (!str0 || str0.toLowerCase().includes('nome') || str0.toLowerCase().includes('cliente')) continue;
 
@@ -703,14 +851,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         let parsedPhone = '';
 
                         if (cols.length > 1) {
-                           for (let j = 1; j < cols.length; j++) {
-                               let cand = String(cols[j] || '').trim();
-                               if (cand.replace(/\D/g, '').length >= 8 && !cand.includes('@')) {
-                                   parsedPhone = cand;
-                                   break;
-                               }
-                           }
-                           if(!parsedPhone) parsedPhone = String(cols[1] || '').trim();
+                            for (let j = 1; j < cols.length; j++) {
+                                let cand = String(cols[j] || '').trim();
+                                if (cand.replace(/\D/g, '').length >= 8 && !cand.includes('@')) {
+                                    parsedPhone = cand;
+                                    break;
+                                }
+                            }
+                            if (!parsedPhone) parsedPhone = String(cols[1] || '').trim();
                         }
 
                         const payload = {
@@ -721,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             modalidade_pagamento: 'Mensal'
                         };
                         importPayloadData.push(payload);
-                        
+
                         // Renderiza no preview
                         const tr = document.createElement('tr');
                         tr.style.cssText = 'border-bottom:1px solid var(--border-soft);';
@@ -749,7 +897,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     btnTriggerFile.innerHTML = oldHtml;
                     btnTriggerFile.style.pointerEvents = 'auto';
                     uploader.value = '';
-                    if(window.lucide) window.lucide.createIcons();
+                    if (window.lucide) window.lucide.createIcons();
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -758,25 +906,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnExecutarImport) {
         btnExecutarImport.addEventListener('click', async () => {
-            if(!importPayloadData.length) return;
-            
+            if (!importPayloadData.length) return;
+
             const originalContent = btnExecutarImport.innerHTML;
             btnExecutarImport.innerHTML = 'Salvando Lote...';
             btnExecutarImport.style.opacity = '0.5';
             btnExecutarImport.style.pointerEvents = 'none';
-            
+
             try {
-                if(supabase) {
+                if (supabase) {
                     const { error } = await supabase.from('alunos').insert(importPayloadData);
                     if (error) throw error;
-                    
+
                     importSlide.classList.remove('open');
                     setTimeout(() => importSlide.classList.add('hidden-overlay'), 300);
-                    
+
                     alert(`Sucesso! ${importPayloadData.length} clientes carregados para a base!`);
                     await loadClientes();
                 }
-            } catch(e) {
+            } catch (e) {
                 alert("Erro ao importar lote: " + e.message);
                 console.error(e);
             } finally {
@@ -801,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Máscara de Moeda (Real time formatter)
     iptFinValor.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, ""); // remove none digits
-        if(value === "") {
+        if (value === "") {
             e.target.value = "";
             return;
         }
@@ -812,14 +960,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formatMoney = (val) => Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-    const openFinSlide = (tipo) => {
+    window.openFinSlide = (tipo) => {
         iptFinTipo.value = tipo;
         finModalTitle.innerHTML = tipo === 'receita' ? '<i data-lucide="arrow-up-circle" style="color:#10B981; width:20px; display:inline-block; vertical-align:middle; margin-right:6px;"></i> Nova Entrada' : '<i data-lucide="arrow-down-circle" style="color:#EF4444; width:20px; display:inline-block; vertical-align:middle; margin-right:6px;"></i> Nova Saída';
-        
-        selectFinCat.innerHTML = tipo === 'receita' 
+
+        selectFinCat.innerHTML = tipo === 'receita'
             ? `<option value="Mensalidade">Mensalidade</option><option value="Avulso">Plano Avulso / Produto</option><option value="Outros">Outros</option>`
             : `<option value="Aluguel">Aluguel / Condomínio</option><option value="Impostos">Impostos / Taxas</option><option value="Operacional">Custo Operacional</option><option value="Salarios">Salários / Terceiros</option><option value="Equipamentos">Equipamentos</option><option value="AguaLuz">Água / Luz / Internet</option><option value="Outros">Outros</option>`;
-            
+
         const lblPessoa = document.getElementById('lbl-fin-pessoa');
         const iptPessoa = document.getElementById('ipt-fin-pessoa');
         if (lblPessoa && iptPessoa) {
@@ -827,7 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
             iptPessoa.placeholder = tipo === 'receita' ? 'Ex: Rômulo, Maria, Aluno...' : 'Ex: CPFL, Imobiliária, Loja...';
         }
 
-            
+
         document.getElementById('ipt-fin-valor').value = '';
         document.getElementById('ipt-fin-desc').value = '';
         document.getElementById('ipt-fin-pessoa').value = '';
@@ -837,22 +985,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reset the segmented control visually
         document.querySelectorAll('.status-btn').forEach(b => {
-             b.style.background = 'transparent';
-             b.style.boxShadow = 'none';
-             b.style.color = '#6B7280';
-             b.style.fontWeight = '600';
+            b.style.background = 'transparent';
+            b.style.boxShadow = 'none';
+            b.style.color = '#6B7280';
+            b.style.fontWeight = '600';
         });
         const bPago = document.querySelector('.status-btn[data-val="Pago"]');
-        if(bPago) {
-             bPago.style.background = 'white';
-             bPago.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-             bPago.style.color = '#10B981';
-             bPago.style.fontWeight = '700';
+        if (bPago) {
+            bPago.style.background = 'white';
+            bPago.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+            bPago.style.color = '#10B981';
+            bPago.style.fontWeight = '700';
         }
 
         slideFinanceiro.classList.remove('hidden-overlay');
         setTimeout(() => slideFinanceiro.classList.add('open'), 10);
-        if(window.lucide) window.lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
     };
 
     if (btnNovaReceita) btnNovaReceita.addEventListener('click', () => openFinSlide('receita'));
@@ -873,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tgt.style.background = 'white';
             tgt.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
             tgt.style.fontWeight = '700';
-            
+
             const val = tgt.getAttribute('data-val');
             iptFinStatus.value = val;
 
@@ -896,13 +1044,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const { data, error } = await supabase.from('financeiro')
                 .select('*')
                 .order('data_lancamento', { ascending: false });
-            
+
             if (error) {
-                if(error.message.includes("relation") || error.code === '42P01') {
+                if (error.message.includes("relation") || error.code === '42P01') {
                     console.warn("Tabela financeiro precisa ser criada no Supabase");
                     document.getElementById('empty-state-financeiro').style.display = 'table-row';
                     document.getElementById('empty-state-financeiro').innerHTML = `<td colspan="6" style="padding: 4rem 2rem; text-align: center; color: var(--text-muted);"><div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 8px;"><i data-lucide="database" style="width:48px; height:48px; opacity:0.15; color:var(--dark);"></i><h3 style="color:var(--dark); font-weight:600; margin-top:8px;">Aviso Técnico (Supabase)</h3><p style="font-size:0.85rem;">Necessário rodar as migrations SQL para habilitar a tabela "financeiro". Crie a tabela na cloud.</p></div></td>`;
-                    if(window.lucide) window.lucide.createIcons();
+                    if (window.lucide) window.lucide.createIcons();
                     return;
                 }
                 throw error;
@@ -910,19 +1058,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const tbody = document.querySelector('#table-financeiro tbody');
             document.querySelectorAll('.fin-row, .empty-fin-msg').forEach(el => el.remove());
-            
+
             if (!data || data.length === 0) {
                 document.getElementById('empty-state-financeiro').style.display = 'table-row';
                 document.getElementById('kpi-fin-entradas').textContent = 'R$ 0,00';
                 document.getElementById('kpi-fin-saidas').textContent = 'R$ 0,00';
                 document.getElementById('kpi-fin-saldo').textContent = 'R$ 0,00';
-                
+
                 const ultimasLista = document.getElementById('list-ultimas-entradas');
-                if(ultimasLista) {
+                if (ultimasLista) {
                     ultimasLista.innerHTML = `<div style="padding: 3.5rem 1rem; text-align: center; color: var(--text-muted);"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 8px; opacity: 0.5;"></i><p style="font-size: 0.85rem;">Nenhuma movimentação registrada.</p></div>`;
                 }
                 const kpiPendentes = document.getElementById('kpi-pendentes');
-                if(kpiPendentes) kpiPendentes.textContent = "0";
+                if (kpiPendentes) kpiPendentes.textContent = "0";
 
                 return;
             }
@@ -936,14 +1084,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tr = document.createElement('tr');
                 tr.className = 'fin-row';
                 tr.style.cssText = 'border-bottom:1px solid var(--border-soft);';
-                
-                const val = parseFloat(t.valor || 0);
-                
-                // Contabilidade para Atualizar KPIs Superiores (do Módulo Financeiro e do Painel Geral)
-                if(t.tipo === 'receita' && t.status !== 'Não Pago') entradas += val;
-                if(t.tipo === 'despesa') saidas += val;
 
-                const tipoBadge = t.tipo === 'receita' 
+                const val = parseFloat(t.valor || 0);
+
+                // Contabilidade para Atualizar KPIs Superiores (do Módulo Financeiro e do Painel Geral)
+                if (t.tipo === 'receita' && t.status !== 'Não Pago') entradas += val;
+                if (t.tipo === 'despesa') saidas += val;
+
+                const tipoBadge = t.tipo === 'receita'
                     ? `<span style="background:rgba(16,185,129,0.1); color:#10B981; padding:2px 8px; border-radius:99px; font-size:0.65rem; font-weight:700;"><i data-lucide="arrow-up" style="width:10px; display:inline; margin-right:2px;"></i> Entrada</span>`
                     : `<span style="background:rgba(239,68,68,0.1); color:#EF4444; padding:2px 8px; border-radius:99px; font-size:0.65rem; font-weight:700;"><i data-lucide="arrow-down" style="width:10px; display:inline; margin-right:2px;"></i> Saída</span>`;
 
@@ -964,7 +1112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="color:var(--text-muted); font-size:0.8rem; background:#F1F5F9; padding:4px 8px; border-radius:6px;">${t.categoria || '-'}</span>
                         ${formaStr}
                     </td>
-                    <td style="padding:1rem 1.5rem; font-size:0.95rem; font-weight:700; color:${t.tipo==='receita'?'#10B981':'#EF4444'};">${formatMoney(t.valor)}</td>
+                    <td style="padding:1rem 1.5rem; font-size:0.95rem; font-weight:700; color:${t.tipo === 'receita' ? '#10B981' : '#EF4444'};">${formatMoney(t.valor)}</td>
                     <td style="padding:1rem 1.5rem; display:flex; flex-direction:column; gap:4px; align-items:flex-start;">
                         ${tipoBadge}
                         ${statusBadge}
@@ -982,17 +1130,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // --- Atualizar Dashboard Global ---
             const kpiReceita = document.getElementById('kpi-receita');
-            if(kpiReceita) kpiReceita.textContent = formatMoney(entradas);
+            if (kpiReceita) kpiReceita.textContent = formatMoney(entradas);
 
             const kpiSaidasGlobal = document.getElementById('kpi-saidas');
-            if(kpiSaidasGlobal) kpiSaidasGlobal.textContent = formatMoney(saidas);
-            
+            if (kpiSaidasGlobal) kpiSaidasGlobal.textContent = formatMoney(saidas);
+
             const pendentesCount = data.filter(r => r.status === 'Não Pago').length;
             const kpiPendentes = document.getElementById('kpi-pendentes');
-            if(kpiPendentes) kpiPendentes.textContent = pendentesCount.toString();
-            
+            if (kpiPendentes) kpiPendentes.textContent = pendentesCount.toString();
+
             const ultimasLista = document.getElementById('list-ultimas-entradas');
-            if(ultimasLista) {
+            if (ultimasLista) {
                 ultimasLista.innerHTML = '';
                 const ultimos5 = data.slice(0, 4); // Mostra os top 4
                 ultimos5.forEach(tx => {
@@ -1002,7 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const corValor = isReceita ? 'var(--success)' : 'var(--text-primary)';
                     const prefix = isReceita ? '+' : '-';
                     const situacaoBadge = tx.status === 'Não Pago' ? `<span style="font-size:0.65rem; color:#EF4444; background:#FEF2F2; padding:1px 4px; border-radius:4px; margin-left:6px; font-weight:600;">Não Pago</span>` : '';
-                    
+
                     ultimasLista.innerHTML += `
                     <div style="display:flex; justify-content:space-between; padding: 1rem 0; border-bottom:1px solid var(--border-soft);">
                         <div style="display:flex; gap:12px; align-items:center;">
@@ -1024,8 +1172,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
                 });
             }
-            
-            if(window.lucide) window.lucide.createIcons();
+
+            if (window.lucide) window.lucide.createIcons();
 
         } catch (err) {
             console.error("Erro Financeiro:", err);
@@ -1033,15 +1181,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deletarTransacao = async (id, el) => {
-        if(!confirm('Deseja cancelar esta transação permanentemente?')) return;
+        if (!confirm('Deseja cancelar esta transação permanentemente?')) return;
         el.style.opacity = '0.3';
         el.style.pointerEvents = 'none';
-        
+
         try {
             const { error } = await supabase.from('financeiro').delete().eq('id', id);
-            if(error) throw error;
+            if (error) throw error;
             await loadFinanceiro();
-        } catch(e) {
+        } catch (e) {
             alert("Erro ao excluir transação no servidor.");
             el.style.opacity = '1';
             el.style.pointerEvents = 'auto';
@@ -1061,7 +1209,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Preencha um valor válido!');
                 return;
             }
-            
+
             const payload = {
                 tipo: iptFinTipo.value,
                 valor: valorFloat,
@@ -1079,10 +1227,10 @@ document.addEventListener('DOMContentLoaded', () => {
             btnSalvarFin.style.opacity = '0.6';
 
             try {
-                if(supabase) {
+                if (supabase) {
                     const { error } = await supabase.from('financeiro').insert([payload]);
                     if (error) throw error;
-                    
+
                     slideFinanceiro.classList.remove('open');
                     setTimeout(() => slideFinanceiro.classList.add('hidden-overlay'), 300);
                     await loadFinanceiro();
@@ -1100,12 +1248,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nav-icons integration to run loads
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
-            if(item.dataset.target === 'financeiro') loadFinanceiro();
+            if (item.dataset.target === 'financeiro') loadFinanceiro();
         });
     });
 
     // Iniciar dados financeiros p/ o Dashboard de Início
-    if(typeof window.loadFinanceiro === 'function') {
+    if (typeof window.loadFinanceiro === 'function') {
         window.loadFinanceiro();
     }
 
@@ -1115,9 +1263,33 @@ document.addEventListener('DOMContentLoaded', () => {
     window.currentAgendaFilterService = 'todos';
     let currentCalDate = new Date();
     const slideAgenda = document.getElementById('slide-over-agenda'); // Mantenha no dom pra erro n aparecer
-    
+
     // Funções de formatação de data ISO local "YYYY-MM-DD"
     const getLocalISO = (d) => new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+
+    // Toggle dos Modos de Visualização
+    document.querySelectorAll('.mode-view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.mode-view-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.dataset.mode === 'week') b.style.color = '#4B5563';
+                b.style.background = b.dataset.mode === 'aniversariantes' ? '#FFF7ED' : '#F9FAFB';
+                b.style.color = b.dataset.mode === 'aniversariantes' ? '#EA580C' : '#4B5563';
+            });
+            const tgt = e.currentTarget;
+            tgt.classList.add('active');
+            if (tgt.dataset.mode === 'aniversariantes') {
+                tgt.style.background = '#FFF7ED';
+                tgt.style.color = '#EA580C';
+                tgt.style.fontWeight = '700';
+            } else {
+                tgt.style.background = '#E0F2FE';
+                tgt.style.color = '#0284C7';
+            }
+            window.currentAgendaMode = tgt.dataset.mode;
+            window.renderCalendar();
+        });
+    });
 
     window.renderCalendar = async () => {
         const viewArea = document.getElementById('calendar-view-area');
@@ -1127,17 +1299,17 @@ document.addEventListener('DOMContentLoaded', () => {
         viewArea.innerHTML = '';
 
         let todasAnotacoes = [];
-        try { todasAnotacoes = JSON.parse(localStorage.getItem('movia_agenda') || '[]'); } catch(e){}
+        try { todasAnotacoes = JSON.parse(localStorage.getItem('movia_agenda') || '[]'); } catch (e) { }
 
-        if(supabase) {
+        if (supabase) {
             try {
-                const {data} = await supabase.from('agenda').select('*');
-                if(data && data.length > 0) {
+                const { data } = await supabase.from('agenda').select('*');
+                if (data && data.length > 0) {
                     data.forEach(remota => {
                         let parsedCor = '#06b6d4';
                         let parsedObs = '';
                         let parsedProf = 'Geral / Principal';
-                        
+
                         if (remota.texto && remota.texto.trim().startsWith('{')) {
                             try {
                                 const parsed = JSON.parse(remota.texto);
@@ -1147,14 +1319,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 parsedCor = parsed.cor || parsedCor;
                                 parsedObs = parsed.observacao || '';
                                 parsedProf = parsed.profissional || parsedProf;
-                            } catch(e) {}
+                            } catch (e) { }
                         }
-                        
-                        const existeIndex = todasAnotacoes.findIndex(loc => 
-                            loc.id == remota.id || 
+
+                        const existeIndex = todasAnotacoes.findIndex(loc =>
+                            loc.id == remota.id ||
                             (loc.data_evento === remota.data_evento && loc.texto === cleanText && loc.hora_inicio === horaVal)
                         );
-                        if(existeIndex === -1) {
+                        if (existeIndex === -1) {
                             todasAnotacoes.push({
                                 id: remota.id,
                                 data_evento: remota.data_evento,
@@ -1175,8 +1347,49 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }
-            } catch(e) {}
+            } catch (e) { }
         }
+
+        // Injeção de Aniversários como Eventos e Confetes
+        try {
+            let lsAlunos = [];
+            try { lsAlunos = JSON.parse(localStorage.getItem('movia_alunos') || '[]'); } catch (e) { }
+            const todayISO = getLocalISO(new Date());
+            lsAlunos.forEach(al => {
+                if (al.data_nascimento && al.data_nascimento.length >= 5) {
+                    let bMonth, bDay;
+                    if (al.data_nascimento.includes('-')) {
+                        const p = al.data_nascimento.split('-');
+                        if (p.length === 3) { bMonth = p[1]; bDay = p[2]; }
+                    } else if (al.data_nascimento.includes('/')) {
+                        const p = al.data_nascimento.split('/');
+                        if (p.length === 3) { bDay = p[0]; bMonth = p[1]; }
+                    } else if (al.data_nascimento.length === 8) {
+                        bDay = al.data_nascimento.substring(0, 2);
+                        bMonth = al.data_nascimento.substring(2, 4);
+                    }
+                    if (bMonth && bDay) {
+                        const evtDate = `${currentCalDate.getFullYear()}-${bMonth}-${bDay}`;
+                        todasAnotacoes.push({
+                            id: 'bday_' + al.nome,
+                            localId: 'bday_' + al.nome,
+                            data_evento: evtDate,
+                            texto: `🎂 Aniv. ${al.nome}`,
+                            hora_inicio: '08:00',
+                            servico: 'Aniversariante',
+                            cor: '#EA580C',
+                            observacao: 'Envie uma mensagem de parabéns!',
+                            profissional: '',
+                            isBirthday: true
+                        });
+                        if (evtDate === todayISO && !window.confettiFiredToday && typeof confetti === 'function') {
+                            window.confettiFiredToday = true;
+                            setTimeout(() => confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }), 700);
+                        }
+                    }
+                }
+            });
+        } catch (e) { console.error('Erro ao injetar aniversariantes', e); }
 
         // Filtros
         let filteredNotes = todasAnotacoes;
@@ -1198,8 +1411,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTimelineView(viewArea, monthTitle, filteredNotes, 1);
         } else if (currentAgendaMode === 'list') {
             renderListView(viewArea, monthTitle, filteredNotes);
+        } else if (currentAgendaMode === 'aniversariantes') {
+            renderAniversariantesView(viewArea, monthTitle, filteredNotes);
         }
-        
+
         if (window.lucide) window.lucide.createIcons();
     };
 
@@ -1238,7 +1453,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const cell = document.createElement('div');
             cell.style.cssText = `background: ${isCurrentMonth ? '#fff' : '#FAFAFA'}; min-height: 110px; padding: 8px; display:flex; flex-direction:column; cursor:pointer; transition:background 0.2s; position:relative; overflow:hidden;`;
-            cell.onmouseover = () => { if(isCurrentMonth) cell.style.background = '#F0F9FF'; };
+            cell.onmouseover = () => { if (isCurrentMonth) cell.style.background = '#F0F9FF'; };
             cell.onmouseout = () => { cell.style.background = isCurrentMonth ? '#fff' : '#FAFAFA'; };
 
             const dayNum = document.createElement('div');
@@ -1254,7 +1469,7 @@ document.addEventListener('DOMContentLoaded', () => {
             notesContainer.style.cssText = 'flex:1; margin-top:8px; display:flex; flex-direction:column; gap:4px; overflow-y:auto;';
 
             cell.onclick = (e) => {
-                if(e.target.closest('.note-bubble')) return;
+                if (e.target.closest('.note-bubble')) return;
                 window.abrirModalNovaAula({ data_evento: dateStr });
             };
 
@@ -1269,12 +1484,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 bbl.dataset.id = note.id || '';
                 bbl.dataset.localId = note.localId || '';
                 bbl.style.cssText = 'background: #FEF9C3; border-left:3px solid #FACC15; padding: 4px 6px; font-size: 0.68rem; color: #854D0E; font-weight: 600; border-radius: 0 4px 4px 4px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.02); margin-bottom: 2px;';
-                
+
                 let servicoLabel = note.servico ? `[${note.servico}] ` : '';
                 let horaLabel = note.hora_inicio ? `${note.hora_inicio} ` : '';
                 bbl.innerText = `${horaLabel}${servicoLabel}${note.texto}`;
                 bbl.title = `${horaLabel}${servicoLabel}${note.texto}`;
-                
+
                 bbl.onclick = (e) => {
                     e.stopPropagation();
                     window.abrirModalNovaAula(note);
@@ -1290,14 +1505,14 @@ document.addEventListener('DOMContentLoaded', () => {
         viewArea.innerHTML = ''; // Evitar duplicação da área de visualização
         const ptBRMonths = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
         const ptBRDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-        
+
         let startDt = new Date(currentCalDate);
         if (numDays === 7) {
             startDt.setDate(startDt.getDate() - startDt.getDay());
         }
 
         const datesOfWeek = [];
-        for(let i=0; i< (numDays === 1 ? 1 : 7); i++) {
+        for (let i = 0; i < (numDays === 1 ? 1 : 7); i++) {
             let nextDay = new Date(startDt);
             nextDay.setDate(startDt.getDate() + i);
             datesOfWeek.push(nextDay);
@@ -1310,13 +1525,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const wrapper = document.createElement('div');
         wrapper.className = 'custom-scrollbar';
         wrapper.style.cssText = 'flex:1; width: 100%; height: 100%; overflow:auto; background:white; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 3px rgba(0,0,0,0.05);';
-        
+
         const table = document.createElement('table');
         table.style.cssText = 'width: 100%; min-width: 800px; border-collapse: collapse; table-layout: fixed;';
 
         const thead = document.createElement('thead');
         const trHead = document.createElement('tr');
-        
+
         const thTime = document.createElement('th');
         thTime.style.cssText = 'width: 70px; background: #F8FAFC; border: 1px solid #CBD5E1; border-top: none; border-left: none; padding: 10px 4px; position: sticky; top: 0; z-index: 10; font-size: 0.75rem; color: #475569;';
         thTime.innerText = 'Horário';
@@ -1333,19 +1548,19 @@ document.addEventListener('DOMContentLoaded', () => {
         table.appendChild(thead);
 
         const tbody = document.createElement('tbody');
-        
+
         const times = [];
-        for(let h=5; h<=21; h++) {
-            times.push(`${h.toString().padStart(2,'0')}:00`);
-            times.push(`${h.toString().padStart(2,'0')}:30`);
+        for (let h = 5; h <= 21; h++) {
+            times.push(`${h.toString().padStart(2, '0')}:00`);
+            times.push(`${h.toString().padStart(2, '0')}:30`);
         }
 
         times.forEach(time => {
             const tr = document.createElement('tr');
-            
+
             const tdTime = document.createElement('td');
             const isFullHour = time.endsWith('00');
-            tdTime.style.cssText = `background: #F8FAFC; border: 1px solid #CBD5E1; border-left: none; text-align: center; padding: 4px; font-weight: ${isFullHour? '700' : '500'}; font-size: ${isFullHour? '0.75rem' : '0.65rem'}; color: ${isFullHour? '#475569' : '#94A3B8'};`;
+            tdTime.style.cssText = `background: #F8FAFC; border: 1px solid #CBD5E1; border-left: none; text-align: center; padding: 4px; font-weight: ${isFullHour ? '700' : '500'}; font-size: ${isFullHour ? '0.75rem' : '0.65rem'}; color: ${isFullHour ? '#475569' : '#94A3B8'};`;
             tdTime.innerText = time;
             tr.appendChild(tdTime);
 
@@ -1353,39 +1568,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dateIso = getLocalISO(dt);
                 const td = document.createElement('td');
                 td.style.cssText = `border: 1px solid ${isFullHour ? '#CBD5E1' : '#E2E8F0'}; cursor: pointer; padding: 3px 4px; vertical-align: top; height: 32px; transition: background 0.1s; background: white;`;
-                
+
                 td.onmouseover = () => td.style.background = '#F1F5F9';
                 td.onmouseout = () => td.style.background = 'white';
 
                 const cellNotes = filteredNotes.filter(n => n.data_evento === dateIso && n.hora_inicio === time);
-                
+
                 if (cellNotes.length > 0) {
                     cellNotes.forEach(note => {
                         const noteDiv = document.createElement('div');
                         // Usando um design extremamente compacto e elegante tipo Excel (borda lateral colorida, fundo muito claro)
                         noteDiv.style.cssText = `font-size: 0.72rem; font-weight: 600; color: #0F172A; border-left: 4px solid ${note.cor || '#0284C7'}; margin-bottom: 3px; padding: 3px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 4px; display:flex; align-items:center; gap:6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);`;
-                        
+
                         // Fake um opacity backgroundColor baseado no HEX
                         const hex = note.cor || '#0284C7';
-                        noteDiv.style.background = `linear-gradient(90deg, ${hex}1A 0%, ${hex}0D 100%)`; 
+                        noteDiv.style.background = `linear-gradient(90deg, ${hex}1A 0%, ${hex}0D 100%)`;
                         // fallback fallback
-                        if(!noteDiv.style.background.includes('gradient')) noteDiv.style.background = '#F1F5F9';
+                        if (!noteDiv.style.background.includes('gradient')) noteDiv.style.background = '#F1F5F9';
 
                         noteDiv.innerHTML = `<span style="opacity:0.8; font-size:0.65rem;">${note.hora_inicio}</span> <span style="flex:1; overflow:hidden; text-overflow:ellipsis;">${note.texto}</span>`;
-                        noteDiv.title = `Cliente: ${note.texto} \nServiço: ${note.servico||'N/A'} \nObs: ${note.observacao||'N/A'}`;
-                        noteDiv.onclick = (e) => { e.stopPropagation(); window.abrirModalNovaAula({...note, isReposicao}); };
-                        
+                        noteDiv.title = `Cliente: ${note.texto} \nServiço: ${note.servico || 'N/A'} \nObs: ${note.observacao || 'N/A'}`;
+                        noteDiv.onclick = (e) => { e.stopPropagation(); window.abrirModalNovaAula({ ...note, isReposicao }); };
+
                         noteDiv.onmouseover = () => { noteDiv.style.filter = 'brightness(0.95)'; };
                         noteDiv.onmouseout = () => { noteDiv.style.filter = 'brightness(1)'; };
 
                         td.appendChild(noteDiv);
                     });
                 }
-                
+
                 td.onclick = (e) => {
-                     if(e.target === td) window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
+                    if (e.target === td) window.abrirModalNovaAula({ data_evento: dateIso, hora_inicio: time, profissional: 'Cadastro de cliente/aluno', cor: isReposicao ? '#f97316' : '#06b6d4', isReposicao });
                 };
-                
+
                 tr.appendChild(td);
             });
             tbody.appendChild(tr);
@@ -1394,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', () => {
         table.appendChild(tbody);
         wrapper.appendChild(table);
         viewArea.appendChild(wrapper);
-        if(window.lucide) window.lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
     }
 
     function renderListView(viewArea, monthTitle, filteredNotes) {
@@ -1402,15 +1617,64 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTimelineView(viewArea, monthTitle, filteredNotes, 1);
     }
 
+    function renderAniversariantesView(viewArea, monthTitle, filteredNotes) {
+        const year = currentCalDate.getFullYear();
+        const month = currentCalDate.getMonth();
+        const ptBRMonths = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        monthTitle.innerHTML = `<i data-lucide="cake" style="color:#EA580C; margin-right:8px; width:20px; display:inline-block; vertical-align:middle;"></i> Aniversariantes de ${ptBRMonths[month]} ${year}`;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'custom-scrollbar fade-in';
+        wrapper.style.cssText = 'flex:1; width: 100%; overflow:auto; background:white; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; align-items: start; align-content: start;';
+
+        const monthStr = (month + 1).toString().padStart(2, '0');
+        const aniversariantesDOMes = filteredNotes.filter(n => n.isBirthday === true && n.data_evento.startsWith(`${year}-${monthStr}`));
+
+        if (aniversariantesDOMes.length === 0) {
+            wrapper.style.display = 'flex';
+            wrapper.style.flexDirection = 'column';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.justifyContent = 'center';
+            wrapper.innerHTML = `<i data-lucide="party-popper" style="width:48px; height:48px; color:#CBD5E1; margin-bottom:1rem;"></i><h4 style="color:var(--dark); font-weight:700;">Nenhum aniversário</h4><p style="color:var(--text-muted); font-size:0.85rem;">Nenhum aluno faz aniversário neste mês ativo.</p>`;
+        } else {
+            aniversariantesDOMes.sort((a, b) => a.data_evento.localeCompare(b.data_evento)).forEach(aniv => {
+                const day = aniv.data_evento.split('-')[2];
+                const parts = aniv.texto.split('Aniv. ');
+                const nome = parts[1] ? parts[1] : aniv.texto;
+                const isToday = aniv.data_evento === getLocalISO(new Date());
+
+                const card = document.createElement('div');
+                card.style.cssText = `background: ${isToday ? '#FFF7ED' : '#F8FAFC'}; border: 1px solid ${isToday ? '#FED7AA' : '#E2E8F0'}; border-radius: 12px; padding: 1rem; display:flex; align-items:center; gap:12px; transition: all 0.2s; cursor:pointer; box-shadow: ${isToday ? '0 4px 15px rgba(234, 88, 12, 0.1)' : '0 1px 2px rgba(0,0,0,0.02)'};`;
+                card.innerHTML = `
+                    <div style="background:${isToday ? '#EA580C' : 'white'}; color:${isToday ? 'white' : '#475569'}; border:1px solid ${isToday ? '#EA580C' : '#E2E8F0'}; width:40px; height:40px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:0.5rem; font-weight:700; text-transform:uppercase; line-height:1;">Dia</span>
+                        <span style="font-size:1rem; font-weight:800; line-height:1; margin-top:2px;">${day}</span>
+                    </div>
+                    <div style="flex:1; overflow:hidden;">
+                        <div style="font-weight:700; font-size:0.9rem; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${nome}</div>
+                        <div style="font-size:0.75rem; color:#64748B; margin-top:2px; display:flex; align-items:center; gap:4px;">${isToday ? '<i data-lucide="cake" style="width:12px; color:#EA580C;"></i> Hoje!' : 'Este mês'}</div>
+                    </div>
+                `;
+                card.onmouseover = () => card.style.transform = 'translateY(-2px)';
+                card.onmouseout = () => card.style.transform = 'none';
+                wrapper.appendChild(card);
+            });
+        }
+
+        viewArea.innerHTML = '';
+        viewArea.appendChild(wrapper);
+        if (window.lucide) window.lucide.createIcons();
+    }
+
     // --- Lógica de Reposições de Aula (Agenda Paralela) ---
     window.renderReposicoes = () => {
         const viewArea = document.getElementById('calendar-reposicao-view-area');
         const monthTitle = document.getElementById('cal-reposicao-month-title');
-        
+
         if (!viewArea || !monthTitle) return;
 
         let reposicoes = [];
-        try { reposicoes = JSON.parse(localStorage.getItem('movia_reposicoes') || '[]'); } catch(e){}
+        try { reposicoes = JSON.parse(localStorage.getItem('movia_reposicoes') || '[]'); } catch (e) { }
 
         // Usa a mesmíssima estrutura de calendário em formato semanal
         renderTimelineView(viewArea, monthTitle, reposicoes, 7, true);
@@ -1434,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', () => {
             containerRepos.style.display = 'none';
             containerAgenda.style.display = 'flex';
             if (filtersRow) filtersRow.style.display = 'flex';
-            
+
             renderCalendar();
         });
 
@@ -1461,7 +1725,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-cal-reposicao-hoje')?.addEventListener('click', () => { currentCalDate = new Date(); window.renderReposicoes(); });
     // Controller events for Calendar
     const btnCalNext = document.getElementById('btn-cal-next');
-    if(btnCalNext) btnCalNext.addEventListener('click', () => {
+    if (btnCalNext) btnCalNext.addEventListener('click', () => {
         if (currentAgendaMode === 'month') {
             currentCalDate.setMonth(currentCalDate.getMonth() + 1);
         } else if (currentAgendaMode === 'week') {
@@ -1473,9 +1737,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderCalendar();
     });
-    
+
     const btnCalPrev = document.getElementById('btn-cal-prev');
-    if(btnCalPrev) btnCalPrev.addEventListener('click', () => {
+    if (btnCalPrev) btnCalPrev.addEventListener('click', () => {
         if (currentAgendaMode === 'month') {
             currentCalDate.setMonth(currentCalDate.getMonth() - 1);
         } else if (currentAgendaMode === 'week') {
@@ -1487,17 +1751,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         renderCalendar();
     });
-    
+
     const btnCalHoje = document.getElementById('btn-cal-hoje');
-    if(btnCalHoje) btnCalHoje.addEventListener('click', () => { currentCalDate = new Date(); renderCalendar(); });
-    
+    if (btnCalHoje) btnCalHoje.addEventListener('click', () => { currentCalDate = new Date(); renderCalendar(); });
+
     const btnNovaNotacaoOld = document.getElementById('btn-nova-anotacao');
     if (btnNovaNotacaoOld) btnNovaNotacaoOld.addEventListener('click', () => {
-        document.getElementById('ipt-agenda-data').value = getLocalISO(new Date());
-        document.getElementById('ipt-agenda-hora').value = '';
-        document.getElementById('ipt-agenda-servico').value = '';
-        document.getElementById('ipt-agenda-texto').value = '';
-        document.getElementById('ipt-agenda-id').value = '';
+        document.getElementById('ipt-anotacao-data').value = getLocalISO(new Date());
+        document.getElementById('ipt-anotacao-hora-ini').value = '';
+        document.getElementById('ipt-anotacao-hora-fim').value = '';
+        document.getElementById('ipt-anotacao-cliente').value = '';
+        document.getElementById('ipt-anotacao-servico').value = '';
+        document.getElementById('ipt-anotacao-profissional').value = '';
+        document.getElementById('ipt-anotacao-observacao').value = '';
+        document.getElementById('ipt-anotacao-id').value = '';
+        document.querySelectorAll('.chk-anotacao-dia').forEach(c => c.checked = false);
+
+        const dataListAnot = document.getElementById('lista-alunos-anotacao');
+        if (dataListAnot && dataListAnot.options.length === 0) {
+            let alunosLoad = [];
+            try {
+                const fromLS = JSON.parse(localStorage.getItem('movia_alunos') || '[]');
+                if (fromLS.length > 0) alunosLoad = fromLS;
+            } catch (e) { }
+            if (alunosLoad.length === 0 && window.cachedAlunos) alunosLoad = window.cachedAlunos;
+            if (alunosLoad.length > 0) {
+                alunosLoad.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a.nome;
+                    dataListAnot.appendChild(opt);
+                });
+            } else if (supabase && typeof supabase !== 'undefined' && supabase.from) {
+                supabase.from('alunos').select('nome').then(({ data }) => {
+                    if (data) {
+                        data.forEach(a => {
+                            const opt = document.createElement('option');
+                            opt.value = a.nome;
+                            dataListAnot.appendChild(opt);
+                        });
+                    }
+                });
+            }
+        }
+
         slideAgenda.classList.remove('hidden-overlay');
         setTimeout(() => slideAgenda.classList.add('open'), 10);
     });
@@ -1508,10 +1804,126 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => slideAgenda.classList.add('hidden-overlay'), 300);
     }));
 
+    // Lógica das cores Anotação
+    const colorBtnsAnot = document.querySelectorAll('.color-picker-anotacao');
+    const iptColorAnot = document.getElementById('ipt-anotacao-color');
+    colorBtnsAnot.forEach(btn => {
+        btn.addEventListener('click', () => {
+            colorBtnsAnot.forEach(b => { b.classList.remove('active'); b.innerHTML = ''; });
+            btn.classList.add('active');
+            btn.innerHTML = '<i data-lucide="check" style="width:14px; height:14px;"></i>';
+            if (iptColorAnot) iptColorAnot.value = btn.dataset.color;
+            if (window.lucide) window.lucide.createIcons();
+        });
+    });
+
+    const btnSalvarAnotacao = document.getElementById('btn-salvar-agenda');
+    if (btnSalvarAnotacao) {
+        btnSalvarAnotacao.addEventListener('click', async () => {
+            const dataTarget = document.getElementById('ipt-anotacao-data').value;
+            const horaIni = document.getElementById('ipt-anotacao-hora-ini').value;
+            const horaFim = document.getElementById('ipt-anotacao-hora-fim').value;
+            const servicoTarget = document.getElementById('ipt-anotacao-servico').value;
+            const prof = document.getElementById('ipt-anotacao-profissional').value;
+            const textoCliente = document.getElementById('ipt-anotacao-cliente').value;
+
+            // Dias da semana S T Q Q S S
+            const diasSelecionados = Array.from(document.querySelectorAll('.chk-anotacao-dia'))
+                .filter(c => c.checked)
+                .map(c => parseInt(c.value));
+
+            const cor = document.getElementById('ipt-anotacao-color').value;
+            const obs = document.getElementById('ipt-anotacao-observacao').value;
+            const id = document.getElementById('ipt-anotacao-id').value;
+
+            if (!textoCliente || !dataTarget) { alert("Preencha ao menos o nome do Cliente (ou grupo) e a Data."); return; }
+
+            const isDbId = id && !id.startsWith('local_');
+            const isEditing = !!id;
+
+            let datasParaSalvar = [];
+            if (!isEditing && diasSelecionados.length > 0) {
+                const dataBase = new Date(dataTarget + 'T12:00:00');
+                for (let week = 0; week < 12; week++) { // Agendar por 12 semanas
+                    diasSelecionados.forEach(diaInt => {
+                        const dayOfBase = dataBase.getDay();
+                        let diff = diaInt - dayOfBase;
+                        let ms = dataBase.getTime() + (week * 7 * 86400000) + (diff * 86400000);
+                        let dt = new Date(ms);
+                        let isoDate = dt.toISOString().split('T')[0];
+                        if (isoDate >= dataTarget) {
+                            datasParaSalvar.push(isoDate);
+                        }
+                    });
+                }
+                datasParaSalvar = Array.from(new Set(datasParaSalvar)).sort();
+            } else {
+                datasParaSalvar.push(dataTarget);
+            }
+
+            const originalBtn = btnSalvarAnotacao.innerHTML;
+            btnSalvarAnotacao.innerHTML = 'Salvando...';
+
+            let agendaLocal = [];
+            try { agendaLocal = JSON.parse(localStorage.getItem('movia_agenda') || '[]'); } catch (e) { }
+
+            let dbInserts = [];
+
+            datasParaSalvar.forEach((dtLoop, index) => {
+                const localIdVal = (isDbId && index === 0) ? ('local_' + id) : (isEditing ? id : 'local_' + Date.now().toString() + '_' + index);
+                const dbTextPayload = {
+                    texto: textoCliente,
+                    hora_inicio: horaIni,
+                    hora_fim: horaFim,
+                    servico: servicoTarget,
+                    profissional: prof,
+                    cor: cor,
+                    observacao: obs,
+                    status: 'Confirmado'
+                };
+                const payloadStr = JSON.stringify(dbTextPayload);
+
+                const memoryPayload = {
+                    ...dbTextPayload,
+                    data_evento: dtLoop,
+                    localId: localIdVal
+                };
+
+                if (isDbId && index === 0) memoryPayload.id = id;
+
+                if (isEditing && index === 0) {
+                    agendaLocal = agendaLocal.map(n => (n.id == id || n.localId == id) ? memoryPayload : n);
+                } else {
+                    agendaLocal.push(memoryPayload);
+                }
+
+                if (supabase && typeof supabase !== 'undefined' && supabase.from) {
+                    if (isDbId && index === 0) {
+                        supabase.from('agenda').update({ data_evento: dtLoop, texto: payloadStr }).eq('id', id).then().catch(() => { });
+                    } else {
+                        dbInserts.push({ data_evento: dtLoop, texto: payloadStr, memId: localIdVal });
+                    }
+                }
+            });
+
+            localStorage.setItem('movia_agenda', JSON.stringify(agendaLocal));
+
+            if (supabase && typeof supabase !== 'undefined' && supabase.from && dbInserts.length > 0) {
+                const onlyBdPush = dbInserts.map(d => ({ data_evento: d.data_evento, texto: d.texto }));
+                supabase.from('agenda').insert(onlyBdPush).select('id, data_evento, texto').then().catch(() => { });
+            }
+
+            slideAgenda.classList.remove('open');
+            setTimeout(() => slideAgenda.classList.add('hidden-overlay'), 300);
+            setTimeout(() => { renderCalendar(); }, 100);
+            btnSalvarAnotacao.innerHTML = originalBtn;
+        });
+    }
+
     // Lógica do Modal Nova Aula
     window.fecharModalNovaAula = () => {
         const modal = document.getElementById('modal-nova-aula');
-        if(modal) modal.style.display = 'none';
+        if (modal) modal.style.display = 'none';
     };
 
     const fecharModalBtns = document.querySelectorAll('.close-modal-nova-aula');
@@ -1529,71 +1941,67 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             btn.innerHTML = '<i data-lucide="check" style="width:14px; height:14px;"></i>';
             iptColor.value = btn.dataset.color;
-            if(window.lucide) window.lucide.createIcons();
+            if (window.lucide) window.lucide.createIcons();
         });
     });
 
     window.abrirModalNovaAula = (dadosPre = {}) => {
         window.currentEditingMode = dadosPre.isReposicao ? 'reposicao' : 'agenda';
-        
+
         const modal = document.getElementById('modal-nova-aula');
         const title = document.getElementById('title-modal-nova-aula');
-        
+
         const selCliente = document.getElementById('ipt-agenda-cliente');
         const selProf = document.getElementById('ipt-agenda-profissional');
-        
-        if (selCliente && selCliente.options.length <= 1) {
-             selCliente.innerHTML = '<option value="">Selecione um cliente...</option>';
-             let alunosLoad = [];
-             try { 
-                 const fromLS = JSON.parse(localStorage.getItem('movia_alunos')||'[]');
-                 if(fromLS.length>0) alunosLoad = fromLS;
-             } catch(e){}
-             if(alunosLoad.length === 0 && window.cachedAlunos) {
-                 alunosLoad = window.cachedAlunos;
-             }
-             if(alunosLoad.length > 0) {
-                 alunosLoad.forEach(a => {
+
+        const dataListCliente = document.getElementById('lista-alunos-agenda');
+        if (dataListCliente && dataListCliente.options.length === 0) {
+            let alunosLoad = [];
+            try {
+                const fromLS = JSON.parse(localStorage.getItem('movia_alunos') || '[]');
+                if (fromLS.length > 0) alunosLoad = fromLS;
+            } catch (e) { }
+            if (alunosLoad.length === 0 && window.cachedAlunos) {
+                alunosLoad = window.cachedAlunos;
+            }
+            if (alunosLoad.length > 0) {
+                alunosLoad.forEach(a => {
                     const opt = document.createElement('option');
                     opt.value = a.nome;
-                    opt.text = a.nome;
-                    selCliente.appendChild(opt);
-                 });
-             } else {
-                 if(supabase) {
-                     supabase.from('alunos').select('nome').then(({data}) => {
-                         if(data) {
-                             data.forEach(a => {
-                                const opt = document.createElement('option');
-                                opt.value = a.nome;
-                                opt.text = a.nome;
-                                selCliente.appendChild(opt);
-                             });
-                         }
-                     });
-                 }
-             }
+                    dataListCliente.appendChild(opt);
+                });
+            } else if (supabase) {
+                supabase.from('alunos').select('nome').then(({ data }) => {
+                    if (data) {
+                        data.forEach(a => {
+                            const opt = document.createElement('option');
+                            opt.value = a.nome;
+                            dataListCliente.appendChild(opt);
+                        });
+                    }
+                });
+            }
         }
-        
+
         // Campo profissional agora é input livre
 
         document.getElementById('ipt-agenda-id').value = dadosPre.id || dadosPre.localId || '';
         document.getElementById('ipt-agenda-data').value = dadosPre.data_evento || '';
         document.getElementById('ipt-agenda-hora-ini').value = dadosPre.hora_inicio || '';
         document.getElementById('ipt-agenda-hora-fim').value = dadosPre.hora_fim || '';
-        if(selProf) selProf.value = (dadosPre.profissional && dadosPre.profissional !== 'Cadastro de cliente/aluno') ? dadosPre.profissional : '';
+        if (selProf) selProf.value = (dadosPre.profissional && dadosPre.profissional !== 'Cadastro de cliente/aluno') ? dadosPre.profissional : '';
         document.getElementById('ipt-agenda-servico').value = dadosPre.servico || '';
         document.getElementById('ipt-agenda-observacao').value = dadosPre.observacao || '';
-        if(selCliente) selCliente.value = dadosPre.texto || ''; 
-        
+        if (selCliente) selCliente.value = dadosPre.texto || '';
+
         // Limpar checkboxes de dias da semana
         document.querySelectorAll('.chk-dia-semana').forEach(c => c.checked = false);
-        
+
         const cor = dadosPre.cor || '#06b6d4';
         iptColor.value = cor;
         colorBtns.forEach(b => { b.innerHTML = ''; b.classList.remove('active'); });
         const cBtn = Array.from(colorBtns).find(b => b.dataset.color === cor);
-        if(cBtn) {
+        if (cBtn) {
             cBtn.classList.add('active');
             cBtn.innerHTML = '<i data-lucide="check" style="width:14px; height:14px;"></i>';
         }
@@ -1606,40 +2014,40 @@ document.addEventListener('DOMContentLoaded', () => {
             title.innerText = 'Nova Aula';
             acoesEdicao.style.display = 'none';
         }
-        
+
         modal.style.display = 'flex';
-        if(window.lucide) window.lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
     };
 
     const btnSalvarModal = document.getElementById('btn-salvar-modal-aula');
     if (btnSalvarModal) {
         btnSalvarModal.addEventListener('click', async () => {
-             const dataTarget = document.getElementById('ipt-agenda-data').value;
-             const horaIni = document.getElementById('ipt-agenda-hora-ini').value;
-             const horaFim = document.getElementById('ipt-agenda-hora-fim').value;
-             const servicoTarget = document.getElementById('ipt-agenda-servico').value;
-             const prof = document.getElementById('ipt-agenda-profissional').value;
-             const textoCliente = document.getElementById('ipt-agenda-cliente').value;
-             
-             // Dias da semana S T Q Q S S
-             const diasSelecionados = Array.from(document.querySelectorAll('.chk-dia-semana'))
-                                            .filter(c => c.checked)
-                                            .map(c => parseInt(c.value));
-                                            
-             const cor = document.getElementById('ipt-agenda-color').value;
-             const obs = document.getElementById('ipt-agenda-observacao').value;
-             const id = document.getElementById('ipt-agenda-id').value;
+            const dataTarget = document.getElementById('ipt-agenda-data').value;
+            const horaIni = document.getElementById('ipt-agenda-hora-ini').value;
+            const horaFim = document.getElementById('ipt-agenda-hora-fim').value;
+            const servicoTarget = document.getElementById('ipt-agenda-servico').value;
+            const prof = document.getElementById('ipt-agenda-profissional').value;
+            const textoCliente = document.getElementById('ipt-agenda-cliente').value;
 
-             if(!textoCliente || !dataTarget) { alert("Selecione o Cliente e a Data da aula."); return; }
+            // Dias da semana S T Q Q S S
+            const diasSelecionados = Array.from(document.querySelectorAll('.chk-dia-semana'))
+                .filter(c => c.checked)
+                .map(c => parseInt(c.value));
 
-             const isDbId = id && !id.startsWith('local_');
-             const isEditing = !!id;
-             
-             let datasParaSalvar = [];
-             if (!isEditing && diasSelecionados.length > 0) {
-                 const dataBase = new Date(dataTarget + 'T12:00:00');
-                 for (let week = 0; week < 12; week++) { // Agendar por 12 semanas (aprox 3 meses)
-                     diasSelecionados.forEach(diaInt => {
+            const cor = document.getElementById('ipt-agenda-color').value;
+            const obs = document.getElementById('ipt-agenda-observacao').value;
+            const id = document.getElementById('ipt-agenda-id').value;
+
+            if (!textoCliente || !dataTarget) { alert("Selecione o Cliente e a Data da aula."); return; }
+
+            const isDbId = id && !id.startsWith('local_');
+            const isEditing = !!id;
+
+            let datasParaSalvar = [];
+            if (!isEditing && diasSelecionados.length > 0) {
+                const dataBase = new Date(dataTarget + 'T12:00:00');
+                for (let week = 0; week < 12; week++) { // Agendar por 12 semanas (aprox 3 meses)
+                    diasSelecionados.forEach(diaInt => {
                         const dayOfBase = dataBase.getDay();
                         let diff = diaInt - dayOfBase;
                         let ms = dataBase.getTime() + (week * 7 * 86400000) + (diff * 86400000);
@@ -1648,114 +2056,114 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (isoDate >= dataTarget) { // Só futuras em relação à data base
                             datasParaSalvar.push(isoDate);
                         }
-                     });
-                 }
-                 // Organiza chronos
-                 datasParaSalvar = Array.from(new Set(datasParaSalvar)).sort();
-             } else {
-                 // Edição ou sem repetição: salva só nesta data mesmo
-                 datasParaSalvar.push(dataTarget);
-             }
+                    });
+                }
+                // Organiza chronos
+                datasParaSalvar = Array.from(new Set(datasParaSalvar)).sort();
+            } else {
+                // Edição ou sem repetição: salva só nesta data mesmo
+                datasParaSalvar.push(dataTarget);
+            }
 
-             const isModoRepo = (window.currentEditingMode === 'reposicao');
-             const targetCache = isModoRepo ? 'movia_reposicoes_db' : 'movia_agenda';
+            const isModoRepo = (window.currentEditingMode === 'reposicao');
+            const targetCache = isModoRepo ? 'movia_reposicoes_db' : 'movia_agenda';
 
-             const originalBtn = btnSalvarModal.innerHTML;
-             btnSalvarModal.innerHTML = 'Salvando...';
+            const originalBtn = btnSalvarModal.innerHTML;
+            btnSalvarModal.innerHTML = 'Salvando...';
 
-             let agendaLocal = [];
-             try { agendaLocal = JSON.parse(localStorage.getItem(targetCache) || '[]'); } catch(e){}
+            let agendaLocal = [];
+            try { agendaLocal = JSON.parse(localStorage.getItem(targetCache) || '[]'); } catch (e) { }
 
-             let dbInserts = [];
+            let dbInserts = [];
 
-             datasParaSalvar.forEach((dtLoop, index) => {
-                 const localIdVal = (isDbId && index===0) ? ('local_' + id) : (isEditing ? id : 'local_' + Date.now().toString() + '_' + index);
-                 const dbTextPayload = {
-                     texto: textoCliente, 
-                     hora_inicio: horaIni,
-                     hora_fim: horaFim,
-                     servico: servicoTarget,
-                     profissional: prof,
-                     cor: cor,
-                     observacao: obs,
-                     status: isModoRepo ? 'Pendente' : 'Confirmado'
-                 };
-                 const payloadStr = JSON.stringify(dbTextPayload);
+            datasParaSalvar.forEach((dtLoop, index) => {
+                const localIdVal = (isDbId && index === 0) ? ('local_' + id) : (isEditing ? id : 'local_' + Date.now().toString() + '_' + index);
+                const dbTextPayload = {
+                    texto: textoCliente,
+                    hora_inicio: horaIni,
+                    hora_fim: horaFim,
+                    servico: servicoTarget,
+                    profissional: prof,
+                    cor: cor,
+                    observacao: obs,
+                    status: isModoRepo ? 'Pendente' : 'Confirmado'
+                };
+                const payloadStr = JSON.stringify(dbTextPayload);
 
-                 const memoryPayload = {
-                     ...dbTextPayload,
-                     data_evento: dtLoop,
-                     localId: localIdVal
-                 };
+                const memoryPayload = {
+                    ...dbTextPayload,
+                    data_evento: dtLoop,
+                    localId: localIdVal
+                };
 
-                 if (isDbId && index===0) memoryPayload.id = id;
+                if (isDbId && index === 0) memoryPayload.id = id;
 
-                 if (isEditing && index === 0) {
-                     agendaLocal = agendaLocal.map(n => (n.id == id || n.localId == id) ? memoryPayload : n);
-                 } else {
-                     agendaLocal.push(memoryPayload);
-                 }
+                if (isEditing && index === 0) {
+                    agendaLocal = agendaLocal.map(n => (n.id == id || n.localId == id) ? memoryPayload : n);
+                } else {
+                    agendaLocal.push(memoryPayload);
+                }
 
-                 if (supabase && !isModoRepo) {
-                     if(isDbId && index===0) {
-                         supabase.from('agenda').update({data_evento: dtLoop, texto: payloadStr}).eq('id', id).then().catch(()=>{});
-                     } else {
-                         dbInserts.push({ data_evento: dtLoop, texto: payloadStr, memId: localIdVal });
-                     }
-                 }
-             });
+                if (supabase && !isModoRepo) {
+                    if (isDbId && index === 0) {
+                        supabase.from('agenda').update({ data_evento: dtLoop, texto: payloadStr }).eq('id', id).then().catch(() => { });
+                    } else {
+                        dbInserts.push({ data_evento: dtLoop, texto: payloadStr, memId: localIdVal });
+                    }
+                }
+            });
 
-             localStorage.setItem(targetCache, JSON.stringify(agendaLocal));
+            localStorage.setItem(targetCache, JSON.stringify(agendaLocal));
 
-             if (supabase && !isModoRepo && dbInserts.length > 0) {
-                 const onlyBdPush = dbInserts.map(d => ({ data_evento: d.data_evento, texto: d.texto }));
-                 supabase.from('agenda').insert(onlyBdPush).select('id, data_evento, texto').then().catch(()=>{});
-             }
+            if (supabase && !isModoRepo && dbInserts.length > 0) {
+                const onlyBdPush = dbInserts.map(d => ({ data_evento: d.data_evento, texto: d.texto }));
+                supabase.from('agenda').insert(onlyBdPush).select('id, data_evento, texto').then().catch(() => { });
+            }
 
-             window.fecharModalNovaAula();
-             setTimeout(() => {
-                 if (isModoRepo) renderReposicoes(); else renderCalendar();
-             }, 100);
-             btnSalvarModal.innerHTML = originalBtn;
+            window.fecharModalNovaAula();
+            setTimeout(() => {
+                if (isModoRepo) renderReposicoes(); else renderCalendar();
+            }, 100);
+            btnSalvarModal.innerHTML = originalBtn;
         });
     }
 
     const btnExcluirModal = document.getElementById('btn-excluir-modal-aula');
-    if(btnExcluirModal) {
+    if (btnExcluirModal) {
         btnExcluirModal.addEventListener('click', async () => {
-             const id = document.getElementById('ipt-agenda-id').value;
-             if(!id) return;
-             if(!confirm('Deseja excluir esta aula permanentemente?')) return;
-             const isModoRepo = (window.currentEditingMode === 'reposicao');
-             const targetCache = isModoRepo ? 'movia_reposicoes_db' : 'movia_agenda';
+            const id = document.getElementById('ipt-agenda-id').value;
+            if (!id) return;
+            if (!confirm('Deseja excluir esta aula permanentemente?')) return;
+            const isModoRepo = (window.currentEditingMode === 'reposicao');
+            const targetCache = isModoRepo ? 'movia_reposicoes_db' : 'movia_agenda';
 
-             let agendaLocal = [];
-             try { agendaLocal = JSON.parse(localStorage.getItem(targetCache) || '[]'); } catch(e){}
-             agendaLocal = agendaLocal.filter(n => n.id != id && n.localId != id);
-             localStorage.setItem(targetCache, JSON.stringify(agendaLocal));
+            let agendaLocal = [];
+            try { agendaLocal = JSON.parse(localStorage.getItem(targetCache) || '[]'); } catch (e) { }
+            agendaLocal = agendaLocal.filter(n => n.id != id && n.localId != id);
+            localStorage.setItem(targetCache, JSON.stringify(agendaLocal));
 
-             if (supabase && id && !id.startsWith('local_') && !isModoRepo) {
-                 supabase.from('agenda').delete().eq('id', id).then().catch(()=>{});
-             }
-             window.fecharModalNovaAula();
-             
-             if (isModoRepo) renderReposicoes(); else renderCalendar();
+            if (supabase && id && !id.startsWith('local_') && !isModoRepo) {
+                supabase.from('agenda').delete().eq('id', id).then().catch(() => { });
+            }
+            window.fecharModalNovaAula();
+
+            if (isModoRepo) renderReposicoes(); else renderCalendar();
         });
     }
 
     const btnDuplicarModal = document.getElementById('btn-duplicar-modal-aula');
-    if(btnDuplicarModal) {
+    if (btnDuplicarModal) {
         btnDuplicarModal.addEventListener('click', () => {
-             document.getElementById('ipt-agenda-id').value = '';
-             document.getElementById('title-modal-nova-aula').innerText = 'Nova Aula (Cópia)';
-             document.getElementById('acoes-edicao-aula').style.display = 'none';
+            document.getElementById('ipt-agenda-id').value = '';
+            document.getElementById('title-modal-nova-aula').innerText = 'Nova Aula (Cópia)';
+            document.getElementById('acoes-edicao-aula').style.display = 'none';
         });
     }
 
     // Inicialização da Agenda
     renderCalendar();
 
-     // Abrir/Fechar Slide Financeiro
+    // Abrir/Fechar Slide Financeiro
     window.openFinSlide = (tipo) => {
         document.getElementById('ipt-fin-tipo').value = tipo;
         document.getElementById('fin-modal-title').innerText = tipo === 'receita' ? 'Nova Entrada (Receita)' : 'Nova Saída (Despesa)';
@@ -1766,13 +2174,102 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica de Ajustes (Dark Mode e Logout) ---
     // Logout
     const btnLogout = document.getElementById('btn-logout');
-    if (btnLogout) {
-        btnLogout.addEventListener('click', async () => {
-            if(confirm('Tem certeza que deseja sair do sistema?')) {
-                btnLogout.innerHTML = 'Saindo...';
-                if(supabase) await supabase.auth.signOut();
-                // Limpar chaves locais se quiser forçar un-remember, mas o Auth Session já cai.
-                window.location.href = 'index.html';
+    const btnLogoutTopbar = document.getElementById('btn-logout-topbar');
+
+    const handleLogout = async () => {
+        if (confirm('Tem certeza que deseja sair do sistema?')) {
+            if (btnLogout) btnLogout.innerHTML = 'Saindo...';
+            if (supabase) await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        }
+    };
+
+    if (btnLogout) btnLogout.addEventListener('click', handleLogout);
+    if (btnLogoutTopbar) btnLogoutTopbar.addEventListener('click', handleLogout);
+
+    // Sistema de Avatar (Foto de Perfil)
+    const uploadAvatar = document.getElementById('ipt-avatar-upload');
+    const topbarAvatar = document.getElementById('topbar-user-avatar');
+    const sideAvatar = document.querySelector('.avatar-sm');
+
+    // Carregar Avatar local se existir
+    const savedAvatar = localStorage.getItem('movia_user_avatar');
+    const savedAvatarPos = localStorage.getItem('movia_user_avatar_pos') || '50% 50%';
+
+    if (topbarAvatar) {
+        if (savedAvatar) topbarAvatar.src = savedAvatar;
+        topbarAvatar.style.objectPosition = savedAvatarPos;
+        topbarAvatar.style.cursor = 'grab';
+    }
+    if (sideAvatar) {
+        if (savedAvatar) sideAvatar.src = savedAvatar;
+        sideAvatar.style.objectPosition = savedAvatarPos;
+    }
+
+    if (uploadAvatar) {
+        uploadAvatar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const base64Image = evt.target.result;
+                    if (topbarAvatar) { topbarAvatar.src = base64Image; topbarAvatar.style.objectPosition = '50% 50%'; }
+                    if (sideAvatar) { sideAvatar.src = base64Image; sideAvatar.style.objectPosition = '50% 50%'; }
+                    localStorage.setItem('movia_user_avatar', base64Image);
+                    localStorage.setItem('movia_user_avatar_pos', '50% 50%');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Drag para reposicionar foto
+    if (topbarAvatar) {
+        let isDraggingAvatar = false;
+        let startX, startY;
+        let currentPosX, currentPosY;
+
+        topbarAvatar.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            isDraggingAvatar = true;
+            topbarAvatar.style.cursor = 'grabbing';
+            startX = e.clientX;
+            startY = e.clientY;
+
+            // Extract current percentages
+            const pos = topbarAvatar.style.objectPosition || '50% 50%';
+            const parts = pos.split(' ');
+            currentPosX = parseFloat(parts[0]) || 50;
+            currentPosY = parseFloat(parts[1]) || 50;
+
+            // Evitar fechar dropdown ao clicar para arrastar
+            e.stopPropagation();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingAvatar) return;
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+
+            // Sensibilidade do arrasto
+            const sensitivity = 0.5;
+            let newX = currentPosX - (deltaX * sensitivity);
+            let newY = currentPosY - (deltaY * sensitivity);
+
+            // Limitar a porcentagem entre 0 e 100
+            newX = Math.max(0, Math.min(100, newX));
+            newY = Math.max(0, Math.min(100, newY));
+
+            const newPos = `${newX}% ${newY}%`;
+            topbarAvatar.style.objectPosition = newPos;
+            if (sideAvatar) sideAvatar.style.objectPosition = newPos;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDraggingAvatar) {
+                isDraggingAvatar = false;
+                topbarAvatar.style.cursor = 'grab';
+                localStorage.setItem('movia_user_avatar_pos', topbarAvatar.style.objectPosition);
             }
         });
     }
@@ -1780,9 +2277,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme Control
     const btnSetDark = document.getElementById('btn-toggle-theme');
     const btnSetLight = document.getElementById('btn-set-light');
-    
+
     const currentTheme = localStorage.getItem('movia_theme') || 'light';
-    
+
     if (currentTheme === 'dark') {
         document.body.classList.add('dark-theme');
     }
@@ -1807,14 +2304,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Iniciar render do calendário quando clicar na tab Agenda
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
-            if(item.dataset.target === 'agenda') {
+            if (item.dataset.target === 'agenda') {
                 renderCalendar();
             }
         });
     });
 
     // --- Máscara de Moeda Global ---
-    window.maskCurrency = function(input) {
+    window.maskCurrency = function (input) {
         let value = input.value.replace(/\D/g, '');
         if (value === '') {
             input.value = '';
@@ -1831,7 +2328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('status-btn')) {
             const container = e.target.parentElement;
             const hiddenInput = container.previousElementSibling;
-            
+
             // Limpa demais botões
             container.querySelectorAll('.status-btn').forEach(b => {
                 b.style.background = 'transparent';
@@ -1841,7 +2338,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.style.background = 'white';
             e.target.style.color = e.target.dataset.val === 'Pago' ? '#10B981' : '#EF4444';
 
-            if(hiddenInput && hiddenInput.type === 'hidden') hiddenInput.value = e.target.dataset.val;
+            if (hiddenInput && hiddenInput.type === 'hidden') hiddenInput.value = e.target.dataset.val;
         }
     });
 
@@ -1850,7 +2347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (globalSearch) {
         globalSearch.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
-            
+
             document.querySelectorAll('.aluno-card, .aluno-row, .fin-row').forEach(el => {
                 const text = el.innerText.toLowerCase();
                 el.style.display = text.includes(query) ? '' : 'none';
@@ -1865,22 +2362,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentImg = null;
 
     const endDragObj = () => {
-        if(isDraggingImg && currentImg) {
+        if (isDraggingImg && currentImg) {
             isDraggingImg = false;
             currentImg.style.transition = 'object-position 0.2s';
             const stylePos = currentImg.style.objectPosition || '50% 50%';
             const finalOffset = parseFloat(stylePos.split(' ')[1]) || 50;
             const prodId = currentImg.dataset.id;
-            
+
             let agendaLocal = [];
-            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e){}
+            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
             agendaLocal = agendaLocal.map(p => {
-                if(p.id == prodId || p.localId == prodId) return { ...p, fotoOffset: finalOffset };
+                if (p.id == prodId || p.localId == prodId) return { ...p, fotoOffset: finalOffset };
                 return p;
             });
             localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
             // Supabase update silencioso na coluna custom ou ignorado caso não exista
-            if(supabase) supabase.from('lojinha').update({fotoOffset: finalOffset}).eq('id', prodId).catch(()=>{});
+            if (supabase) supabase.from('lojinha').update({ fotoOffset: finalOffset }).eq('id', prodId).catch(() => { });
             currentImg = null;
         }
     };
@@ -1897,16 +2394,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('mousemove', (e) => {
-        if(!isDraggingImg || !currentImg) return;
+        if (!isDraggingImg || !currentImg) return;
         const deltaY = e.clientY - startY;
         let newOffset = currentOffset - (deltaY * 0.3); // sensitivity
-        if(newOffset < 0) newOffset = 0;
-        if(newOffset > 100) newOffset = 100;
+        if (newOffset < 0) newOffset = 0;
+        if (newOffset > 100) newOffset = 100;
         currentImg.style.objectPosition = `50% ${newOffset}%`;
     });
 
     document.addEventListener('mouseup', endDragObj);
-    
+
     // Suporte mobile (touch)
     document.addEventListener('touchstart', (e) => {
         if (e.target.classList.contains('card-img-draggable')) {
@@ -1917,17 +2414,17 @@ document.addEventListener('DOMContentLoaded', () => {
             currentImg = e.target;
             currentImg.style.transition = 'none';
         }
-    }, {passive: false});
+    }, { passive: false });
 
     document.addEventListener('touchmove', (e) => {
-        if(!isDraggingImg || !currentImg) return;
+        if (!isDraggingImg || !currentImg) return;
         e.preventDefault();
         const deltaY = e.touches[0].clientY - startY;
         let newOffset = currentOffset - (deltaY * 0.3);
-        if(newOffset < 0) newOffset = 0;
-        if(newOffset > 100) newOffset = 100;
+        if (newOffset < 0) newOffset = 0;
+        if (newOffset > 100) newOffset = 100;
         currentImg.style.objectPosition = `50% ${newOffset}%`;
-    }, {passive: false});
+    }, { passive: false });
 
     document.addEventListener('touchend', endDragObj);
 
@@ -1937,32 +2434,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.loadLojinha = async () => {
         let produtos = [];
-        try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e){}
+        try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
 
         if (supabase) {
             try {
-                const {data} = await supabase.from('lojinha').select('*');
-                if(data && data.length > 0) {
+                const { data } = await supabase.from('lojinha').select('*');
+                if (data && data.length > 0) {
                     data.forEach(p => {
-                        if(!produtos.some(loc => loc.id == p.id || loc.nome === p.nome)) produtos.push(p);
+                        if (!produtos.some(loc => loc.id == p.id || loc.nome === p.nome)) produtos.push(p);
                     });
                 }
-            } catch(e) {}
+            } catch (e) { }
         }
-        
+
         const grid = document.getElementById('store-grid');
         const empty = document.getElementById('empty-state-loja');
-        if(!grid) return;
-        
+        if (!grid) return;
+
         grid.innerHTML = '';
-        if(produtos.length === 0) {
+        if (produtos.length === 0) {
             empty.style.display = 'block';
         } else {
             empty.style.display = 'none';
             produtos.forEach(p => {
                 const fotoOffset = p.fotoOffset !== undefined ? p.fotoOffset : 50;
                 const fotoStr = p.foto ? `<img src="${p.foto}" title="Arraste para ajustar o enquadramento" style="width:100%; height:100%; object-fit:cover; object-position: 50% ${fotoOffset}%; cursor: ns-resize;" draggable="false" class="card-img-draggable" data-id="${p.id || p.localId}">` : `<i data-lucide="image" style="width:40px; height:40px; color:#9CA3AF; opacity:0.5;"></i>`;
-                
+
                 const card = document.createElement('div');
                 card.style.cssText = 'background: white; border: 1px solid var(--border-soft); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);';
                 let badgesHtml = '';
@@ -1970,16 +2467,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     badgesHtml = `<div style="display:flex; flex-direction:column; gap:6px; margin-bottom: 16px; max-height: 90px; overflow-y:auto;" class="custom-scrollbar">`;
                     p.vendas.forEach(v => {
                         const isPago = v.status === 'Pago';
-                        const bgParams = isPago 
-                            ? 'background: rgba(16, 185, 129, 0.1); color: #065F46; border: none;' 
+                        const bgParams = isPago
+                            ? 'background: rgba(16, 185, 129, 0.1); color: #065F46; border: none;'
                             : 'background: transparent; border: 1px solid #E5E7EB; color: #6B7280; padding: 3px 7px;';
-                        
+
                         const icone = isPago ? `<i data-lucide="check" style="width:12px; min-width:12px; margin-right:6px; color: #10B981;"></i>` : `<i data-lucide="clock" style="width:12px; min-width:12px; margin-right:6px;"></i>`;
-                        
+
                         let dataFormatada = 'Pendente';
-                        if(v.data_venda) {
+                        if (v.data_venda) {
                             const partes = v.data_venda.split('-');
-                            if(partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}`;
+                            if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}`;
                         }
                         const prefixo = isPago ? 'Pago' : dataFormatada;
 
@@ -2001,30 +2498,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column;">
                         <h4 style="margin:0 0 4px 0; font-size: 0.95rem; font-weight: 600; color: var(--dark); line-height:1.2;">${p.nome}</h4>
-                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 16px;">R$ ${parseFloat(p.preco).toFixed(2).replace('.',',')}</div>
+                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 16px;">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
                         ${badgesHtml}
                         <button class="btn-outline btn-abrir-venda" data-id="${p.id || p.localId}" data-nome="${p.nome}" data-preco="${p.preco}" style="margin-top:auto; width: 100%; border-radius: 6px; font-weight:600; color: #374151; border: 1px solid #E5E7EB; background: white; padding: 0.6rem; transition: background 0.2s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='white'"><i data-lucide="shopping-bag" style="width:14px; margin-right:6px; pointer-events:none; color: #9CA3AF;"></i> Vender</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
-            if(window.lucide) window.lucide.createIcons();
+            if (window.lucide) window.lucide.createIcons();
 
             document.querySelectorAll('.btn-abrir-venda').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.dataset.id;
                     const nome = e.currentTarget.dataset.nome;
                     const preco = e.currentTarget.dataset.preco;
-                    
+
                     document.getElementById('venda-prod-nome').innerText = nome;
                     document.getElementById('venda-prod-nome').dataset.prodId = id;
-                    document.getElementById('venda-prod-preco').innerText = `R$ ${parseFloat(preco).toFixed(2).replace('.',',')}`;
+                    document.getElementById('venda-prod-preco').innerText = `R$ ${parseFloat(preco).toFixed(2).replace('.', ',')}`;
                     document.getElementById('venda-prod-preco').dataset.valorRaw = preco;
                     document.getElementById('ipt-venda-cliente').value = '';
-                    
+
                     const elData = document.getElementById('ipt-venda-data');
-                    if(elData) elData.value = new Date().toISOString().split('T')[0];
-                    
+                    if (elData) elData.value = new Date().toISOString().split('T')[0];
+
                     slideVenda.classList.remove('hidden-overlay');
                     setTimeout(() => slideVenda.classList.add('open'), 10);
                 });
@@ -2035,13 +2532,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.dataset.id;
                     const p = produtos.find(item => (item.id == id || item.localId == id));
-                    if(p) {
+                    if (p) {
                         document.getElementById('ipt-prod-id').value = id;
                         document.getElementById('ipt-prod-nome').value = p.nome;
                         document.getElementById('ipt-prod-preco').value = parseFloat(p.preco).toFixed(2).replace('.', ',');
                         document.getElementById('ipt-prod-foto-base64').value = p.foto || '';
                         document.getElementById('foto-preview-text').innerText = p.foto ? 'Foto carrega. Clique para trocar' : 'Clique ou arraste para subir a foto';
-                        
+
                         slideProduto.classList.remove('hidden-overlay');
                         setTimeout(() => slideProduto.classList.add('open'), 10);
                     }
@@ -2051,12 +2548,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Apagar Produto
             document.querySelectorAll('.btn-del-prod').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    if(!confirm('Deseja excluir definitivamente este produto de sua vitrine?')) return;
+                    if (!confirm('Deseja excluir definitivamente este produto de sua vitrine?')) return;
                     const id = e.currentTarget.dataset.id;
                     let agendaLocal = produtos.filter(p => (p.id != id && p.localId != id));
                     localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-                    if(supabase) {
-                        supabase.from('lojinha').delete().eq('id', id).then().catch(()=>{});
+                    if (supabase) {
+                        supabase.from('lojinha').delete().eq('id', id).then().catch(() => { });
                     }
                     window.loadLojinha();
                 });
@@ -2074,15 +2571,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Upload FileReader para Foto Produto
     const iptFileProd = document.getElementById('ipt-prod-foto-file');
-    if(iptFileProd) {
+    if (iptFileProd) {
         iptFileProd.addEventListener('change', (e) => {
             const file = e.target.files[0];
-            if(file) {
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
+                reader.onload = function (evt) {
                     document.getElementById('ipt-prod-foto-base64').value = evt.target.result;
                     document.getElementById('foto-preview-text').innerHTML = `<span style="color:#10B981;"><i data-lucide="check-circle-2" style="width:14px; margin-right:4px;"></i> Foto Carregada</span>`;
-                    if(window.lucide) window.lucide.createIcons();
+                    if (window.lucide) window.lucide.createIcons();
                 };
                 reader.readAsDataURL(file);
             }
@@ -2091,7 +2588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Abrir Novo Produto
     const btnNovoProd = document.getElementById('btn-novo-produto');
-    if(btnNovoProd) {
+    if (btnNovoProd) {
         btnNovoProd.addEventListener('click', () => {
             document.getElementById('ipt-prod-id').value = '';
             document.getElementById('ipt-prod-nome').value = '';
@@ -2105,19 +2602,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Salvar Produto
     const btnSalvarProd = document.getElementById('btn-salvar-produto');
-    if(btnSalvarProd) {
+    if (btnSalvarProd) {
         btnSalvarProd.addEventListener('click', async () => {
             const editId = document.getElementById('ipt-prod-id').value;
             const nome = document.getElementById('ipt-prod-nome').value;
             let precoStr = document.getElementById('ipt-prod-preco').value.replace(/\./g, '').replace(',', '.');
-            if(!nome || !precoStr) { alert('Nome e Preço obrigatórios.'); return; }
-            
+            if (!nome || !precoStr) { alert('Nome e Preço obrigatórios.'); return; }
+
             const fotoVal = document.getElementById('ipt-prod-foto-base64').value;
             btnSalvarProd.innerHTML = 'Salvando...';
 
             let agendaLocal = [];
-            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e){}
-            
+            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
+
             if (editId) {
                 // Modo Edição
                 agendaLocal = agendaLocal.map(p => {
@@ -2126,21 +2623,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     return p;
                 });
-                if(supabase) supabase.from('lojinha').update({nome, preco: parseFloat(precoStr), foto: fotoVal}).eq('id', editId).then().catch(()=>{});
+                if (supabase) supabase.from('lojinha').update({ nome, preco: parseFloat(precoStr), foto: fotoVal }).eq('id', editId).then().catch(() => { });
             } else {
                 // Modo Novo Cadastro
-                const payload = { 
-                    nome: nome, 
-                    preco: parseFloat(precoStr), 
+                const payload = {
+                    nome: nome,
+                    preco: parseFloat(precoStr),
                     foto: fotoVal,
                     localId: Date.now().toString()
                 };
                 agendaLocal.push(payload);
-                if(supabase) supabase.from('lojinha').insert([{nome: payload.nome, preco: payload.preco, foto: payload.foto}]).then().catch(()=>{});
+                if (supabase) supabase.from('lojinha').insert([{ nome: payload.nome, preco: payload.preco, foto: payload.foto }]).then().catch(() => { });
             }
-            
+
             localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-            
+
             slideProduto.classList.remove('open');
             setTimeout(() => slideProduto.classList.add('hidden-overlay'), 300);
             window.loadLojinha();
@@ -2159,7 +2656,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cliente = document.getElementById('ipt-venda-cliente').value;
             const statusVenda = document.getElementById('ipt-venda-status').value;
             const dataVenda = document.getElementById('ipt-venda-data') ? document.getElementById('ipt-venda-data').value : new Date().toISOString().split('T')[0];
-            
+
             const payload = {
                 tipo: 'receita',
                 valor: valor,
@@ -2174,33 +2671,33 @@ document.addEventListener('DOMContentLoaded', () => {
             btnConfirmarVenda.innerHTML = 'Salvando...';
 
             // Salva de forma assíncrona (não boqueia a interface)
-            if(supabase) {
-                supabase.from('financeiro').insert([payload]).then().catch(()=>{});
+            if (supabase) {
+                supabase.from('financeiro').insert([payload]).then().catch(() => { });
             }
 
             // Atualizar o histórico de vendas do produto na vitrine
             let agendaLocal = [];
-            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e){}
+            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
             agendaLocal = agendaLocal.map(p => {
-                if(p.id == prodId || p.localId == prodId) {
+                if (p.id == prodId || p.localId == prodId) {
                     const novaVenda = { cliente: cliente || 'Avulso', status: statusVenda, data_venda: dataVenda };
                     return { ...p, vendas: p.vendas ? [...p.vendas, novaVenda] : [novaVenda] };
                 }
                 return p;
             });
             localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-            
-            if(supabase) {
+
+            if (supabase) {
                 // Atualização json em supabase ficaria aqui, ou relacional numa tabela de 'vendas'
                 // Para não quebrar por schema, apenas silenciamos caso a coluna não exista.
-                supabase.from('lojinha').update({ultimo_vendido_para: cliente || 'Avulso'}).eq('id', prodId).then().catch(()=>{});
+                supabase.from('lojinha').update({ ultimo_vendido_para: cliente || 'Avulso' }).eq('id', prodId).then().catch(() => { });
             }
 
             slideVenda.classList.remove('open');
             setTimeout(() => slideVenda.classList.add('hidden-overlay'), 300);
-            
+
             // Reloada a aba de financeiro em background
-            if(window.loadFinanceiro) window.loadFinanceiro();
+            if (window.loadFinanceiro) window.loadFinanceiro();
             window.loadLojinha();
 
             btnConfirmarVenda.innerHTML = 'Confirmar a Compra';
@@ -2212,24 +2709,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.loadProntuarios = async () => {
         let prontuarios = [];
-        try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch(e){}
-        
+        try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch (e) { }
+
         let pacientesList = [];
-        if(supabase) {
+        if (supabase) {
             try {
                 const { data } = await supabase.from('alunos').select('nome,telefone,cpf,id');
                 if (data) pacientesList = data;
-            } catch(e) {}
+            } catch (e) { }
         }
         if (pacientesList.length === 0) {
             const nomes = [...new Set(prontuarios.map(p => p.paciente).filter(Boolean))];
-            pacientesList = nomes.map(n => ({nome: n}));
+            pacientesList = nomes.map(n => ({ nome: n }));
         }
 
         const sidebarLista = document.getElementById('lista-pacientes-prontuario-sidebar');
         if (sidebarLista) {
             sidebarLista.innerHTML = '';
-            if(pacientesList.length === 0) {
+            if (pacientesList.length === 0) {
                 sidebarLista.innerHTML = '<div style="padding:1rem; text-align:center; color:#9CA3AF; font-size:0.85rem;">Nenhum aluno cadastrado.</div>';
             } else {
                 pacientesList.forEach(pac => {
@@ -2240,7 +2737,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="font-size:0.9rem; font-weight:600; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${pac.nome}</span>
                     `;
                     div.onmouseover = () => div.style.background = '#F3F4F6';
-                    div.onmouseleave = () => { if(currentProntuarioPaciente !== pac.nome) div.style.background = 'transparent'; };
+                    div.onmouseleave = () => { if (currentProntuarioPaciente !== pac.nome) div.style.background = 'transparent'; };
                     div.onclick = () => {
                         Array.from(sidebarLista.children).forEach(c => c.style.background = 'transparent');
                         div.style.background = '#F3F4F6';
@@ -2256,19 +2753,19 @@ document.addEventListener('DOMContentLoaded', () => {
         currentProntuarioPaciente = pac.nome;
         document.getElementById('prontuario-vazio-state').style.display = 'none';
         document.getElementById('prontuario-selecionado-content').style.display = 'flex';
-        
+
         document.getElementById('pront-header-nome').innerText = pac.nome;
         document.getElementById('pront-header-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(pac.nome)}&background=2563EB&color=fff&size=64`;
         document.getElementById('pront-header-tel').innerText = pac.telefone || 'Não informado';
         document.getElementById('pront-header-cpf').innerText = pac.cpf || 'Não informado';
-        
+
         // Render timeline
         const container = document.getElementById('prontuario-timeline-container');
         if (container) {
             container.innerHTML = '';
-            
-            const meusRegistros = prontuarios.filter(p => p.paciente === pac.nome).sort((a,b) => new Date(b.data) - new Date(a.data));
-            
+
+            const meusRegistros = prontuarios.filter(p => p.paciente === pac.nome).sort((a, b) => new Date(b.data) - new Date(a.data));
+
             if (meusRegistros.length === 0) {
                 container.innerHTML = '<div style="text-align:center; padding: 2rem; color: #9CA3AF; font-size:0.9rem;">Nenhum registro clínico encontrado para este paciente.</div>';
             } else {
@@ -2321,16 +2818,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const iptInlineTexto = document.getElementById('ipt-pront-inline-texto');
     const btnSalvarInline = document.getElementById('btn-salvar-pront-inline');
     const txtDataHoje = document.getElementById('txt-data-hoje');
-    
+
     window.editingEvolucaoId = null;
     window.editarEvolucao = (id) => {
         let prontuarios = [];
-        try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch(e){}
+        try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch (e) { }
         const reg = prontuarios.find(p => p.localId === id);
-        if(reg) {
+        if (reg) {
             iptInlineTitulo.value = reg.titulo;
             iptInlineTexto.value = reg.texto;
-            if(reg.imagem) {
+            if (reg.imagem) {
                 document.getElementById('ipt-pront-anexo-base64').value = reg.imagem;
                 document.getElementById('pront-anexo-img').src = reg.imagem;
                 document.getElementById('pront-anexo-preview').style.display = 'block';
@@ -2340,17 +2837,17 @@ document.addEventListener('DOMContentLoaded', () => {
             window.editingEvolucaoId = id;
             btnSalvarInline.innerHTML = 'Salvar Edição';
             btnSalvarInline.style.background = '#F59E0B';
-            
+
             const contEvo = document.getElementById('pront-content-evolucao');
-            if(contEvo) contEvo.scrollTo({top: 0, behavior: 'smooth'});
+            if (contEvo) contEvo.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
-    
+
     if (txtDataHoje) {
         const h = new Date();
         txtDataHoje.innerText = h.toLocaleDateString('pt-BR');
     }
-    
+
     const focarInputInline = () => {
         if (!currentProntuarioPaciente) {
             alert('Por favor, selecione um paciente primeiro na lista lateral.');
@@ -2363,12 +2860,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    if(btnNovoPront) btnNovoPront.addEventListener('click', focarInputInline);
-    if(btnAddLinha) btnAddLinha.addEventListener('click', focarInputInline);
+    if (btnNovoPront) btnNovoPront.addEventListener('click', focarInputInline);
+    if (btnAddLinha) btnAddLinha.addEventListener('click', focarInputInline);
 
     // Sistema de Abas (Tabs) do Prontuário
     const prontTabs = document.querySelectorAll('.pront-tab');
-    
+
     function changeProntTab(tabId) {
         prontTabs.forEach(t => {
             if (t.dataset.tab === tabId) {
@@ -2395,20 +2892,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if(btnSalvarInline) {
+    if (btnSalvarInline) {
         btnSalvarInline.addEventListener('click', () => {
             if (!currentProntuarioPaciente) return;
-            
+
             const titulo = iptInlineTitulo.value;
             const texto = iptInlineTexto.value;
-            
-            if(!titulo || !texto) { alert('Título e Anotações são obrigatórios.'); return; }
-            
+
+            if (!titulo || !texto) { alert('Título e Anotações são obrigatórios.'); return; }
+
             btnSalvarInline.innerHTML = 'Salvando...';
 
             let prontuarios = [];
-            try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch(e){}
-            
+            try { prontuarios = JSON.parse(localStorage.getItem('movia_prontuario') || '[]'); } catch (e) { }
+
             const base64Img = document.getElementById('ipt-pront-anexo-base64').value;
 
             if (window.editingEvolucaoId) {
@@ -2429,16 +2926,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     imagem: base64Img || null
                 });
             }
-            
+
             localStorage.setItem('movia_prontuario', JSON.stringify(prontuarios));
-            
+
             iptInlineTitulo.value = '';
             iptInlineTexto.value = '';
             removerAnexoInline();
-            
+
             window.loadProntuarios().then(() => {
                 const latest = JSON.parse(localStorage.getItem('movia_prontuario') || '[]');
-                window.abrirProntuarioPaciente({nome: currentProntuarioPaciente, telefone: document.getElementById('pront-header-tel').innerText, cpf: document.getElementById('pront-header-cpf').innerText}, latest);
+                window.abrirProntuarioPaciente({ nome: currentProntuarioPaciente, telefone: document.getElementById('pront-header-tel').innerText, cpf: document.getElementById('pront-header-cpf').innerText }, latest);
             });
             btnSalvarInline.innerHTML = 'Registrar Evolução';
             btnSalvarInline.style.background = '';
@@ -2457,7 +2954,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnAnexo && iptAnexoFile) {
         btnAnexo.addEventListener('click', () => iptAnexoFile.click());
-        
+
         iptAnexoFile.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -2473,10 +2970,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const removerAnexoInline = () => {
-        if(iptBase64) iptBase64.value = '';
-        if(iptAnexoFile) iptAnexoFile.value = '';
-        if(previewContainer) previewContainer.style.display = 'none';
-        if(previewImg) previewImg.src = '';
+        if (iptBase64) iptBase64.value = '';
+        if (iptAnexoFile) iptAnexoFile.value = '';
+        if (previewContainer) previewContainer.style.display = 'none';
+        if (previewImg) previewImg.src = '';
     };
 
     if (btnRemoveAnexo) {
@@ -2508,7 +3005,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recognition.onresult = (event) => {
             const resultText = event.results[0][0].transcript;
             const iptTxt = document.getElementById('ipt-pront-inline-texto');
-            if(iptTxt) {
+            if (iptTxt) {
                 iptTxt.value = iptTxt.value + (iptTxt.value ? ' ' : '') + resultText;
             }
         };
@@ -2536,11 +3033,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const pararGravacao = () => {
         isRecording = false;
-        if(btnMic) {
+        if (btnMic) {
             btnMic.style.color = '#475569';
             btnMic.style.borderColor = 'transparent';
         }
-        if(txtMicStatus) txtMicStatus.style.display = 'none';
+        if (txtMicStatus) txtMicStatus.style.display = 'none';
     };
 
     // ----------------------------------------------------
@@ -2549,12 +3046,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const selSangue = document.getElementById('ipt-pront-sangue');
     if (selSangue) {
         selSangue.addEventListener('change', (e) => {
-            if(!currentProntuarioPaciente) return;
+            if (!currentProntuarioPaciente) return;
             const val = e.target.value;
             let info = null;
-            try { info = JSON.parse(localStorage.getItem('movia_pacientes_info')) || {}; } catch(err){}
-            if(!info) info = {};
-            if(!info[currentProntuarioPaciente]) info[currentProntuarioPaciente] = {};
+            try { info = JSON.parse(localStorage.getItem('movia_pacientes_info')) || {}; } catch (err) { }
+            if (!info) info = {};
+            if (!info[currentProntuarioPaciente]) info[currentProntuarioPaciente] = {};
             info[currentProntuarioPaciente].sangue = val;
             localStorage.setItem('movia_pacientes_info', JSON.stringify(info));
         });
@@ -2564,28 +3061,28 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const info = JSON.parse(localStorage.getItem('movia_pacientes_info')) || {};
             const pacInfo = info[nomePac] || {};
-            if(selSangue) selSangue.value = pacInfo.sangue || 'ND';
-        } catch(e){}
+            if (selSangue) selSangue.value = pacInfo.sangue || 'ND';
+        } catch (e) { }
     };
-    
+
     // ----------------------------------------------------
     // LÓGICA DO RELATÓRIO CLÍNICO GERAL
     // ----------------------------------------------------
     const btnSalvarRelatorio = document.getElementById('btn-salvar-relatorio-geral');
-    if(btnSalvarRelatorio) {
+    if (btnSalvarRelatorio) {
         btnSalvarRelatorio.addEventListener('click', () => {
-            if(!currentProntuarioPaciente) return;
+            if (!currentProntuarioPaciente) return;
             const relatorioTexto = document.getElementById('ipt-pront-relatorio').value;
-            
+
             let data = {};
-            try { data = JSON.parse(localStorage.getItem('movia_relatorios_clinicos')) || {}; } catch(e){}
+            try { data = JSON.parse(localStorage.getItem('movia_relatorios_clinicos')) || {}; } catch (e) { }
             data[currentProntuarioPaciente] = relatorioTexto;
             localStorage.setItem('movia_relatorios_clinicos', JSON.stringify(data));
-            
+
             btnSalvarRelatorio.innerHTML = '<i data-lucide="check" style="width:14px; margin-right:4px;"></i> Salvo!';
             btnSalvarRelatorio.style.background = '#10B981';
             lucide.createIcons();
-            
+
             setTimeout(() => {
                 btnSalvarRelatorio.innerHTML = '<i data-lucide="save" style="width:14px; margin-right:4px;"></i> Salvar Relatório';
                 btnSalvarRelatorio.style.background = '';
@@ -2597,12 +3094,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const carregarRelatorioClinico = (nomePac) => {
         try {
             const data = JSON.parse(localStorage.getItem('movia_relatorios_clinicos')) || {};
-            if(document.getElementById('ipt-pront-relatorio')) {
+            if (document.getElementById('ipt-pront-relatorio')) {
                 document.getElementById('ipt-pront-relatorio').value = data[nomePac] || '';
             }
-        }catch(e){}
+        } catch (e) { }
     };
-    
+
     // Sobrescrevendo parcialmente a função abrirProntuarioPaciente para injetar as chamas de load extra
     const _abrirProntuarioOriginal = window.abrirProntuarioPaciente;
     window.abrirProntuarioPaciente = (pac, prontuarios) => {
@@ -2617,10 +3114,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // LÓGICA DE ANAMNESE
     // ----------------------------------------------------
     const btnSalvarAnamnese = document.getElementById('btn-salvar-anamnese');
-    if(btnSalvarAnamnese) {
+    if (btnSalvarAnamnese) {
         btnSalvarAnamnese.addEventListener('click', () => {
-            if(!currentProntuarioPaciente) return;
-            
+            if (!currentProntuarioPaciente) return;
+
             const obj = {
                 queixa: document.getElementById('anamnese-queixa').value,
                 doencas: document.getElementById('anamnese-doencas').value,
@@ -2630,12 +3127,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 cirurgias: document.getElementById('anamnese-cirurgias') ? document.getElementById('anamnese-cirurgias').value : '',
                 habitos: document.getElementById('anamnese-habitos') ? document.getElementById('anamnese-habitos').value : ''
             };
-            
+
             let data = {};
-            try { data = JSON.parse(localStorage.getItem('movia_anamneses')) || {}; } catch(e){}
+            try { data = JSON.parse(localStorage.getItem('movia_anamneses')) || {}; } catch (e) { }
             data[currentProntuarioPaciente] = obj;
             localStorage.setItem('movia_anamneses', JSON.stringify(data));
-            
+
             const txtBase = btnSalvarAnamnese.innerText;
             btnSalvarAnamnese.innerHTML = '<i class="lucide lucide-check" style="width:14px; margin-right:4px;"></i> Salvo!';
             btnSalvarAnamnese.style.background = '#10B981';
@@ -2650,17 +3147,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const carregarAnamnesePaciente = (nomePac) => {
         try {
             const data = JSON.parse(localStorage.getItem('movia_anamneses')) || {};
-            const obj = data[nomePac] || { queixa:'', doencas:'', medicamentos:'', historico:'', alergias:'', cirurgias:'', habitos:'' };
-            if(document.getElementById('anamnese-queixa')) {
+            const obj = data[nomePac] || { queixa: '', doencas: '', medicamentos: '', historico: '', alergias: '', cirurgias: '', habitos: '' };
+            if (document.getElementById('anamnese-queixa')) {
                 document.getElementById('anamnese-queixa').value = obj.queixa || '';
                 document.getElementById('anamnese-doencas').value = obj.doencas || '';
                 document.getElementById('anamnese-medicamentos').value = obj.medicamentos || '';
                 document.getElementById('anamnese-historico').value = obj.historico || '';
-                if(document.getElementById('anamnese-alergias')) document.getElementById('anamnese-alergias').value = obj.alergias || '';
-                if(document.getElementById('anamnese-cirurgias')) document.getElementById('anamnese-cirurgias').value = obj.cirurgias || '';
-                if(document.getElementById('anamnese-habitos')) document.getElementById('anamnese-habitos').value = obj.habitos || '';
+                if (document.getElementById('anamnese-alergias')) document.getElementById('anamnese-alergias').value = obj.alergias || '';
+                if (document.getElementById('anamnese-cirurgias')) document.getElementById('anamnese-cirurgias').value = obj.cirurgias || '';
+                if (document.getElementById('anamnese-habitos')) document.getElementById('anamnese-habitos').value = obj.habitos || '';
             }
-        }catch(e){}
+        } catch (e) { }
     };
 
     // ----------------------------------------------------
@@ -2670,22 +3167,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const iptUploadDoc = document.getElementById('ipt-upload-documento');
     const listaArquivos = document.getElementById('lista-arquivos-paciente');
 
-    if(btnUploadDoc && iptUploadDoc) {
+    if (btnUploadDoc && iptUploadDoc) {
         btnUploadDoc.addEventListener('click', () => iptUploadDoc.click());
-        
+
         iptUploadDoc.addEventListener('change', async (e) => {
-            if(!currentProntuarioPaciente) return;
+            if (!currentProntuarioPaciente) return;
             const files = e.target.files;
-            if(files && files.length > 0) {
+            if (files && files.length > 0) {
                 let currentDocs = [];
                 try {
                     const allDocs = JSON.parse(localStorage.getItem('movia_arquivos_pacientes')) || {};
                     currentDocs = allDocs[currentProntuarioPaciente] || [];
-                } catch(e){}
-                
+                } catch (e) { }
+
                 // Em um cenário real, enviaríamos ao Supabase Storage.
                 // Simulando salvamento de nome, tamanho e base64.
-                for(let i=0; i<files.length; i++) {
+                for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     const base64Data = await new Promise((resolve) => {
                         const reader = new FileReader();
@@ -2701,11 +3198,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         base64: base64Data
                     });
                 }
-                
-                const allDocs = JSON.parse(localStorage.getItem('movia_arquivos_pacientes')||'{}');
+
+                const allDocs = JSON.parse(localStorage.getItem('movia_arquivos_pacientes') || '{}');
                 allDocs[currentProntuarioPaciente] = currentDocs;
                 localStorage.setItem('movia_arquivos_pacientes', JSON.stringify(allDocs));
-                
+
                 iptUploadDoc.value = '';
                 carregarArquivosPaciente(currentProntuarioPaciente);
             }
@@ -2716,13 +3213,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewerModal = document.getElementById('modal-viewer-arquivo');
         const viewerContent = document.getElementById('viewer-content');
         const viewerTitle = document.getElementById('viewer-title');
-        
+
         if (viewerModal && viewerContent && viewerTitle) {
             viewerTitle.innerText = doc.nome;
-            
+
             const extensao = doc.nome.toLowerCase();
             const ehImagem = extensao.endsWith('.png') || extensao.endsWith('.jpg') || extensao.endsWith('.jpeg') || extensao.endsWith('.webp') || extensao.endsWith('.gif') || extensao.endsWith('.svg') || (doc.base64 && doc.base64.startsWith('data:image/'));
-            
+
             if (ehImagem && doc.base64) {
                 viewerContent.innerHTML = `<img src="${doc.base64}" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />`;
             } else if (doc.base64) {
@@ -2740,19 +3237,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             }
-            
+
             viewerModal.style.display = 'flex';
             lucide.createIcons();
         }
     };
 
     const carregarArquivosPaciente = (nomePac) => {
-        if(!listaArquivos) return;
+        if (!listaArquivos) return;
         listaArquivos.innerHTML = '';
         try {
             const allDocs = JSON.parse(localStorage.getItem('movia_arquivos_pacientes')) || {};
             const docs = allDocs[nomePac] || [];
-            if(docs.length === 0) {
+            if (docs.length === 0) {
                 listaArquivos.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #9CA3AF; font-size:0.9rem;">Nenhum arquivo anexado.</div>';
                 return;
             }
@@ -2761,7 +3258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.style.cssText = 'background: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.25rem; display:flex; flex-direction:column; gap:0.5rem; cursor:pointer; transition:all 0.2s;';
                 card.onmouseover = () => { card.style.borderColor = 'var(--primary)'; card.style.transform = 'translateY(-2px)'; };
                 card.onmouseout = () => { card.style.borderColor = '#E2E8F0'; card.style.transform = 'translateY(0)'; };
-                
+
                 card.onclick = (e) => {
                     if (e.target.closest('button')) return;
                     mostrarVisualizadorArquivo(doc);
@@ -2797,13 +3294,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 listaArquivos.appendChild(card);
             });
             lucide.createIcons();
-        } catch(e){}
+        } catch (e) { }
     };
 
     window.removerArquivoPaciente = (nomePac, docId) => {
-        if(confirm('Tem certeza que deseja remover este arquivo?')) {
+        if (confirm('Tem certeza que deseja remover este arquivo?')) {
             const allDocs = JSON.parse(localStorage.getItem('movia_arquivos_pacientes')) || {};
-            if(allDocs[nomePac]) {
+            if (allDocs[nomePac]) {
                 allDocs[nomePac] = allDocs[nomePac].filter(d => d.id !== docId);
                 localStorage.setItem('movia_arquivos_pacientes', JSON.stringify(allDocs));
                 carregarArquivosPaciente(nomePac);
@@ -2826,17 +3323,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Lógica do Módulo Integrações ---
     const initIntegrations = () => {
-        const btnSaveWellhub = document.getElementById('btn-save-wellhub');
-        const btnSaveTotalpass = document.getElementById('btn-save-totalpass');
+        const wellhubSettings = JSON.parse(localStorage.getItem('movia_wellhub_settings') || '{"active":false}');
+        const totalpassSettings = JSON.parse(localStorage.getItem('movia_totalpass_settings') || '{"active":false}');
+        const instagramSettings = JSON.parse(localStorage.getItem('movia_instagram_settings') || '{"active":false}');
+
         const chkWellhubActive = document.getElementById('chk-wellhub-active');
         const chkTotalpassActive = document.getElementById('chk-totalpass-active');
+        const chkInstagramActive = document.getElementById('chk-instagram-sync');
+
+        const btnSaveWellhub = document.getElementById('btn-save-wellhub');
+        const btnSaveTotalpass = document.getElementById('btn-save-totalpass');
+        const btnSaveInstagram = document.getElementById('btn-save-instagram');
         const wellhubStatusBadge = document.getElementById('wellhub-status-badge');
         const totalpassStatusBadge = document.getElementById('totalpass-status-badge');
 
         const updateWellhubVisuals = (active) => {
             const logsDiv = document.getElementById('wellhub-logs');
             if (!logsDiv) return;
-            
+
             if (active) {
                 if (wellhubStatusBadge) {
                     wellhubStatusBadge.innerText = 'Conectado';
@@ -2866,7 +3370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const updateTotalpassVisuals = (active) => {
             const logsDiv = document.getElementById('totalpass-logs');
             if (!logsDiv) return;
-            
+
             if (active) {
                 if (totalpassStatusBadge) {
                     totalpassStatusBadge.innerText = 'Conectado';
@@ -2893,14 +3397,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Carregar dados salvos
-        const wellhubSettings = JSON.parse(localStorage.getItem('movia_wellhub_settings') || '{"active":false,"id":"","token":""}');
-        const totalpassSettings = JSON.parse(localStorage.getItem('movia_totalpass_settings') || '{"active":false,"id":"","token":""}');
-
+        // Carregar dados salvos (declarações foram movidas para o topo de initIntegrations)
         const iptWellhubId = document.getElementById('ipt-wellhub-id');
         const iptWellhubToken = document.getElementById('ipt-wellhub-token');
         const iptTotalpassId = document.getElementById('ipt-totalpass-id');
         const iptTotalpassToken = document.getElementById('ipt-totalpass-token');
+        const iptInstagramToken = document.getElementById('ipt-instagram-token');
+        const iptInstagramPageId = document.getElementById('ipt-instagram-page-id');
 
         if (iptWellhubId) iptWellhubId.value = wellhubSettings.id || '';
         if (iptWellhubToken) iptWellhubToken.value = wellhubSettings.token || '';
@@ -2909,6 +3412,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (iptTotalpassId) iptTotalpassId.value = totalpassSettings.id || '';
         if (iptTotalpassToken) iptTotalpassToken.value = totalpassSettings.token || '';
         if (chkTotalpassActive) updateTotalpassVisuals(totalpassSettings.active);
+
+        if (iptInstagramToken) iptInstagramToken.value = instagramSettings.token || '';
+        if (iptInstagramPageId) iptInstagramPageId.value = instagramSettings.pageId || '';
+
+        const updateInstagramVisuals = (active) => {
+            const logsDiv = document.getElementById('instagram-logs');
+            if (!logsDiv) return;
+            if (active) {
+                if (chkInstagramActive) chkInstagramActive.checked = true;
+                logsDiv.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #E2E8F0; font-size: 0.8rem;">
+                        <span>Conectado (Aguardando Webhook)</span>
+                        <span style="color:#ec4899; font-weight:600;">Ouvindo mensagens...</span>
+                    </div>`;
+            } else {
+                if (chkInstagramActive) chkInstagramActive.checked = false;
+                logsDiv.innerHTML = '<div style="text-align:center; padding:1.5rem 0;">Aguardando token de acesso oficial...</div>';
+            }
+        };
+        updateInstagramVisuals(instagramSettings.active);
 
         if (btnSaveWellhub) {
             btnSaveWellhub.addEventListener('click', () => {
@@ -2956,6 +3479,29 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        if (btnSaveInstagram) {
+            btnSaveInstagram.addEventListener('click', () => {
+                const idVal = iptInstagramPageId ? iptInstagramPageId.value : '';
+                const tokenVal = iptInstagramToken ? iptInstagramToken.value : '';
+                const activeVal = chkInstagramActive ? chkInstagramActive.checked : false;
+
+                if (activeVal && (!idVal || !tokenVal)) {
+                    alert('Por favor, insira a Página ID e o Token de Acesso da Meta para ativar a sincronização do Instagram.');
+                    if (chkInstagramActive) chkInstagramActive.checked = false;
+                    return;
+                }
+
+                localStorage.setItem('movia_instagram_settings', JSON.stringify({
+                    active: activeVal,
+                    pageId: idVal,
+                    token: tokenVal
+                }));
+
+                updateInstagramVisuals(activeVal);
+                alert('Configurações do Instagram salvas com sucesso!');
+            });
+        }
+
         if (chkWellhubActive) {
             chkWellhubActive.addEventListener('change', () => {
                 updateWellhubVisuals(chkWellhubActive.checked);
@@ -2973,11 +3519,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sincroniza clique do menu lateral tradicional
     document.querySelectorAll('.sidebar-fixed .nav-item[data-target], .sidebar-slim .nav-item[data-target]').forEach(item => {
-        item.addEventListener('click', () => {
-            if(item.dataset.target === 'loja') window.loadLojinha();
-            if(item.dataset.target === 'prontuario') window.loadProntuarios();
-            if(item.dataset.target === 'agenda') {
-                setTimeout(() => window.renderCalendar(), 100);
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = item.dataset.target;
+            
+            // Controle de visual (Sidebar Active)
+            document.querySelectorAll('.sidebar-fixed .nav-item, .sidebar-slim .nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll(`.nav-item[data-target="${target}"]`).forEach(n => n.classList.add('active'));
+            
+            // Controle de visual (Telas)
+            if(target) {
+                document.querySelectorAll('main.main-surface > .view').forEach(v => v.classList.add('hidden'));
+                const viewEl = document.getElementById(`view-${target}`);
+                if(viewEl) viewEl.classList.remove('hidden');
+            }
+
+            // Inicializadores condicionais
+            if(target === 'loja' && window.loadLojinha) window.loadLojinha();
+            if(target === 'prontuario' && window.loadProntuarios) window.loadProntuarios();
+            if(target === 'clientes' && typeof loadClientes === 'function') loadClientes();
+            if(target === 'agenda') {
+                setTimeout(() => { if(typeof renderCalendar === 'function') renderCalendar(); else if(window.renderCalendar) window.renderCalendar(); }, 100);
             }
         });
     });
@@ -2992,7 +3554,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('active');
             btn.style.color = '#2563EB';
             window.currentAgendaMode = btn.dataset.mode;
-            if(typeof window.renderCalendar === 'function') window.renderCalendar();
+            if (typeof window.renderCalendar === 'function') window.renderCalendar();
         });
     });
 
@@ -3009,7 +3571,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const min = String(now.getMinutes()).padStart(2, '0');
         clk.innerText = `${d}/${m}/${y} - ${h}:${min}`;
     };
-    
+
     updateClock();
     setInterval(updateClock, 10000);
 
