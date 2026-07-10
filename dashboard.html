@@ -1082,121 +1082,507 @@
                     </div>
                 </section>
 
-                <!-- Visão Financeiro -->
-                <section id="view-financeiro" class="view hidden fade-in"
-                    style="overflow-y: auto; overflow-x: hidden; padding-bottom: 8rem; height: 100%; display: flex; flex-direction: column;">
+                <!-- Visão Financeiro — Módulo Premium -->
+                <section id="view-financeiro" class="view hidden fade-in" style="overflow-y: auto; overflow-x: hidden; padding: 0 1.5rem 6rem; height: 100%; display: flex; flex-direction: column; gap: 1.75rem;">
 
-                    <!-- Top header -->
-                    <div
-                        style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 2rem; padding: 0 1.5rem;">
-                        <div style="padding-left: 1rem;">
-                            <h3
-                                style="font-size: 1.35rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="wallet" class="icon-sm" style="color: var(--primary);"></i> Fluxo de
-                                Caixa</h3>
-                            <p class="text-muted mt-1" style="font-size: 0.9rem;">Visão geral das suas receitas e
-                                despesas do mês atual.</p>
+                    <style>
+                        /* ===== FINANCEIRO PREMIUM STYLES ===== */
+                        .fin-kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+                        @media (max-width: 1200px) { .fin-kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+                        @media (max-width: 768px) { .fin-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+                        @media (max-width: 480px) { .fin-kpi-grid { grid-template-columns: 1fr 1fr; } }
+
+                        .fin-kpi-card {
+                            background: white; border-radius: 14px; padding: 1.25rem 1.5rem;
+                            box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid var(--border-soft);
+                            display: flex; flex-direction: column; gap: 0.5rem; transition: transform 0.2s, box-shadow 0.2s;
+                        }
+                        .fin-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+                        .fin-kpi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+                        .fin-kpi-icon i { width: 18px; height: 18px; }
+                        .fin-kpi-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+                        .fin-kpi-value { font-size: 1.3rem; font-weight: 800; color: var(--dark); line-height: 1; }
+                        .fin-kpi-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; display: inline-flex; align-items: center; gap: 3px; width: fit-content; }
+
+                        .fin-mid-grid { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; }
+                        @media (max-width: 960px) { .fin-mid-grid { grid-template-columns: 1fr; } }
+
+                        .fin-today-card { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden; }
+                        .fin-today-header { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); padding: 1.25rem 1.5rem; }
+                        .fin-today-row { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.5rem; border-bottom: 1px solid #F3F4F6; }
+                        .fin-today-row:last-child { border-bottom: none; }
+
+                        .fin-chart-card { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+                        .fin-chart-filters { display: flex; gap: 6px; }
+                        .fin-chart-btn { padding: 5px 14px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 0.78rem; font-weight: 600; color: #6B7280; cursor: pointer; transition: all 0.18s; }
+                        .fin-chart-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
+
+                        .fin-indicators { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+                        .fin-chip { background: white; border: 1px solid var(--border-soft); border-radius: 10px; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 110px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+                        .fin-chip-label { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+                        .fin-chip-value { font-size: 1rem; font-weight: 800; color: var(--dark); }
+
+                        .fin-toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+                        .fin-filter-btn { padding: 6px 14px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 0.78rem; font-weight: 600; color: #6B7280; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
+                        .fin-filter-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
+                        .fin-filter-btn:hover { border-color: #4F46E5; color: #4F46E5; }
+
+                        .fin-table-wrap { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden; }
+                        .fin-table { width: 100%; border-collapse: collapse; }
+                        .fin-table thead tr { background: #F9FAFB; border-bottom: 1px solid var(--border-soft); }
+                        .fin-table th { padding: 0.9rem 1.25rem; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; text-align: left; white-space: nowrap; }
+                        .fin-table td { padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--dark); border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+                        .fin-table tbody tr { transition: background 0.15s; cursor: pointer; }
+                        .fin-table tbody tr:hover { background: #F8FAFC; }
+                        .fin-table tbody tr:last-child td { border-bottom: none; }
+                        @media (max-width: 768px) { .fin-table { min-width: 700px; } }
+
+                        .cat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
+                        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
+                        .status-pago { background: #DCFCE7; color: #16A34A; }
+                        .status-pendente { background: #FEF3C7; color: #D97706; }
+                        .status-vencido { background: #FEE2E2; color: #DC2626; }
+                        .status-agendado { background: #DBEAFE; color: #2563EB; }
+
+                        /* Modal Financeiro */
+                        .fin-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 1rem; }
+                        .fin-modal-overlay.open { opacity: 1; pointer-events: all; }
+                        .fin-modal { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.18); transform: translateY(30px); transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275); }
+                        .fin-modal-overlay.open .fin-modal { transform: translateY(0); }
+                        .fin-modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
+                        .fin-modal-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+                        .fin-modal-footer { padding: 1.25rem 2rem; border-top: 1px solid var(--border-soft); display: flex; gap: 1rem; justify-content: flex-end; background: #FAFAFA; border-radius: 0 0 20px 20px; }
+                        .fin-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+                        @media (max-width: 480px) { .fin-form-row { grid-template-columns: 1fr; } }
+                    </style>
+
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+                        <div>
+                            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin: 0;">
+                                <i data-lucide="wallet" style="color: #4F46E5; width: 26px;"></i> Financeiro
+                            </h2>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 0 0;">Controle completo das suas finanças em um só lugar.</p>
                         </div>
-                        <div style="display:flex; gap:12px;">
-                            <button class="btn-primary" id="btn-nova-despesa"
-                                style="border-radius:99px; font-size:0.85rem; padding: 0.5rem 1rem; background:#EF4444; color:#FFF; border:none; font-weight:600;"
-                                onclick="openFinSlide('despesa')"><i data-lucide="arrow-down-circle"
-                                    style="width:14px; margin-right:4px;"></i> Nova Saída</button>
-                            <button class="btn-primary" id="btn-nova-receita"
-                                style="border-radius:99px; font-size:0.85rem; padding: 0.5rem 1rem; background:#10B981; color:#FFF; border:none; font-weight:600;"
-                                onclick="openFinSlide('receita')"><i data-lucide="arrow-up-circle"
-                                    style="width:14px; margin-right:4px;"></i> Nova Entrada</button>
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <button onclick="abrirModalDespesa()" style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#DC2626';this.style.color='white'" onmouseout="this.style.background='#FEF2F2';this.style.color='#DC2626'">
+                                <i data-lucide="arrow-down-circle" style="width: 15px;"></i> Nova Despesa
+                            </button>
+                            <button onclick="abrirModalReceita()" style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #10B981; color: white; border: none; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16,185,129,0.3);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                                <i data-lucide="arrow-up-circle" style="width: 15px;"></i> Nova Receita
+                            </button>
                         </div>
                     </div>
 
-                    <!-- KPI Financeiro -->
-                    <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem;">
-                        <div class="card kpi-card" style="padding:1.5rem;">
-                            <div class="kpi-icon bg-green"><i data-lucide="trending-up"></i></div>
-                            <div class="kpi-info" style="margin-top:1rem;">
-                                <span class="kpi-label">Entradas (Mês)</span>
-                                <span class="kpi-value" id="kpi-fin-entradas"
-                                    style="font-size: 1.5rem; color:#10B981;">R$ 0,00</span>
+                    <!-- 6 KPI Cards -->
+                    <div class="fin-kpi-grid">
+                        <!-- Entradas -->
+                        <div class="fin-kpi-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:#DCFCE7;"><i data-lucide="trending-up" style="color:#16A34A;"></i></div>
+                                <span class="fin-kpi-badge" style="background:#DCFCE7; color:#16A34A;" id="badge-entradas">+0%</span>
+                            </div>
+                            <span class="fin-kpi-label">Entradas do Mês</span>
+                            <span class="fin-kpi-value" id="kpi-fin-entradas" style="color:#10B981;">R$ 0,00</span>
+                        </div>
+                        <!-- Saídas -->
+                        <div class="fin-kpi-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:#FEE2E2;"><i data-lucide="trending-down" style="color:#DC2626;"></i></div>
+                                <span class="fin-kpi-badge" style="background:#FEE2E2; color:#DC2626;" id="badge-saidas">+0%</span>
+                            </div>
+                            <span class="fin-kpi-label">Saídas do Mês</span>
+                            <span class="fin-kpi-value" id="kpi-fin-saidas" style="color:#EF4444;">R$ 0,00</span>
+                        </div>
+                        <!-- Saldo -->
+                        <div class="fin-kpi-card" style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%); border-color: transparent;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:rgba(255,255,255,0.12);"><i data-lucide="banknote" style="color:#A5B4FC;"></i></div>
+                            </div>
+                            <span class="fin-kpi-label" style="color:#A5B4FC;">Saldo Atual</span>
+                            <span class="fin-kpi-value" id="kpi-fin-saldo" style="color:white;">R$ 0,00</span>
+                        </div>
+                        <!-- Contas a Receber -->
+                        <div class="fin-kpi-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:#EEF2FF;"><i data-lucide="clock" style="color:#4F46E5;"></i></div>
+                            </div>
+                            <span class="fin-kpi-label">Contas a Receber</span>
+                            <span class="fin-kpi-value" id="kpi-fin-receber" style="color:#4F46E5;">R$ 0,00</span>
+                        </div>
+                        <!-- Contas a Pagar -->
+                        <div class="fin-kpi-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:#FEF3C7;"><i data-lucide="alert-circle" style="color:#D97706;"></i></div>
+                            </div>
+                            <span class="fin-kpi-label">Contas a Pagar</span>
+                            <span class="fin-kpi-value" id="kpi-fin-pagar" style="color:#D97706;">R$ 0,00</span>
+                        </div>
+                        <!-- Lucro -->
+                        <div class="fin-kpi-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                <div class="fin-kpi-icon" style="background:#F0FDF4;"><i data-lucide="sparkles" style="color:#10B981;"></i></div>
+                            </div>
+                            <span class="fin-kpi-label">Lucro do Mês</span>
+                            <span class="fin-kpi-value" id="kpi-fin-lucro" style="color:#10B981;">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <!-- Mid: Resumo de Hoje + Gráfico -->
+                    <div class="fin-mid-grid">
+                        <!-- Resumo de Hoje -->
+                        <div class="fin-today-card">
+                            <div class="fin-today-header">
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                    <i data-lucide="sun" style="color:white; width:18px;"></i>
+                                    <span style="color:white; font-weight:800; font-size:0.95rem;">Resumo de Hoje</span>
+                                </div>
+                                <p style="color:rgba(255,255,255,0.7); font-size:0.78rem; margin:0;" id="fin-date-today"></p>
+                            </div>
+                            <div class="fin-today-row">
+                                <span style="font-size:0.83rem; color:var(--text-muted);">↑ Entradas Previstas</span>
+                                <strong id="today-entradas" style="color:#10B981; font-size:0.9rem;">R$ 0,00</strong>
+                            </div>
+                            <div class="fin-today-row">
+                                <span style="font-size:0.83rem; color:var(--text-muted);">↓ Saídas Previstas</span>
+                                <strong id="today-saidas" style="color:#EF4444; font-size:0.9rem;">R$ 0,00</strong>
+                            </div>
+                            <div class="fin-today-row">
+                                <span style="font-size:0.83rem; color:var(--text-muted);">⏰ Cobranças Hoje</span>
+                                <strong id="today-cobrancas" style="color:#D97706; font-size:0.9rem;">0</strong>
+                            </div>
+                            <div class="fin-today-row">
+                                <span style="font-size:0.83rem; color:var(--text-muted);">🔴 Contas Atrasadas</span>
+                                <strong id="today-atrasadas" style="color:#DC2626; font-size:0.9rem;">0</strong>
+                            </div>
+                            <div class="fin-today-row">
+                                <span style="font-size:0.83rem; color:var(--text-muted);">💰 Previsto Entrar</span>
+                                <strong id="today-previsto" style="color:#4F46E5; font-size:0.9rem;">R$ 0,00</strong>
                             </div>
                         </div>
-                        <div class="card kpi-card" style="padding:1.5rem;">
-                            <div class="kpi-icon bg-red"><i data-lucide="trending-down"></i></div>
-                            <div class="kpi-info" style="margin-top:1rem;">
-                                <span class="kpi-label">Saídas (Mês)</span>
-                                <span class="kpi-value" id="kpi-fin-saidas" style="font-size: 1.5rem; color:#EF4444;">R$
-                                    0,00</span>
+
+                        <!-- Gráfico Fluxo de Caixa -->
+                        <div class="fin-chart-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                <h4 style="font-size:1rem; font-weight:800; margin:0;">Fluxo de Caixa</h4>
+                                <div class="fin-chart-filters">
+                                    <button class="fin-chart-btn active" onclick="initGraficoFluxo(7, this)">7d</button>
+                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(30, this)">30d</button>
+                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(90, this)">90d</button>
+                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(365, this)">12m</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card kpi-card" style="padding:1.5rem; background:#111827; border:none;">
-                            <div class="kpi-icon" style="background:#1F2937; color:#38BDF8;"><i
-                                    data-lucide="banknote"></i></div>
-                            <div class="kpi-info" style="margin-top:1rem;">
-                                <span class="kpi-label" style="color:#9CA3AF;">Saldo Líquido Estimado</span>
-                                <span class="kpi-value" id="kpi-fin-saldo" style="font-size: 1.5rem; color:#ffffff;">R$
-                                    0,00</span>
+                            <div style="flex:1; min-height:200px; position:relative;">
+                                <canvas id="chart-fluxo"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tabela de Movimentações -->
-                    <div class="card p-0" style="padding: 0; min-height: 400px;">
-                        <div class="panel-header"
-                            style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-soft);">
-                            <h4 style="font-size: 1rem; font-weight:600; color:var(--dark);">Extrato Detalhado</h4>
-                            <div class="search-command-modern" style="width: 250px; height: 34px;">
-                                <i data-lucide="search" style="width: 14px; height: 14px; color:#6B7280;"></i>
-                                <input type="text" placeholder="Buscar transação...">
-                            </div>
+                    <!-- Indicadores Rápidos -->
+                    <div class="fin-indicators">
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Receita Total</span>
+                            <span class="fin-chip-value" id="ind-receita">R$ 0,00</span>
                         </div>
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse; min-width: 900px;"
-                                id="table-financeiro">
-                                <thead>
-                                    <tr
-                                        style="background: #F9FAFB; border-bottom: 1px solid var(--border-soft); text-align: left;">
-                                        <th
-                                            style="padding: 1rem 2rem; font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); font-weight: 700; letter-spacing:0.04em;">
-                                            Data</th>
-                                        <th
-                                            style="padding: 1rem 1.5rem; font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); font-weight: 700; letter-spacing:0.04em; width: 25%;">
-                                            Descrição / Origem</th>
-                                        <th
-                                            style="padding: 1rem 1.5rem; font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); font-weight: 700; letter-spacing:0.04em;">
-                                            Categoria (Pgto)</th>
-                                        <th
-                                            style="padding: 1rem 1.5rem; font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); font-weight: 700; letter-spacing:0.04em;">
-                                            Valor</th>
-                                        <th
-                                            style="padding: 1rem 1.5rem; font-size: 0.72rem; text-transform:uppercase; color: var(--text-muted); font-weight: 700; letter-spacing:0.04em;">
-                                            Status</th>
-                                        <th style="padding: 1rem 2rem; text-align:right;"></th>
-                                    </tr>
-                                </thead>
-                                <style>
-                                    .fin-row:hover {
-                                        background: #F8FAFC;
-                                    }
-                                </style>
-                                <tbody>
-                                    <tr id="empty-state-financeiro">
-                                        <td colspan="6"
-                                            style="padding: 4rem 2rem; text-align: center; color: var(--text-muted);">
-                                            <div
-                                                style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 8px;">
-                                                <i data-lucide="receipt"
-                                                    style="width:48px; height:48px; opacity:0.15; color:var(--dark);"></i>
-                                                <h3 style="color:var(--dark); font-weight:600; margin-top:8px;">
-                                                    Balanço Vazio</h3>
-                                                <p style="font-size:0.85rem;">Ainda não há receitas ou despesas
-                                                    cadastradas neste período.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Despesas Totais</span>
+                            <span class="fin-chip-value" id="ind-despesas" style="color:#EF4444;">R$ 0,00</span>
+                        </div>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Lucro</span>
+                            <span class="fin-chip-value" id="ind-lucro" style="color:#10B981;">R$ 0,00</span>
+                        </div>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Margem de Lucro</span>
+                            <span class="fin-chip-value" id="ind-margem" style="color:#4F46E5;">0%</span>
+                        </div>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Ticket Médio</span>
+                            <span class="fin-chip-value" id="ind-ticket">R$ 0,00</span>
+                        </div>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Valor Recebido</span>
+                            <span class="fin-chip-value" id="ind-recebido" style="color:#16A34A;">R$ 0,00</span>
+                        </div>
+                        <div class="fin-chip">
+                            <span class="fin-chip-label">Valor Pendente</span>
+                            <span class="fin-chip-value" id="ind-pendente" style="color:#D97706;">R$ 0,00</span>
                         </div>
                     </div>
+
+                    <!-- Toolbar: Busca + Filtros + Ações -->
+                    <div class="fin-table-wrap" style="padding: 1.25rem 1.5rem; border-radius-bottom: 0;">
+                        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                            <div class="search-command-modern" style="flex:1; min-width:220px; height:40px;">
+                                <i data-lucide="search" style="width:14px; color:#6B7280;"></i>
+                                <input type="text" id="fin-search" placeholder="Buscar por cliente, valor, categoria..." oninput="renderExtrato()" style="font-size:0.85rem;">
+                            </div>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button class="fin-filter-btn active" onclick="setFiltroData('hoje', this)">Hoje</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('semana', this)">Semana</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('mes', this)">Este Mês</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('30dias', this)">30 dias</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('ano', this)">Este Ano</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('todos', this)">Todos</button>
+                            </div>
+                            <select id="fin-filter-tipo" onchange="renderExtrato()" style="padding: 6px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size:0.83rem; color:var(--dark); background:white; cursor:pointer;">
+                                <option value="">Tipo: Todos</option>
+                                <option value="receita">Receitas</option>
+                                <option value="despesa">Despesas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tabela Extrato -->
+                    <div class="fin-table-wrap" style="overflow-x:auto; margin-top:-0.75rem; border-radius-top: 0;">
+                        <table class="fin-table" id="table-financeiro-v2">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição / Cliente</th>
+                                    <th>Categoria</th>
+                                    <th>Pagamento</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th style="text-align:right;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-financeiro">
+                                <tr id="fin-empty-state">
+                                    <td colspan="7" style="text-align:center; padding:4rem 2rem; color:var(--text-muted);">
+                                        <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                                            <i data-lucide="receipt" style="width:48px; height:48px; opacity:0.12;"></i>
+                                            <h4 style="font-weight:700; color:var(--dark); margin:0;">Nenhum lançamento ainda</h4>
+                                            <p style="font-size:0.85rem; margin:0;">Use os botões acima para registrar receitas e despesas.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </section>
+
+                <!-- Modal Nova Receita -->
+                <div class="fin-modal-overlay" id="modal-receita">
+                    <div class="fin-modal">
+                        <div class="fin-modal-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="background:#DCFCE7; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-up-circle" style="color:#16A34A; width:18px;"></i>
+                                </div>
+                                <div>
+                                    <h3 style="margin:0; font-size:1.05rem; font-weight:800;">Nova Receita</h3>
+                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma entrada no caixa</p>
+                                </div>
+                            </div>
+                            <button onclick="fecharModais()" style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x" style="width:20px; color:#6B7280;"></i></button>
+                        </div>
+                        <div class="fin-modal-body">
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Cliente</label>
+                                    <input type="text" id="rec-cliente" class="input-base" list="fin-clientes-list" placeholder="Nome do cliente...">
+                                    <datalist id="fin-clientes-list"></datalist>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Valor (R$)</label>
+                                    <input type="text" id="rec-valor" class="input-base" placeholder="0,00" inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)" style="font-size:1.15rem; font-weight:700; color:#10B981;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-sm">Descrição</label>
+                                <input type="text" id="rec-desc" class="input-base" placeholder="Ex: Mensalidade Julho, Avaliação Física...">
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Categoria</label>
+                                    <select id="rec-cat" class="input-base">
+                                        <option value="Mensalidade">🟢 Mensalidade</option>
+                                        <option value="Avaliação">🔵 Avaliação</option>
+                                        <option value="Venda de Produtos">🟣 Venda de Produtos</option>
+                                        <option value="Aluguel">🟠 Aluguel</option>
+                                        <option value="Marketing">🟤 Marketing</option>
+                                        <option value="Outros">⚪ Outros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Centro de Custo</label>
+                                    <input type="text" id="rec-centro" class="input-base" placeholder="Ex: Pilates, Estética...">
+                                </div>
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Data</label>
+                                    <input type="date" id="rec-data" class="input-base">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Forma de Pagamento</label>
+                                    <select id="rec-forma" class="input-base">
+                                        <option value="PIX">PIX</option>
+                                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                        <option value="Cartão de Débito">Cartão de Débito</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Boleto">Boleto</option>
+                                        <option value="Transferência">Transferência / TED</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Status</label>
+                                    <select id="rec-status" class="input-base">
+                                        <option value="Pago">🟢 Pago</option>
+                                        <option value="Pendente">🟠 Pendente</option>
+                                        <option value="Agendado">🔵 Agendado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Conta Bancária</label>
+                                    <input type="text" id="rec-conta" class="input-base" placeholder="Ex: Bradesco, Nubank...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-sm">Observações</label>
+                                <textarea id="rec-obs" class="input-base" rows="2" placeholder="Notas adicionais..." style="resize:none;"></textarea>
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
+                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Receita Recorrente?</span>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="rec-recorrente" onchange="toggleRecRecorrencia()">
+                                    <span style="font-size:0.82rem; color:var(--text-muted);">Sim, repetir</span>
+                                </label>
+                            </div>
+                            <div id="rec-recorrencia-opts" style="display:none;">
+                                <label class="label-sm">Recorrência</label>
+                                <select id="rec-recorrencia" class="input-base">
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Quinzenal">Quinzenal</option>
+                                    <option value="Mensal" selected>Mensal</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="fin-modal-footer">
+                            <button onclick="fecharModais()" class="btn-outline" style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
+                            <button onclick="salvarLancamento('receita')" style="background:#10B981; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3); font-size:0.9rem;">Salvar Receita</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Nova Despesa -->
+                <div class="fin-modal-overlay" id="modal-despesa">
+                    <div class="fin-modal">
+                        <div class="fin-modal-header">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="background:#FEE2E2; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="arrow-down-circle" style="color:#DC2626; width:18px;"></i>
+                                </div>
+                                <div>
+                                    <h3 style="margin:0; font-size:1.05rem; font-weight:800;">Nova Despesa</h3>
+                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma saída do caixa</p>
+                                </div>
+                            </div>
+                            <button onclick="fecharModais()" style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x" style="width:20px; color:#6B7280;"></i></button>
+                        </div>
+                        <div class="fin-modal-body">
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Fornecedor / Destino</label>
+                                    <input type="text" id="dep-fornecedor" class="input-base" placeholder="Ex: Mega Energia, Locação...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Valor (R$)</label>
+                                    <input type="text" id="dep-valor" class="input-base" placeholder="0,00" inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)" style="font-size:1.15rem; font-weight:700; color:#DC2626;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-sm">Descrição</label>
+                                <input type="text" id="dep-desc" class="input-base" placeholder="Ex: Aluguel, Conta de Luz, Salário...">
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Categoria</label>
+                                    <select id="dep-cat" class="input-base">
+                                        <option value="Aluguel">🟠 Aluguel</option>
+                                        <option value="Funcionários">🟡 Funcionários</option>
+                                        <option value="Marketing">🟤 Marketing</option>
+                                        <option value="Impostos">⚫ Impostos</option>
+                                        <option value="Manutenção">🔷 Manutenção</option>
+                                        <option value="Venda de Produtos">🟣 Insumos/Produtos</option>
+                                        <option value="Outros">⚪ Outros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Centro de Custo</label>
+                                    <input type="text" id="dep-centro" class="input-base" placeholder="Ex: Administrativo...">
+                                </div>
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Data</label>
+                                    <input type="date" id="dep-data" class="input-base">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Forma de Pagamento</label>
+                                    <select id="dep-forma" class="input-base">
+                                        <option value="PIX">PIX</option>
+                                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                        <option value="Cartão de Débito">Cartão de Débito</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Boleto">Boleto</option>
+                                        <option value="Transferência">Transferência / TED</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="fin-form-row">
+                                <div class="form-group">
+                                    <label class="label-sm">Status</label>
+                                    <select id="dep-status" class="input-base">
+                                        <option value="Pago">🟢 Pago</option>
+                                        <option value="Pendente">🟠 Pendente</option>
+                                        <option value="Agendado">🔵 Agendado</option>
+                                        <option value="Vencido">🔴 Vencido</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-sm">Conta Bancária</label>
+                                    <input type="text" id="dep-conta" class="input-base" placeholder="Ex: Bradesco, Nubank...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-sm">Observações</label>
+                                <textarea id="dep-obs" class="input-base" rows="2" placeholder="Notas adicionais..." style="resize:none;"></textarea>
+                            </div>
+                            <div style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
+                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Despesa Recorrente?</span>
+                                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                                    <input type="checkbox" id="dep-recorrente" onchange="toggleDepRecorrencia()">
+                                    <span style="font-size:0.82rem; color:var(--text-muted);">Sim, repetir</span>
+                                </label>
+                            </div>
+                            <div id="dep-recorrencia-opts" style="display:none;">
+                                <label class="label-sm">Recorrência</label>
+                                <select id="dep-recorrencia" class="input-base">
+                                    <option value="Semanal">Semanal</option>
+                                    <option value="Quinzenal">Quinzenal</option>
+                                    <option value="Mensal" selected>Mensal</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="fin-modal-footer">
+                            <button onclick="fecharModais()" class="btn-outline" style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
+                            <button onclick="salvarLancamento('despesa')" style="background:#DC2626; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(220,38,38,0.3); font-size:0.9rem;">Salvar Despesa</button>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 <!-- Visão Prontuário -->
                 <section id="view-prontuario" class="view hidden fade-in">
