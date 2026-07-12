@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovClin — Solicite Aqui</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Mayaflow — Solicite Aqui</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="login.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* Pequeno ajuste para o scroll caso a tela seja menor do que o form extenso */
         .login-right {
             overflow-y: auto;
-            align-items: flex-start; /* Permite scroll no form extenso */
+            align-items: flex-start;
+            /* Permite scroll no form extenso */
         }
+
         .login-form-container {
             margin: auto 0;
             padding: 2rem 0;
         }
+
         @media (max-width: 768px) {
             .login-right {
                 align-items: center;
@@ -25,6 +30,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-layout">
         <!-- Left Side (60%) -->
@@ -38,10 +44,11 @@
                 <div class="shape shape-2"></div>
                 <div class="cross-pattern"></div>
             </div>
-            
+
             <div class="left-content">
                 <div class="hero-image-wrapper">
-                    <img src="pilates_teacher.png" alt="Professora de Pilates utilizando tablet" class="illustrative-photo">
+                    <img src="pilates_teacher.png" alt="Professora de Pilates utilizando tablet"
+                        class="illustrative-photo">
                     <div class="floating-badge">
                         <i data-lucide="activity"></i>
                         <span>Saúde & Tecnologia</span>
@@ -49,12 +56,16 @@
                 </div>
 
                 <div class="text-content">
-                    <h1 class="left-title" style="font-size: 2.2rem; line-height: 1.25;">Simplifique a gestão <br><span>do seu estúdio de Pilates, clínica ou academia.</span></h1>
+                    <h1 class="left-title" style="font-size: 2.2rem; line-height: 1.25;">Simplifique a gestão
+                        <br><span>do seu estúdio de Pilates, clínica ou academia.</span>
+                    </h1>
                     <h2 class="left-highlight">Tudo em um só lugar.</h2>
                     <p class="left-desc">
-                        O MovClin ajuda fisioterapeutas, educadores físicos, estúdios de Pilates e academias a organizar atendimentos, controlar pagamentos, gerenciar pacientes e acompanhar o crescimento do negócio de forma simples.
+                        O Mayaflow ajuda fisioterapeutas, educadores físicos, estúdios de Pilates e academias a
+                        organizar atendimentos, controlar pagamentos, gerenciar pacientes e acompanhar o crescimento do
+                        negócio de forma simples.
                     </p>
-                    
+
                     <div class="benefits-grid">
                         <div class="benefit-item">
                             <i data-lucide="calendar-check" class="benefit-icon"></i>
@@ -73,7 +84,7 @@
                             <span>Relatórios e Indicadores</span>
                         </div>
                     </div>
-                    
+
                     <div class="security-card">
                         <div class="security-icon-wrapper">
                             <i data-lucide="shield-check" class="security-icon"></i>
@@ -88,19 +99,17 @@
         <div class="login-right">
             <div class="login-form-container" style="max-width: 480px;">
                 <div class="brand" style="display:flex; align-items:center; gap: 12px; margin-bottom: 8px;">
-                    <div style="width: 126px; height: 100px; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
-                        <img src="logo-movia.png" alt="MovClin Icon" style="height: 100px; width: auto; max-width: none; display: block;">
-                    </div>
-                    <span style="font-size: 3.5rem; font-weight: 800; color: #111827; letter-spacing: -0.05em; line-height: 1; margin-left: -6px;">MovClin</span>
+                    <img src="logo-Mayaflow.png" alt="Mayaflow"
+                        style="height: 160px; width: auto; max-width: 100%; display: block; background: transparent;">
                 </div>
-                
+
                 <div class="form-header">
                     <h2>Solicite sua conta</h2>
                     <p>Faça parte da nova era de gestão.</p>
                 </div>
-                
+
                 <form class="login-form" id="signupForm" style="gap: 1rem;">
-                    
+
                     <div class="form-group">
                         <label for="name">Nome completo</label>
                         <input type="text" id="name" placeholder="Ex: Ana Silva" required>
@@ -108,7 +117,7 @@
 
                     <div class="form-group">
                         <label for="company">Nome do estúdio, clínica ou academia</label>
-                        <input type="text" id="company" placeholder="Ex: Studio MovClin Pilates" required>
+                        <input type="text" id="company" placeholder="Ex: Studio Mayaflow Pilates" required>
                     </div>
 
                     <div style="display: flex; gap: 1rem;">
@@ -127,19 +136,32 @@
                             <label for="uf">UF</label>
                             <select id="uf" required>
                                 <option value="">Sel...</option>
-                                <option value="AC">AC</option><option value="AL">AL</option>
-                                <option value="AP">AP</option><option value="AM">AM</option>
-                                <option value="BA">BA</option><option value="CE">CE</option>
-                                <option value="DF">DF</option><option value="ES">ES</option>
-                                <option value="GO">GO</option><option value="MA">MA</option>
-                                <option value="MT">MT</option><option value="MS">MS</option>
-                                <option value="MG">MG</option><option value="PA">PA</option>
-                                <option value="PB">PB</option><option value="PR">PR</option>
-                                <option value="PE">PE</option><option value="PI">PI</option>
-                                <option value="RJ">RJ</option><option value="RN">RN</option>
-                                <option value="RS">RS</option><option value="RO">RO</option>
-                                <option value="RR">RR</option><option value="SC">SC</option>
-                                <option value="SP">SP</option><option value="SE">SE</option>
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MT">MT</option>
+                                <option value="MS">MS</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
                                 <option value="TO">TO</option>
                             </select>
                         </div>
@@ -160,7 +182,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="source">Como conheceu o MovClin?</label>
+                        <label for="source">Como conheceu o Mayaflow?</label>
                         <select id="source" required>
                             <option value="">Selecione...</option>
                             <option value="Instagram">Instagram</option>
@@ -174,63 +196,124 @@
                     <div class="form-group" style="margin-bottom: 24px;">
                         <label>Escolha o seu plano:</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px;">
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-teste">
-                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="teste" checked> <strong style="color:#111827; font-size: 0.9rem;">Demonstração</strong></span>
-                                <span style="font-size: 0.75rem; color: #6B7280; margin-left: 20px;">Livre por 7 dias</span>
-                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #6B7280; display: flex; flex-direction: column; gap: 4px;">
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i> <span>Acesso total liberado</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i> <span>Uso sem compromisso</span></li>
-                                </ul>
-                            </label>
-                            
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-essencial">
-                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="essencial"> <strong style="color:#111827; font-size: 0.9rem;">Essencial</strong></span>
-                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 69,90 / mês</span>
-                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Até 50 alunos</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Agenda Prática</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>1 Profissional</span></li>
-                                </ul>
-                            </label>
-
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-avancado">
-                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="avancado"> <strong style="color:#111827; font-size: 0.9rem;">Avançado</strong></span>
-                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 119,90 / mês</span>
-                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Até 200 alunos</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Financeiro e Cobranças</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Acesso p/ 3 Profissionais</span></li>
+                            <label
+                                style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;"
+                                class="plan-option" id="label-teste">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input
+                                        type="radio" name="selectedPlan" value="teste" checked> <strong
+                                        style="color:#111827; font-size: 0.9rem;">Demonstração</strong></span>
+                                <span style="font-size: 0.75rem; color: #6B7280; margin-left: 20px;">Livre por 7
+                                    dias</span>
+                                <ul
+                                    style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #6B7280; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i>
+                                        <span>Acesso total liberado</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#6B7280; flex-shrink: 0;"></i>
+                                        <span>Uso sem compromisso</span>
+                                    </li>
                                 </ul>
                             </label>
 
-                            <label style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;" class="plan-option" id="label-premium">
-                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input type="radio" name="selectedPlan" value="premium"> <strong style="color:#111827; font-size: 0.9rem;">Premium</strong></span>
-                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$ 179,90 / mês</span>
-                                <ul style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="star" style="width:12px; height:12px; color:#F59E0B; flex-shrink: 0;"></i> <span>Alunos Ilimitados</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Relatórios de BI</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Profissionais Ilimitados</span></li>
-                                    <li style="display:flex; gap: 4px;"><i data-lucide="check" style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>Suporte VIP Prioritário</span></li>
+                            <label
+                                style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;"
+                                class="plan-option" id="label-essencial">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input
+                                        type="radio" name="selectedPlan" value="essencial"> <strong
+                                        style="color:#111827; font-size: 0.9rem;">Essencial</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$
+                                    69,90 / mês</span>
+                                <ul
+                                    style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Até 50 alunos</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Agenda Prática</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i> <span>1
+                                            Profissional</span></li>
+                                </ul>
+                            </label>
+
+                            <label
+                                style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;"
+                                class="plan-option" id="label-avancado">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input
+                                        type="radio" name="selectedPlan" value="avancado"> <strong
+                                        style="color:#111827; font-size: 0.9rem;">Avançado</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$
+                                    119,90 / mês</span>
+                                <ul
+                                    style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Até 200 alunos</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Financeiro e Cobranças</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Acesso p/ 3 Profissionais</span>
+                                    </li>
+                                </ul>
+                            </label>
+
+                            <label
+                                style="border: 1px solid #D1D5DB; border-radius: 8px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s; align-items: flex-start;"
+                                class="plan-option" id="label-premium">
+                                <span style="display:flex; align-items:center; gap: 8px; width: 100%;"><input
+                                        type="radio" name="selectedPlan" value="premium"> <strong
+                                        style="color:#111827; font-size: 0.9rem;">Premium</strong></span>
+                                <span style="font-size: 0.8rem; color: #4F46E5; font-weight: 600; margin-left: 20px;">R$
+                                    179,90 / mês</span>
+                                <ul
+                                    style="margin: 8px 0 0 20px; padding: 0; list-style: none; font-size: 0.75rem; color: #4B5563; display: flex; flex-direction: column; gap: 4px;">
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="star"
+                                            style="width:12px; height:12px; color:#F59E0B; flex-shrink: 0;"></i>
+                                        <span>Alunos Ilimitados</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Relatórios de BI</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Profissionais Ilimitados</span>
+                                    </li>
+                                    <li style="display:flex; gap: 4px;"><i data-lucide="check"
+                                            style="width:12px; height:12px; color:#10B981; flex-shrink: 0;"></i>
+                                        <span>Suporte VIP Prioritário</span>
+                                    </li>
                                 </ul>
                             </label>
                         </div>
                     </div>
 
-                    <button type="submit" id="mainSubmitBtn" class="btn-primary" style="margin-top: 0.5rem; font-size: 1.05rem;">Quero experimentar grátis por 7 dias</button>
-                    
-                    <p style="font-size: 0.75rem; color: #6B7280; text-align: center; margin-top: -0.25rem; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.4;">
+                    <button type="submit" id="mainSubmitBtn" class="btn-primary"
+                        style="margin-top: 0.5rem; font-size: 1.05rem;">Quero experimentar grátis por 7 dias</button>
+
+                    <p
+                        style="font-size: 0.75rem; color: #6B7280; text-align: center; margin-top: -0.25rem; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.4;">
                         <i data-lucide="shield-check" style="width:14px; height: 14px; color: #10B981;"></i>
                         Prometemos não utilizar suas informações de contato para enviar qualquer tipo de SPAM.
                     </p>
                 </form>
-                
+
                 <div class="signup-prompt" style="margin-top: 1.5rem;">
                     <span>Já possui uma conta?</span>
                     <a href="login.html" class="btn-secondary">Entrar</a>
                 </div>
-                
+
                 <footer class="login-footer">
-                    <p>&copy; 2026 MovClin. Todos os direitos reservados.</p>
+                    <p>&copy; 2026 Mayaflow. Todos os direitos reservados.</p>
                 </footer>
             </div>
         </div>
@@ -249,7 +332,7 @@
         toggleBtn.addEventListener('click', function () {
             const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
             inputField.setAttribute('type', type);
-            
+
             if (type === 'password') {
                 iconField.setAttribute('data-lucide', 'eye');
             } else {
@@ -268,10 +351,10 @@
 
         function updatePlanSelection() {
             selectedPlan = document.querySelector('input[name="selectedPlan"]:checked').value;
-            
+
             planLabels.forEach(lbl => {
                 let radio = lbl.querySelector('input');
-                if(radio.checked) {
+                if (radio.checked) {
                     lbl.style.border = '2px solid #4F46E5';
                     lbl.style.background = '#EEF2FF';
                 } else {
@@ -288,7 +371,7 @@
         }
 
         planRadios.forEach(r => r.addEventListener('change', updatePlanSelection));
-        
+
         // Define o inicial com base na URL
         if (['essencial', 'avancado', 'premium'].includes(selectedPlan)) {
             document.querySelector(`input[name="selectedPlan"][value="${selectedPlan}"]`).checked = true;
@@ -300,15 +383,15 @@
 
         // Configuração do Supabase
         // IMPORTANTE: Insira sua URL do Supabase gerada no painel! (ex: https://abcedf.supabase.co)
-        const SUPABASE_URL = 'https://lwzcinuzqgogrgsgfnjf.supabase.co'; 
+        const SUPABASE_URL = 'https://lwzcinuzqgogrgsgfnjf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_yu0syRT8oiLCD2tz-K8ipA_KUiyFrbU';
-        
+
         let supabaseApp = null;
         try {
-            if(SUPABASE_URL.startsWith('http')) {
+            if (SUPABASE_URL.startsWith('http')) {
                 supabaseApp = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
-        } catch(e) {
+        } catch (e) {
             console.warn("Supabase não carregado: URL inválida.");
         }
 
@@ -316,7 +399,7 @@
         const form = document.getElementById('signupForm');
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const btn = form.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
             btn.innerText = 'Processando...';
@@ -337,7 +420,7 @@
                     const ipRes = await fetch('https://api.ipify.org?format=json');
                     const ipData = await ipRes.json();
                     userIp = ipData.ip;
-                } catch(ipErr) {
+                } catch (ipErr) {
                     console.log('Aviso: IP não rastreado.');
                 }
 
@@ -351,21 +434,21 @@
                 const city = document.getElementById('city').value;
                 const source = document.getElementById('source').value;
                 const promo = document.getElementById('promo').value;
-        // Persist registration data locally for quick access or debugging
-        const clientData = {
-          email,
-          password,
-          name,
-          company,
-          phone,
-          uf,
-          city,
-          source,
-          promo
-        };
-        try {
-          localStorage.setItem('movia_signup_data', JSON.stringify(clientData));
-        } catch(e) { console.warn('Failed to store signup data', e); }
+                // Persist registration data locally for quick access or debugging
+                const clientData = {
+                    email,
+                    password,
+                    name,
+                    company,
+                    phone,
+                    uf,
+                    city,
+                    source,
+                    promo
+                };
+                try {
+                    localStorage.setItem('movia_signup_data', JSON.stringify(clientData));
+                } catch (e) { console.warn('Failed to store signup data', e); }
 
                 // 3. Cadastrar Autenticação
                 const { data: authData, error: authError } = await supabaseApp.auth.signUp({
@@ -390,7 +473,7 @@
                             codigo_promo: promo,
                             ip_cadastro: userIp
                         }]);
-                    
+
                     if (dbError) {
                         // Se violar restrição UNIQUE de IP
                         if (dbError.code === '23505') {
@@ -420,4 +503,5 @@
         });
     </script>
 </body>
+
 </html>

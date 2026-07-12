@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovClin - Workspace</title>
+    <title>Mayaflow - Workspace</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,15 +19,11 @@
             <!-- Sidebar Fixed (Área Estática Larga) -->
             <aside class="sidebar-fixed">
                 <!-- Header da Sidebar com Logotipo estilo AGENDA+ -->
-                <div class="sidebar-brand-header" style="height: 85px; align-items: flex-end; padding-bottom: 12px;">
-                    <div style="display:flex; align-items:center; gap: 8px;">
-                        <div
-                            style="width: 58px; height: 46px; overflow: hidden; display: flex; align-items: center; justify-content: flex-start;">
-                            <img src="logo-movia.png" alt="MovClin Icon"
-                                style="height: 46px; width: auto; max-width: none; display: block; filter: invert(1) grayscale(1) brightness(2); mix-blend-mode: screen;">
-                        </div>
-                        <span
-                            style="font-size: 1.6rem; font-weight: 800; color: white; letter-spacing: -0.05em; line-height: 1; margin-left: -3px;">MovClin</span>
+                <div class="sidebar-brand-header"
+                    style="height: 110px; align-items: center; padding-bottom: 8px; padding-top: 8px;">
+                    <div style="display:flex; align-items:center; gap: 8px; flex:1;">
+                        <img src="logo-Mayaflow.png" alt="Mayaflow"
+                            style="height: 140px; width: auto; max-width: 100%; display: block; background: transparent;">
                     </div>
                     <button class="btn-icon" style="color: #94A3B8; margin-bottom: 2px;"><i data-lucide="menu"
                             style="width:18px; height:18px;"></i></button>
@@ -66,9 +62,17 @@
                                 Wellhub
                             </a>
                             <a href="#" class="nav-dropdown-item nav-item" data-target="integracao-instagram">
-                                <span
-                                    style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#94A3B8; margin-right:6px;"></span>
-                                Instagram
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                                    <span>
+                                        <span
+                                            style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#94A3B8; margin-right:6px;"></span>
+                                        Instagram
+                                    </span>
+                                    <span
+                                        style="background:rgba(245,158,11,0.15); color:#D97706; font-size:9px; padding:3px 6px; border-radius:99px; font-weight:700; letter-spacing:0.02em;">Em
+                                        const.</span>
+                                </div>
                             </a>
                             <a href="#" class="nav-dropdown-item nav-item" data-target="integracao-totalpass">
                                 <span
@@ -80,6 +84,9 @@
                 </nav>
 
                 <div class="nav-list mt-auto mb-4" style="margin-top:auto; margin-bottom: 0.5rem; width:100%;">
+                    <a href="#" class="nav-item" data-target="suporte" title="Suporte IA"><i data-lucide="help-circle"
+                            class="icon-suporte" style="color: #10B981;"></i> <span class="nav-label">Suporte
+                            IA</span></a>
                     <a href="#" class="nav-item" data-target="ajustes" title="Configurações"><i data-lucide="settings"
                             class="icon-ajustes"></i> <span class="nav-label">Ajustes</span></a>
                     <div class="avatar-container-fixed"
@@ -530,7 +537,7 @@
                                         <h3
                                             style="font-size:1.15rem; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
                                             <i data-lucide="compass" style="width:20px;"></i> Primeiros passos na
-                                            MovClin
+                                            Mayaflow
                                         </h3>
                                         <p style="font-size:0.85rem; opacity:0.9; line-height: 1.5; max-width: 500px;">
                                             Bem-vindo ao seu novo painel gerencial! Preparamos um tour guiado rápido
@@ -541,7 +548,7 @@
                                     <div style="z-index: 2;">
                                         <button id="btn-start-tour"
                                             style="background:white; color:#4F46E5; padding:10px 18px; border-radius:8px; font-weight:800; font-size:0.85rem; border:none; cursor:pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display:flex; align-items:center; gap:8px;"
-                                            onclick="iniciarTourMovClin()">
+                                            onclick="iniciarTourMayaflow()">
                                             <i data-lucide="play" style="width:16px;"></i> Fazer um Tour
                                         </button>
                                     </div>
@@ -553,7 +560,7 @@
                                         <h3
                                             style="font-size:1.2rem; font-weight:800; color:var(--dark); display:flex; align-items:center; gap:8px;">
                                             <i data-lucide="youtube" style="color:#EF4444; width:22px;"></i> Aprenda com
-                                            a MovClin
+                                            a Mayaflow
                                         </h3>
                                         <button
                                             style="background:transparent; border:none; color:#4F46E5; font-size:0.85rem; font-weight:700; cursor:pointer;"
@@ -710,7 +717,8 @@
                                                 <p
                                                     style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
                                                     <i data-lucide="activity" style="width:12px; color:#10B981;"></i>
-                                                    Pilates Solo</p>
+                                                    Pilates Solo
+                                                </p>
                                             </div>
                                             <button class="btn-icon"
                                                 style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
@@ -739,7 +747,8 @@
                                                 <p
                                                     style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
                                                     <i data-lucide="dumbbell" style="width:12px; color:#3B82F6;"></i>
-                                                    Funcional</p>
+                                                    Funcional
+                                                </p>
                                             </div>
                                             <button class="btn-icon"
                                                 style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
@@ -768,7 +777,8 @@
                                                 <p
                                                     style="font-size:0.8rem; color:var(--text-muted); margin:4px 0 0 0; display:flex; align-items:center; gap:4px;">
                                                     <i data-lucide="clipboard-list"
-                                                        style="width:12px; color:#8B5CF6;"></i> Avaliação Física</p>
+                                                        style="width:12px; color:#8B5CF6;"></i> Avaliação Física
+                                                </p>
                                             </div>
                                             <button class="btn-icon"
                                                 style="background:#F1F5F9; color:#475569; width:30px; height:30px;"><i
@@ -1041,328 +1051,1340 @@
 
                 <!-- Visão Lojinha -->
                 <section id="view-loja" class="view hidden fade-in"
-                    style="height: calc(100vh - 100px); display: flex; flex-direction: column;">
-                    <div class="card p-0"
-                        style="flex: 1; display: flex; flex-direction: column; overflow: hidden; border:none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);">
-                        <!-- Cabeçalho -->
-                        <div class="panel-header"
-                            style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-soft);">
-                            <div style="display:flex; align-items:center;">
-                                <h3 style="font-size: 1.25rem; font-weight:700; margin:0;"><i data-lucide="store"
-                                        style="color:var(--primary); margin-right:8px; width:22px;"></i> Vitrine de
-                                    Produtos</h3>
+                    style="height: 100%; display: flex; flex-direction: column; overflow-y: auto;">
+                    <style>
+                        /* ===== LOJA STYLES (from reference) ===== */
+                        #view-loja {
+                            --card: #FFFFFF;
+                            --navy: #0B1220;
+                            --purple: #7C3AED;
+                            --purple-light: #F1EBFC;
+                            --blue: #2563EB;
+                            --blue-light: #EAF1FE;
+                            --green: #16A34A;
+                            --green-light: #E9F9EE;
+                            --red: #E11D48;
+                            --red-light: #FDECEC;
+                            --amber: #D97706;
+                            --amber-light: #FEF3C7;
+                            --muted: #6B7280;
+                            --border: #E7EAF0;
+                            --radius: 14px;
+                        }
+
+                        #view-loja .page-header {
+                            display: flex;
+                            align-items: flex-start;
+                            justify-content: space-between;
+                            gap: 20px;
+                            margin-bottom: 20px;
+                            padding: 20px 30px 0 30px;
+                        }
+
+                        #view-loja .page-title-wrap h1 {
+                            font-family: 'Manrope', sans-serif;
+                            font-size: 24px;
+                            font-weight: 800;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            margin: 0;
+                        }
+
+                        #view-loja .title-icon-badge {
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 10px;
+                            background: linear-gradient(135deg, var(--purple), var(--blue));
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                            color: white;
+                        }
+
+                        #view-loja .page-title-wrap p {
+                            color: var(--muted);
+                            font-size: 13.5px;
+                            margin-top: 3px;
+                            margin-left: 42px;
+                        }
+
+                        #view-loja .header-actions {
+                            display: flex;
+                            gap: 10px;
+                            flex-shrink: 0;
+                            align-items: center;
+                        }
+
+                        #view-loja .search-input {
+                            border: 1px solid var(--border);
+                            border-radius: 10px;
+                            padding: 10px 14px;
+                            font-size: 13px;
+                            font-family: inherit;
+                            width: 230px;
+                            background: #fff;
+                            outline: none;
+                        }
+
+                        #view-loja .search-input:focus {
+                            border-color: var(--purple);
+                        }
+
+                        /* TABS */
+                        #view-loja .tabs {
+                            display: flex;
+                            border-bottom: 1px solid var(--border);
+                            margin-bottom: 22px;
+                            gap: 4px;
+                            padding: 0 30px;
+                        }
+
+                        #view-loja .tab-btn {
+                            background: none;
+                            border: none;
+                            cursor: pointer;
+                            padding: 11px 4px;
+                            margin-right: 22px;
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: var(--muted);
+                            border-bottom: 3px solid transparent;
+                            transition: .15s;
+                        }
+
+                        #view-loja .tab-btn:hover {
+                            color: var(--text);
+                        }
+
+                        #view-loja .tab-btn.active {
+                            color: var(--purple);
+                            border-image: linear-gradient(90deg, var(--purple), var(--blue)) 1;
+                            border-bottom-width: 3px;
+                            border-bottom-style: solid;
+                        }
+
+                        #view-loja .tab-panel {
+                            display: none;
+                            padding: 0 30px 40px 30px;
+                        }
+
+                        #view-loja .tab-panel.active {
+                            display: block;
+                        }
+
+                        /* HERO SUMMARY */
+                        #view-loja .hero-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 14px;
+                            margin-bottom: 22px;
+                        }
+
+                        #view-loja .hero-card {
+                            background: var(--card);
+                            border-radius: var(--radius);
+                            padding: 18px 20px;
+                            border: 1px solid var(--border);
+                            position: relative;
+                            overflow: hidden;
+                        }
+
+                        #view-loja .hero-card::before {
+                            content: "";
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            height: 4px;
+                        }
+
+                        #view-loja .hero-card.c-purple::before {
+                            background: linear-gradient(90deg, #A855F7, #7C3AED);
+                        }
+
+                        #view-loja .hero-card.c-green::before {
+                            background: linear-gradient(90deg, #22C55E, #16A34A);
+                        }
+
+                        #view-loja .hero-card.c-amber::before {
+                            background: linear-gradient(90deg, #F59E0B, #D97706);
+                        }
+
+                        #view-loja .hero-card.c-red::before {
+                            background: linear-gradient(90deg, #F43F5E, #E11D48);
+                        }
+
+                        #view-loja .hero-icon {
+                            width: 34px;
+                            height: 34px;
+                            border-radius: 10px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-bottom: 10px;
+                            font-size: 16px;
+                        }
+
+                        #view-loja .i-purple {
+                            background: var(--purple-light);
+                            color: var(--purple);
+                        }
+
+                        #view-loja .i-green {
+                            background: var(--green-light);
+                            color: var(--green);
+                        }
+
+                        #view-loja .i-amber {
+                            background: var(--amber-light);
+                            color: var(--amber);
+                        }
+
+                        #view-loja .i-red {
+                            background: var(--red-light);
+                            color: var(--red);
+                        }
+
+                        #view-loja .hero-label {
+                            font-size: 12px;
+                            font-weight: 600;
+                            color: var(--muted);
+                            text-transform: uppercase;
+                            letter-spacing: .02em;
+                        }
+
+                        #view-loja .hero-value {
+                            font-family: 'Manrope', sans-serif;
+                            font-size: 24px;
+                            font-weight: 800;
+                            margin-top: 6px;
+                            color: var(--dark);
+                        }
+
+                        #view-loja .hero-sub {
+                            font-size: 11.5px;
+                            margin-top: 4px;
+                            font-weight: 600;
+                            color: var(--muted);
+                        }
+
+                        /* FILTER BAR */
+                        #view-loja .filter-bar {
+                            display: flex;
+                            gap: 10px;
+                            margin-bottom: 18px;
+                            flex-wrap: wrap;
+                            align-items: center;
+                        }
+
+                        #view-loja .filter-chip {
+                            border: 1px solid var(--border);
+                            background: #fff;
+                            padding: 8px 14px;
+                            border-radius: 9px;
+                            font-size: 12.5px;
+                            font-weight: 600;
+                            color: var(--muted);
+                            cursor: pointer;
+                            transition: all 0.2s;
+                        }
+
+                        #view-loja .filter-chip.active {
+                            background: linear-gradient(135deg, var(--purple), var(--blue));
+                            color: #fff;
+                            border-color: var(--purple);
+                        }
+
+                        /* PRODUCT GRID */
+                        #view-loja .product-grid {
+                            display: grid;
+                            grid-template-columns: repeat(5, 1fr);
+                            gap: 16px;
+                            min-height: 200px;
+                        }
+
+                        #view-loja .product-card {
+                            background: var(--card);
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius);
+                            overflow: hidden;
+                            display: flex;
+                            flex-direction: column;
+                            transition: .15s;
+                        }
+
+                        #view-loja .product-card:hover {
+                            box-shadow: 0 8px 24px rgba(17, 24, 39, .08);
+                            transform: translateY(-2px);
+                        }
+
+                        #view-loja .product-image {
+                            height: 150px;
+                            background: linear-gradient(135deg, #EEF0FA, #E7EBFB);
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: #B9C0DA;
+                            font-size: 34px;
+                        }
+
+                        #view-loja .product-image img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+
+                        #view-loja .stock-badge {
+                            position: absolute;
+                            top: 9px;
+                            left: 9px;
+                            font-size: 10.5px;
+                            font-weight: 700;
+                            padding: 3px 9px;
+                            border-radius: 20px;
+                        }
+
+                        #view-loja .stock-ok {
+                            background: var(--green-light);
+                            color: var(--green);
+                        }
+
+                        #view-loja .stock-low {
+                            background: var(--amber-light);
+                            color: var(--amber);
+                        }
+
+                        #view-loja .stock-out {
+                            background: var(--red-light);
+                            color: var(--red);
+                        }
+
+                        #view-loja .product-actions {
+                            position: absolute;
+                            top: 9px;
+                            right: 9px;
+                            display: flex;
+                            gap: 6px;
+                        }
+
+                        #view-loja .icon-btn {
+                            width: 26px;
+                            height: 26px;
+                            border-radius: 7px;
+                            border: none;
+                            background: rgba(255, 255, 255, .92);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            font-size: 12px;
+                            box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+                        }
+
+                        #view-loja .icon-btn.del {
+                            color: var(--red);
+                        }
+
+                        #view-loja .icon-btn.edit {
+                            color: var(--purple);
+                        }
+
+                        #view-loja .product-body {
+                            padding: 14px 15px 15px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 8px;
+                            flex: 1;
+                        }
+
+                        #view-loja .product-name {
+                            font-weight: 700;
+                            font-size: 13px;
+                            line-height: 1.3;
+                            min-height: 34px;
+                            color: var(--dark);
+                        }
+
+                        #view-loja .product-price {
+                            font-family: 'Manrope', sans-serif;
+                            font-weight: 800;
+                            font-size: 17px;
+                            color: var(--dark);
+                        }
+
+                        #view-loja .product-meta {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            font-size: 11.5px;
+                            color: var(--muted);
+                        }
+
+                        #view-loja .variant-tags {
+                            display: flex;
+                            gap: 4px;
+                            flex-wrap: wrap;
+                        }
+
+                        #view-loja .variant-tag {
+                            background: #F1F2F6;
+                            padding: 2px 7px;
+                            border-radius: 6px;
+                            font-size: 10.5px;
+                            font-weight: 600;
+                            color: var(--muted);
+                        }
+
+                        #view-loja .btn-vender {
+                            margin-top: auto;
+                            border: none;
+                            border-radius: 9px;
+                            padding: 9px;
+                            font-weight: 700;
+                            font-size: 12.5px;
+                            cursor: pointer;
+                            background: linear-gradient(135deg, var(--purple), var(--blue));
+                            color: #fff;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 6px;
+                        }
+
+                        #view-loja .btn-vender:disabled {
+                            background: #E5E7EB;
+                            color: #9CA3AF;
+                            cursor: not-allowed;
+                        }
+
+                        #view-loja .add-card {
+                            border: 2px dashed var(--border);
+                            border-radius: var(--radius);
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            color: var(--muted);
+                            font-weight: 600;
+                            font-size: 13px;
+                            cursor: pointer;
+                            min-height: 280px;
+                            gap: 8px;
+                            background: #FAFAFC;
+                        }
+
+                        #view-loja .add-card:hover {
+                            border-color: var(--purple);
+                            color: var(--purple);
+                            background: var(--purple-light);
+                        }
+
+                        #view-loja .add-plus {
+                            width: 38px;
+                            height: 38px;
+                            border-radius: 50%;
+                            background: linear-gradient(135deg, var(--purple), var(--blue));
+                            color: #fff;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 20px;
+                            font-weight: bold;
+                        }
+
+                        /* TABLES */
+                        #view-loja .loja-table-card {
+                            background: var(--card);
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius);
+                            padding: 20px;
+                            overflow-x: auto;
+                        }
+
+                        #view-loja table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            min-width: 600px;
+                        }
+
+                        #view-loja thead th {
+                            text-align: left;
+                            font-size: 11.5px;
+                            color: var(--muted);
+                            text-transform: uppercase;
+                            letter-spacing: .02em;
+                            padding: 10px 12px;
+                            border-bottom: 1px solid var(--border);
+                            font-weight: 700;
+                        }
+
+                        #view-loja tbody td {
+                            padding: 13px 12px;
+                            border-bottom: 1px solid var(--border);
+                            font-size: 13.5px;
+                            color: var(--dark);
+                        }
+
+                        #view-loja tbody tr:last-child td {
+                            border-bottom: none;
+                        }
+
+                        #view-loja .status-pill {
+                            padding: 4px 10px;
+                            border-radius: 20px;
+                            font-size: 11px;
+                            font-weight: 700;
+                            display: inline-block;
+                        }
+
+                        #view-loja .status-pago {
+                            background: var(--green-light);
+                            color: var(--green);
+                        }
+
+                        #view-loja .status-pendente {
+                            background: var(--amber-light);
+                            color: var(--amber);
+                        }
+
+                        #view-loja .row-value {
+                            font-weight: 700;
+                        }
+
+                        #view-loja .prod-cell {
+                            display: flex;
+                            align-items: center;
+                            gap: 9px;
+                        }
+
+                        #view-loja .prod-thumb {
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 7px;
+                            background: linear-gradient(135deg, #EEF0FA, #E7EBFB);
+                            overflow: hidden;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 16px;
+                        }
+
+                        #view-loja .prod-thumb img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+
+                        @media (max-width:1300px) {
+                            #view-loja .product-grid {
+                                grid-template-columns: repeat(3, 1fr);
+                            }
+
+                            #view-loja .hero-grid {
+                                grid-template-columns: repeat(2, 1fr);
+                            }
+                        }
+
+                        @media (max-width:768px) {
+                            #view-loja .product-grid {
+                                grid-template-columns: repeat(2, 1fr);
+                            }
+
+                            #view-loja .hero-grid {
+                                grid-template-columns: 1fr;
+                            }
+                        }
+                    </style>
+
+                    <div class="page-header">
+                        <div class="page-title-wrap">
+                            <h1><span class="title-icon-badge"><i data-lucide="store"
+                                        style="width: 18px; color: white;"></i></span> Lojinha</h1>
+                            <p>Gerencie seus produtos, estoque e vendas em um só lugar.</p>
+                        </div>
+                        <div class="header-actions">
+                            <i data-lucide="search"
+                                style="position: absolute; margin-left: 14px; width: 14px; color: #6B7280; pointer-events: none;"></i>
+                            <input class="search-input" id="loja-global-search" placeholder="Buscar produto..."
+                                style="padding-left: 36px;"
+                                oninput="if(window.renderLojinhaProdutos) renderLojinhaProdutos()">
+                            <button class="btn btn-primary" id="btn-novo-produto">
+                                <i data-lucide="plus" style="width:16px;"></i> Novo Produto
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" data-lojatab="produtos"
+                            onclick="switchLojaTab('produtos')">Produtos</button>
+                        <button class="tab-btn" data-lojatab="vendas" onclick="switchLojaTab('vendas')">Vendas</button>
+                        <button class="tab-btn" data-lojatab="estoque"
+                            onclick="switchLojaTab('estoque')">Estoque</button>
+                    </div>
+
+                    <!-- ===== TAB PRODUTOS ===== -->
+                    <section class="tab-panel active" id="loja-tab-produtos">
+                        <div class="hero-grid">
+                            <div class="hero-card c-purple">
+                                <div class="hero-icon i-purple"><i data-lucide="tag" style="width: 18px;"></i></div>
+                                <div class="hero-label">Faturamento do Mês</div>
+                                <div class="hero-value" id="loja-kpi-fat">R$ 0,00</div>
+                                <div class="hero-sub"><span id="loja-kpi-fat-sub">0</span> vendas realizadas</div>
                             </div>
-                            <div style="display: flex; gap: 1rem; align-items: center;">
-                                <div class="search-command-modern" style="margin:0;">
-                                    <i data-lucide="search" style="width: 14px; height: 14px; color:#6B7280;"></i>
-                                    <input type="text" id="store-search" placeholder="Buscar produto..."
-                                        style="width: 200px;">
+                            <div class="hero-card c-green">
+                                <div class="hero-icon i-green"><i data-lucide="package" style="width: 18px;"></i></div>
+                                <div class="hero-label">Produtos Ativos</div>
+                                <div class="hero-value" id="loja-kpi-ativos">0</div>
+                                <div class="hero-sub">na vitrine agora</div>
+                            </div>
+                            <div class="hero-card c-amber">
+                                <div class="hero-icon i-amber"><i data-lucide="alert-triangle" style="width: 18px;"></i>
                                 </div>
-                                <button class="btn-primary" id="btn-novo-produto"
-                                    style="height: 38px; padding: 0 1.25rem; border-radius: 99px; font-weight:600;"><i
-                                        data-lucide="plus" style="margin-right:6px; width:16px;"></i> Novo</button>
+                                <div class="hero-label">Estoque Baixo</div>
+                                <div class="hero-value" id="loja-kpi-baixo">0</div>
+                                <div class="hero-sub">precisam de reposição</div>
+                            </div>
+                            <div class="hero-card c-red">
+                                <div class="hero-icon i-red"><i data-lucide="clock" style="width: 18px;"></i></div>
+                                <div class="hero-label">Vendas Pendentes</div>
+                                <div class="hero-value" id="loja-kpi-pendentes">0</div>
+                                <div class="hero-sub">aguardando pagamento</div>
                             </div>
                         </div>
 
-                        <!-- Grid de Produtos -->
-                        <div class="custom-scrollbar"
-                            style="padding: 2rem; background: var(--bg-body); flex: 1; overflow-y: auto;">
-                            <div class="grid-produtos" id="store-grid"
-                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
-                                <!-- Celulas geradas via JS entrarão aqui -->
-                            </div>
-                            <div id="empty-state-loja" style="text-align:center; padding: 4rem 2rem;">
-                                <i data-lucide="store"
-                                    style="width:48px; height:48px; opacity:0.15; color:var(--dark); margin: 0 auto 1rem auto; display:block;"></i>
-                                <h3 style="color:var(--dark); font-weight:600;">Sua vitrine está vazia</h3>
-                                <p style="font-size:0.85rem; color:var(--text-muted);">Adicione camisetas, meias ou
-                                    produtos para vender.</p>
-                            </div>
+                        <div class="filter-bar" id="loja-filters-cat">
+                            <button class="filter-chip active" onclick="setLojaFilter('todos', this)">Todos</button>
+                            <button class="filter-chip" onclick="setLojaFilter('roupas', this)">Roupas</button>
+                            <button class="filter-chip" onclick="setLojaFilter('acessorios', this)">Acessórios</button>
+                            <button class="filter-chip" onclick="setLojaFilter('baixo', this)">Estoque baixo</button>
+                            <button class="filter-chip" onclick="setLojaFilter('esgotados', this)">Esgotados</button>
                         </div>
-                    </div>
+
+                        <div class="product-grid" id="loja-product-grid">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </section>
+
+                    <!-- ===== TAB VENDAS ===== -->
+                    <section class="tab-panel" id="loja-tab-vendas">
+                        <div class="filter-bar">
+                            <input class="search-input" id="loja-vendas-search"
+                                placeholder="Buscar por cliente ou produto..." style="width:260px;"
+                                oninput="if(window.renderLojinhaVendas) renderLojinhaVendas()">
+                            <button class="filter-chip active"
+                                onclick="setLojaVendaFilter('todas', this)">Todas</button>
+                            <button class="filter-chip" onclick="setLojaVendaFilter('pagas', this)">Pagas</button>
+                            <button class="filter-chip"
+                                onclick="setLojaVendaFilter('pendentes', this)">Pendentes</button>
+                        </div>
+                        <div class="loja-table-card" style="padding:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Cliente</th>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loja-vendas-tbody">
+                                    <!-- Gerado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ===== TAB ESTOQUE ===== -->
+                    <section class="tab-panel" id="loja-tab-estoque">
+                        <div class="loja-table-card" style="padding:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Variação</th>
+                                        <th>Quantidade</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loja-estoque-tbody">
+                                    <!-- Gerado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
                 </section>
 
                 <!-- Visão Financeiro — Módulo Premium -->
-                <section id="view-financeiro" class="view hidden fade-in" style="overflow-y: auto; overflow-x: hidden; padding: 0 1.5rem 6rem; height: 100%; display: flex; flex-direction: column; gap: 1.75rem;">
+                <section id="view-financeiro" class="view hidden fade-in"
+                    style="overflow-y: auto; overflow-x: hidden; padding: 0 1.5rem 6rem; height: 100%; display: flex; flex-direction: column; gap: 1.75rem;">
 
                     <style>
                         /* ===== FINANCEIRO PREMIUM STYLES ===== */
-                        .fin-kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
-                        @media (max-width: 1200px) { .fin-kpi-grid { grid-template-columns: repeat(3, 1fr); } }
-                        @media (max-width: 768px) { .fin-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-                        @media (max-width: 480px) { .fin-kpi-grid { grid-template-columns: 1fr 1fr; } }
+                        .fin-kpi-grid {
+                            display: grid;
+                            grid-template-columns: repeat(6, 1fr);
+                            gap: 1rem;
+                        }
+
+                        @media (max-width: 1200px) {
+                            .fin-kpi-grid {
+                                grid-template-columns: repeat(3, 1fr);
+                            }
+                        }
+
+                        @media (max-width: 768px) {
+                            .fin-kpi-grid {
+                                grid-template-columns: repeat(2, 1fr);
+                            }
+                        }
+
+                        @media (max-width: 480px) {
+                            .fin-kpi-grid {
+                                grid-template-columns: 1fr 1fr;
+                            }
+                        }
 
                         .fin-kpi-card {
-                            background: white; border-radius: 14px; padding: 1.25rem 1.5rem;
-                            box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid var(--border-soft);
-                            display: flex; flex-direction: column; gap: 0.5rem; transition: transform 0.2s, box-shadow 0.2s;
+                            background: white;
+                            border-radius: 14px;
+                            padding: 1.25rem 1.5rem;
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                            border: 1px solid var(--border-soft);
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.5rem;
+                            transition: transform 0.2s, box-shadow 0.2s;
                         }
-                        .fin-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-                        .fin-kpi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-                        .fin-kpi-icon i { width: 18px; height: 18px; }
-                        .fin-kpi-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-                        .fin-kpi-value { font-size: 1.3rem; font-weight: 800; color: var(--dark); line-height: 1; }
-                        .fin-kpi-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; display: inline-flex; align-items: center; gap: 3px; width: fit-content; }
 
-                        .fin-mid-grid { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; }
-                        @media (max-width: 960px) { .fin-mid-grid { grid-template-columns: 1fr; } }
+                        .fin-kpi-card:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+                        }
 
-                        .fin-today-card { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden; }
-                        .fin-today-header { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); padding: 1.25rem 1.5rem; }
-                        .fin-today-row { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.5rem; border-bottom: 1px solid #F3F4F6; }
-                        .fin-today-row:last-child { border-bottom: none; }
+                        .fin-kpi-icon {
+                            width: 38px;
+                            height: 38px;
+                            border-radius: 10px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
 
-                        .fin-chart-card { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-                        .fin-chart-filters { display: flex; gap: 6px; }
-                        .fin-chart-btn { padding: 5px 14px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 0.78rem; font-weight: 600; color: #6B7280; cursor: pointer; transition: all 0.18s; }
-                        .fin-chart-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
+                        .fin-kpi-icon i {
+                            width: 18px;
+                            height: 18px;
+                        }
 
-                        .fin-indicators { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-                        .fin-chip { background: white; border: 1px solid var(--border-soft); border-radius: 10px; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 110px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-                        .fin-chip-label { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-                        .fin-chip-value { font-size: 1rem; font-weight: 800; color: var(--dark); }
+                        .fin-kpi-label {
+                            font-size: 0.72rem;
+                            font-weight: 600;
+                            color: var(--text-muted);
+                            text-transform: uppercase;
+                            letter-spacing: 0.04em;
+                        }
 
-                        .fin-toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-                        .fin-filter-btn { padding: 6px 14px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 0.78rem; font-weight: 600; color: #6B7280; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
-                        .fin-filter-btn.active { background: #4F46E5; color: white; border-color: #4F46E5; }
-                        .fin-filter-btn:hover { border-color: #4F46E5; color: #4F46E5; }
+                        .fin-kpi-value {
+                            font-size: 1.3rem;
+                            font-weight: 800;
+                            color: var(--dark);
+                            line-height: 1;
+                        }
 
-                        .fin-table-wrap { background: white; border-radius: 14px; border: 1px solid var(--border-soft); box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden; }
-                        .fin-table { width: 100%; border-collapse: collapse; }
-                        .fin-table thead tr { background: #F9FAFB; border-bottom: 1px solid var(--border-soft); }
-                        .fin-table th { padding: 0.9rem 1.25rem; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; text-align: left; white-space: nowrap; }
-                        .fin-table td { padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--dark); border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
-                        .fin-table tbody tr { transition: background 0.15s; cursor: pointer; }
-                        .fin-table tbody tr:hover { background: #F8FAFC; }
-                        .fin-table tbody tr:last-child td { border-bottom: none; }
-                        @media (max-width: 768px) { .fin-table { min-width: 700px; } }
+                        .fin-kpi-badge {
+                            font-size: 0.7rem;
+                            font-weight: 700;
+                            padding: 2px 7px;
+                            border-radius: 99px;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 3px;
+                            width: fit-content;
+                        }
 
-                        .cat-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
-                        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 99px; font-size: 0.73rem; font-weight: 700; }
-                        .status-pago { background: #DCFCE7; color: #16A34A; }
-                        .status-pendente { background: #FEF3C7; color: #D97706; }
-                        .status-vencido { background: #FEE2E2; color: #DC2626; }
-                        .status-agendado { background: #DBEAFE; color: #2563EB; }
+                        .fin-mid-grid {
+                            display: grid;
+                            grid-template-columns: 340px 1fr;
+                            gap: 1.25rem;
+                        }
+
+                        @media (max-width: 960px) {
+                            .fin-mid-grid {
+                                grid-template-columns: 1fr;
+                            }
+                        }
+
+                        .fin-today-card {
+                            background: white;
+                            border-radius: 14px;
+                            border: 1px solid var(--border-soft);
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                            overflow: hidden;
+                        }
+
+                        .fin-today-header {
+                            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+                            padding: 1.25rem 1.5rem;
+                        }
+
+                        .fin-today-row {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            padding: 0.85rem 1.5rem;
+                            border-bottom: 1px solid #F3F4F6;
+                        }
+
+                        .fin-today-row:last-child {
+                            border-bottom: none;
+                        }
+
+                        .fin-chart-card {
+                            background: white;
+                            border-radius: 14px;
+                            border: 1px solid var(--border-soft);
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                            padding: 1.5rem;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1rem;
+                        }
+
+                        .fin-chart-filters {
+                            display: flex;
+                            gap: 6px;
+                        }
+
+                        .fin-chart-btn {
+                            padding: 5px 14px;
+                            border-radius: 99px;
+                            border: 1px solid #E5E7EB;
+                            background: white;
+                            font-size: 0.78rem;
+                            font-weight: 600;
+                            color: #6B7280;
+                            cursor: pointer;
+                            transition: all 0.18s;
+                        }
+
+                        .fin-chart-btn.active {
+                            background: #4F46E5;
+                            color: white;
+                            border-color: #4F46E5;
+                        }
+
+                        .fin-indicators {
+                            display: flex;
+                            gap: 0.75rem;
+                            flex-wrap: wrap;
+                        }
+
+                        .fin-chip {
+                            background: white;
+                            border: 1px solid var(--border-soft);
+                            border-radius: 10px;
+                            padding: 0.75rem 1rem;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 2px;
+                            flex: 1;
+                            min-width: 110px;
+                            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+                        }
+
+                        .fin-chip-label {
+                            font-size: 0.68rem;
+                            font-weight: 600;
+                            color: var(--text-muted);
+                            text-transform: uppercase;
+                            letter-spacing: 0.04em;
+                        }
+
+                        .fin-chip-value {
+                            font-size: 1rem;
+                            font-weight: 800;
+                            color: var(--dark);
+                        }
+
+                        .fin-toolbar {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                            flex-wrap: wrap;
+                        }
+
+                        .fin-filter-btn {
+                            padding: 6px 14px;
+                            border-radius: 99px;
+                            border: 1px solid #E5E7EB;
+                            background: white;
+                            font-size: 0.78rem;
+                            font-weight: 600;
+                            color: #6B7280;
+                            cursor: pointer;
+                            transition: all 0.18s;
+                            white-space: nowrap;
+                        }
+
+                        .fin-filter-btn.active {
+                            background: #4F46E5;
+                            color: white;
+                            border-color: #4F46E5;
+                        }
+
+                        .fin-filter-btn:hover {
+                            border-color: #4F46E5;
+                            color: #4F46E5;
+                        }
+
+                        .fin-table-wrap {
+                            background: white;
+                            border-radius: 14px;
+                            border: 1px solid var(--border-soft);
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+                            overflow: hidden;
+                        }
+
+                        .fin-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        .fin-table thead tr {
+                            background: #F9FAFB;
+                            border-bottom: 1px solid var(--border-soft);
+                        }
+
+                        .fin-table th {
+                            padding: 0.9rem 1.25rem;
+                            font-size: 0.7rem;
+                            font-weight: 700;
+                            color: var(--text-muted);
+                            text-transform: uppercase;
+                            letter-spacing: 0.04em;
+                            text-align: left;
+                            white-space: nowrap;
+                        }
+
+                        .fin-table td {
+                            padding: 1rem 1.25rem;
+                            font-size: 0.85rem;
+                            color: var(--dark);
+                            border-bottom: 1px solid #F3F4F6;
+                            vertical-align: middle;
+                        }
+
+                        .fin-table tbody tr {
+                            transition: background 0.15s;
+                            cursor: pointer;
+                        }
+
+                        .fin-table tbody tr:hover {
+                            background: #F8FAFC;
+                        }
+
+                        .fin-table tbody tr:last-child td {
+                            border-bottom: none;
+                        }
+
+                        @media (max-width: 768px) {
+                            .fin-table {
+                                min-width: 700px;
+                            }
+                        }
+
+                        .cat-badge {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            padding: 3px 10px;
+                            border-radius: 99px;
+                            font-size: 0.73rem;
+                            font-weight: 700;
+                        }
+
+                        .status-badge {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            padding: 4px 10px;
+                            border-radius: 99px;
+                            font-size: 0.73rem;
+                            font-weight: 700;
+                        }
+
+                        .status-pago {
+                            background: #DCFCE7;
+                            color: #16A34A;
+                        }
+
+                        .status-pendente {
+                            background: #FEF3C7;
+                            color: #D97706;
+                        }
+
+                        .status-vencido {
+                            background: #FEE2E2;
+                            color: #DC2626;
+                        }
+
+                        .status-agendado {
+                            background: #DBEAFE;
+                            color: #2563EB;
+                        }
 
                         /* Modal Financeiro */
-                        .fin-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 1rem; }
-                        .fin-modal-overlay.open { opacity: 1; pointer-events: all; }
-                        .fin-modal { background: white; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.18); transform: translateY(30px); transition: transform 0.3s cubic-bezier(.175,.885,.32,1.275); }
-                        .fin-modal-overlay.open .fin-modal { transform: translateY(0); }
-                        .fin-modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
-                        .fin-modal-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
-                        .fin-modal-footer { padding: 1.25rem 2rem; border-top: 1px solid var(--border-soft); display: flex; gap: 1rem; justify-content: flex-end; background: #FAFAFA; border-radius: 0 0 20px 20px; }
-                        .fin-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-                        @media (max-width: 480px) { .fin-form-row { grid-template-columns: 1fr; } }
+                        .fin-modal-overlay {
+                            position: fixed;
+                            inset: 0;
+                            background: rgba(0, 0, 0, 0.45);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 9999;
+                            opacity: 0;
+                            pointer-events: none;
+                            transition: opacity 0.25s;
+                            padding: 1rem;
+                        }
+
+                        .fin-modal-overlay.open {
+                            opacity: 1;
+                            pointer-events: all;
+                        }
+
+                        .fin-modal {
+                            background: white;
+                            border-radius: 20px;
+                            width: 100%;
+                            max-width: 600px;
+                            max-height: 90vh;
+                            overflow-y: auto;
+                            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.18);
+                            transform: translateY(30px);
+                            transition: transform 0.3s cubic-bezier(.175, .885, .32, 1.275);
+                        }
+
+                        .fin-modal-overlay.open .fin-modal {
+                            transform: translateY(0);
+                        }
+
+                        .fin-modal-header {
+                            padding: 1.5rem 2rem;
+                            border-bottom: 1px solid var(--border-soft);
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            position: sticky;
+                            top: 0;
+                            background: white;
+                            z-index: 1;
+                        }
+
+                        .fin-modal-body {
+                            padding: 1.5rem 2rem;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1.25rem;
+                        }
+
+                        .fin-modal-footer {
+                            padding: 1.25rem 2rem;
+                            border-top: 1px solid var(--border-soft);
+                            display: flex;
+                            gap: 1rem;
+                            justify-content: flex-end;
+                            background: #FAFAFA;
+                            border-radius: 0 0 20px 20px;
+                        }
+
+                        .fin-form-row {
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 1rem;
+                        }
+
+                        @media (max-width: 480px) {
+                            .fin-form-row {
+                                grid-template-columns: 1fr;
+                            }
+                        }
                     </style>
 
                     <!-- Header -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding-top: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
                         <div>
-                            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin: 0;">
+                            <h2
+                                style="font-size: 1.5rem; font-weight: 800; color: var(--dark); display: flex; align-items: center; gap: 10px; margin: 0;">
                                 <i data-lucide="wallet" style="color: #4F46E5; width: 26px;"></i> Financeiro
                             </h2>
-                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 0 0;">Controle completo das suas finanças em um só lugar.</p>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 0 0;">Controle
+                                completo das suas finanças em um só lugar.</p>
                         </div>
                         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <button onclick="abrirModalDespesa()" style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#DC2626';this.style.color='white'" onmouseout="this.style.background='#FEF2F2';this.style.color='#DC2626'">
+                            <button onclick="abrirModalDespesa()"
+                                style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;"
+                                onmouseover="this.style.background='#DC2626';this.style.color='white'"
+                                onmouseout="this.style.background='#FEF2F2';this.style.color='#DC2626'">
                                 <i data-lucide="arrow-down-circle" style="width: 15px;"></i> Nova Despesa
                             </button>
-                            <button onclick="abrirModalReceita()" style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #10B981; color: white; border: none; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16,185,129,0.3);" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10B981'">
+                            <button onclick="abrirModalReceita()"
+                                style="display:flex; align-items:center; gap:6px; padding: 0.6rem 1.25rem; background: #10B981; color: white; border: none; border-radius: 99px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16,185,129,0.3);"
+                                onmouseover="this.style.background='#059669'"
+                                onmouseout="this.style.background='#10B981'">
                                 <i data-lucide="arrow-up-circle" style="width: 15px;"></i> Nova Receita
                             </button>
                         </div>
                     </div>
 
-                    <!-- 6 KPI Cards -->
-                    <div class="fin-kpi-grid">
-                        <!-- Entradas -->
-                        <div class="fin-kpi-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:#DCFCE7;"><i data-lucide="trending-up" style="color:#16A34A;"></i></div>
-                                <span class="fin-kpi-badge" style="background:#DCFCE7; color:#16A34A;" id="badge-entradas">+0%</span>
-                            </div>
-                            <span class="fin-kpi-label">Entradas do Mês</span>
-                            <span class="fin-kpi-value" id="kpi-fin-entradas" style="color:#10B981;">R$ 0,00</span>
-                        </div>
-                        <!-- Saídas -->
-                        <div class="fin-kpi-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:#FEE2E2;"><i data-lucide="trending-down" style="color:#DC2626;"></i></div>
-                                <span class="fin-kpi-badge" style="background:#FEE2E2; color:#DC2626;" id="badge-saidas">+0%</span>
-                            </div>
-                            <span class="fin-kpi-label">Saídas do Mês</span>
-                            <span class="fin-kpi-value" id="kpi-fin-saidas" style="color:#EF4444;">R$ 0,00</span>
-                        </div>
-                        <!-- Saldo -->
-                        <div class="fin-kpi-card" style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%); border-color: transparent;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:rgba(255,255,255,0.12);"><i data-lucide="banknote" style="color:#A5B4FC;"></i></div>
-                            </div>
-                            <span class="fin-kpi-label" style="color:#A5B4FC;">Saldo Atual</span>
-                            <span class="fin-kpi-value" id="kpi-fin-saldo" style="color:white;">R$ 0,00</span>
-                        </div>
-                        <!-- Contas a Receber -->
-                        <div class="fin-kpi-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:#EEF2FF;"><i data-lucide="clock" style="color:#4F46E5;"></i></div>
-                            </div>
-                            <span class="fin-kpi-label">Contas a Receber</span>
-                            <span class="fin-kpi-value" id="kpi-fin-receber" style="color:#4F46E5;">R$ 0,00</span>
-                        </div>
-                        <!-- Contas a Pagar -->
-                        <div class="fin-kpi-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:#FEF3C7;"><i data-lucide="alert-circle" style="color:#D97706;"></i></div>
-                            </div>
-                            <span class="fin-kpi-label">Contas a Pagar</span>
-                            <span class="fin-kpi-value" id="kpi-fin-pagar" style="color:#D97706;">R$ 0,00</span>
-                        </div>
-                        <!-- Lucro -->
-                        <div class="fin-kpi-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div class="fin-kpi-icon" style="background:#F0FDF4;"><i data-lucide="sparkles" style="color:#10B981;"></i></div>
-                            </div>
-                            <span class="fin-kpi-label">Lucro do Mês</span>
-                            <span class="fin-kpi-value" id="kpi-fin-lucro" style="color:#10B981;">R$ 0,00</span>
-                        </div>
+                    <!-- Tabs Financeiro -->
+                    <div class="fin-tabs"
+                        style="display:flex; gap:12px; border-bottom: 2px solid var(--border-soft); padding-bottom: 0px;">
+                        <button class="fin-tab-link active" onclick="switchFinTab('visao', this)"
+                            style="background:none; border:none; border-bottom:3px solid #10B981; padding:10px 16px; font-weight:700; color:var(--dark); cursor:pointer; font-size:0.95rem; display:flex; align-items:center; gap:6px; transition:all 0.2s;">
+                            <i data-lucide="bar-chart-2" style="width:18px;"></i> Visão Geral
+                        </button>
+                        <button class="fin-tab-link text-muted" onclick="switchFinTab('transacoes', this)"
+                            style="background:none; border:none; border-bottom:3px solid transparent; padding:10px 16px; font-weight:600; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; gap:6px; transition:all 0.2s;">
+                            <i data-lucide="list-ordered" style="width:18px;"></i> Transações (Extrato)
+                        </button>
                     </div>
 
-                    <!-- Mid: Resumo de Hoje + Gráfico -->
-                    <div class="fin-mid-grid">
-                        <!-- Resumo de Hoje -->
-                        <div class="fin-today-card">
-                            <div class="fin-today-header">
-                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                                    <i data-lucide="sun" style="color:white; width:18px;"></i>
-                                    <span style="color:white; font-weight:800; font-size:0.95rem;">Resumo de Hoje</span>
+                    <!-- VISÃO GERAL TAB CONTENT -->
+                    <div id="fin-tab-visao-content"
+                        style="display:flex; flex-direction:column; gap:1.75rem; animation: fadeIn 0.3s ease;">
+                        <!-- 6 KPI Cards -->
+                        <div class="fin-kpi-grid">
+                            <!-- Entradas -->
+                            <div class="fin-kpi-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:#DCFCE7;"><i data-lucide="trending-up"
+                                            style="color:#16A34A;"></i></div>
+                                    <span class="fin-kpi-badge" style="background:#DCFCE7; color:#16A34A;"
+                                        id="badge-entradas">+0%</span>
                                 </div>
-                                <p style="color:rgba(255,255,255,0.7); font-size:0.78rem; margin:0;" id="fin-date-today"></p>
+                                <span class="fin-kpi-label">Entradas do Mês</span>
+                                <span class="fin-kpi-value" id="kpi-fin-entradas" style="color:#10B981;">R$ 0,00</span>
                             </div>
-                            <div class="fin-today-row">
-                                <span style="font-size:0.83rem; color:var(--text-muted);">↑ Entradas Previstas</span>
-                                <strong id="today-entradas" style="color:#10B981; font-size:0.9rem;">R$ 0,00</strong>
+                            <!-- Saídas -->
+                            <div class="fin-kpi-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:#FEE2E2;"><i data-lucide="trending-down"
+                                            style="color:#DC2626;"></i></div>
+                                    <span class="fin-kpi-badge" style="background:#FEE2E2; color:#DC2626;"
+                                        id="badge-saidas">+0%</span>
+                                </div>
+                                <span class="fin-kpi-label">Saídas do Mês</span>
+                                <span class="fin-kpi-value" id="kpi-fin-saidas" style="color:#EF4444;">R$ 0,00</span>
                             </div>
-                            <div class="fin-today-row">
-                                <span style="font-size:0.83rem; color:var(--text-muted);">↓ Saídas Previstas</span>
-                                <strong id="today-saidas" style="color:#EF4444; font-size:0.9rem;">R$ 0,00</strong>
+                            <!-- Saldo -->
+                            <div class="fin-kpi-card"
+                                style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%); border-color: transparent;">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:rgba(255,255,255,0.12);"><i
+                                            data-lucide="banknote" style="color:#A5B4FC;"></i></div>
+                                </div>
+                                <span class="fin-kpi-label" style="color:#A5B4FC;">Saldo Atual</span>
+                                <span class="fin-kpi-value" id="kpi-fin-saldo" style="color:white;">R$ 0,00</span>
                             </div>
-                            <div class="fin-today-row">
-                                <span style="font-size:0.83rem; color:var(--text-muted);">⏰ Cobranças Hoje</span>
-                                <strong id="today-cobrancas" style="color:#D97706; font-size:0.9rem;">0</strong>
+                            <!-- Contas a Receber -->
+                            <div class="fin-kpi-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:#EEF2FF;"><i data-lucide="clock"
+                                            style="color:#4F46E5;"></i></div>
+                                </div>
+                                <span class="fin-kpi-label">Contas a Receber</span>
+                                <span class="fin-kpi-value" id="kpi-fin-receber" style="color:#4F46E5;">R$ 0,00</span>
                             </div>
-                            <div class="fin-today-row">
-                                <span style="font-size:0.83rem; color:var(--text-muted);">🔴 Contas Atrasadas</span>
-                                <strong id="today-atrasadas" style="color:#DC2626; font-size:0.9rem;">0</strong>
+                            <!-- Contas a Pagar -->
+                            <div class="fin-kpi-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:#FEF3C7;"><i data-lucide="alert-circle"
+                                            style="color:#D97706;"></i></div>
+                                </div>
+                                <span class="fin-kpi-label">Contas a Pagar</span>
+                                <span class="fin-kpi-value" id="kpi-fin-pagar" style="color:#D97706;">R$ 0,00</span>
                             </div>
-                            <div class="fin-today-row">
-                                <span style="font-size:0.83rem; color:var(--text-muted);">💰 Previsto Entrar</span>
-                                <strong id="today-previsto" style="color:#4F46E5; font-size:0.9rem;">R$ 0,00</strong>
+                            <!-- Lucro -->
+                            <div class="fin-kpi-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <div class="fin-kpi-icon" style="background:#F0FDF4;"><i data-lucide="sparkles"
+                                            style="color:#10B981;"></i></div>
+                                </div>
+                                <span class="fin-kpi-label">Lucro do Mês</span>
+                                <span class="fin-kpi-value" id="kpi-fin-lucro" style="color:#10B981;">R$ 0,00</span>
                             </div>
                         </div>
 
-                        <!-- Gráfico Fluxo de Caixa -->
-                        <div class="fin-chart-card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                                <h4 style="font-size:1rem; font-weight:800; margin:0;">Fluxo de Caixa</h4>
-                                <div class="fin-chart-filters">
-                                    <button class="fin-chart-btn active" onclick="initGraficoFluxo(7, this)">7d</button>
-                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(30, this)">30d</button>
-                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(90, this)">90d</button>
-                                    <button class="fin-chart-btn" onclick="initGraficoFluxo(365, this)">12m</button>
+                        <!-- Mid: Resumo de Hoje + Gráfico -->
+                        <div class="fin-mid-grid">
+                            <!-- Resumo de Hoje -->
+                            <div class="fin-today-card">
+                                <div class="fin-today-header">
+                                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                                        <i data-lucide="sun" style="color:white; width:18px;"></i>
+                                        <span style="color:white; font-weight:800; font-size:0.95rem;">Resumo de
+                                            Hoje</span>
+                                    </div>
+                                    <p style="color:rgba(255,255,255,0.7); font-size:0.78rem; margin:0;"
+                                        id="fin-date-today"></p>
+                                </div>
+                                <div class="fin-today-row">
+                                    <span style="font-size:0.83rem; color:var(--text-muted);">↑ Entradas
+                                        Previstas</span>
+                                    <strong id="today-entradas" style="color:#10B981; font-size:0.9rem;">R$
+                                        0,00</strong>
+                                </div>
+                                <div class="fin-today-row">
+                                    <span style="font-size:0.83rem; color:var(--text-muted);">↓ Saídas Previstas</span>
+                                    <strong id="today-saidas" style="color:#EF4444; font-size:0.9rem;">R$ 0,00</strong>
+                                </div>
+                                <div class="fin-today-row">
+                                    <span style="font-size:0.83rem; color:var(--text-muted);">⏰ Cobranças Hoje</span>
+                                    <strong id="today-cobrancas" style="color:#D97706; font-size:0.9rem;">0</strong>
+                                </div>
+                                <div class="fin-today-row">
+                                    <span style="font-size:0.83rem; color:var(--text-muted);">🔴 Contas Atrasadas</span>
+                                    <strong id="today-atrasadas" style="color:#DC2626; font-size:0.9rem;">0</strong>
+                                </div>
+                                <div class="fin-today-row">
+                                    <span style="font-size:0.83rem; color:var(--text-muted);">💰 Previsto Entrar</span>
+                                    <strong id="today-previsto" style="color:#4F46E5; font-size:0.9rem;">R$
+                                        0,00</strong>
                                 </div>
                             </div>
-                            <div style="flex:1; min-height:200px; position:relative;">
-                                <canvas id="chart-fluxo"></canvas>
+
+                            <!-- Gráfico Fluxo de Caixa -->
+                            <div class="fin-chart-card">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+                                    <h4 style="font-size:1rem; font-weight:800; margin:0;">Fluxo de Caixa</h4>
+                                    <div class="fin-chart-filters">
+                                        <button class="fin-chart-btn active"
+                                            onclick="initGraficoFluxo(7, this)">7d</button>
+                                        <button class="fin-chart-btn" onclick="initGraficoFluxo(30, this)">30d</button>
+                                        <button class="fin-chart-btn" onclick="initGraficoFluxo(90, this)">90d</button>
+                                        <button class="fin-chart-btn" onclick="initGraficoFluxo(365, this)">12m</button>
+                                    </div>
+                                </div>
+                                <div style="flex:1; min-height:200px; position:relative;">
+                                    <canvas id="chart-fluxo"></canvas>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Indicadores Rápidos -->
-                    <div class="fin-indicators">
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Receita Total</span>
-                            <span class="fin-chip-value" id="ind-receita">R$ 0,00</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Despesas Totais</span>
-                            <span class="fin-chip-value" id="ind-despesas" style="color:#EF4444;">R$ 0,00</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Lucro</span>
-                            <span class="fin-chip-value" id="ind-lucro" style="color:#10B981;">R$ 0,00</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Margem de Lucro</span>
-                            <span class="fin-chip-value" id="ind-margem" style="color:#4F46E5;">0%</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Ticket Médio</span>
-                            <span class="fin-chip-value" id="ind-ticket">R$ 0,00</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Valor Recebido</span>
-                            <span class="fin-chip-value" id="ind-recebido" style="color:#16A34A;">R$ 0,00</span>
-                        </div>
-                        <div class="fin-chip">
-                            <span class="fin-chip-label">Valor Pendente</span>
-                            <span class="fin-chip-value" id="ind-pendente" style="color:#D97706;">R$ 0,00</span>
-                        </div>
-                    </div>
-
-                    <!-- Toolbar: Busca + Filtros -->
-                    <div style="background:white; border-radius:14px; border:1px solid var(--border-soft); box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:1.25rem 1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
-                        <!-- Linha 1: Busca + Tipo -->
-                        <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
-                            <div class="search-command-modern" style="flex:1; min-width:200px; height:40px;">
-                                <i data-lucide="search" style="width:14px; color:#6B7280;"></i>
-                                <input type="text" id="fin-search" placeholder="Buscar por cliente, valor, categoria..." oninput="renderExtrato()" style="font-size:0.85rem;">
+                        <!-- Indicadores Rápidos -->
+                        <div class="fin-indicators">
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Receita Total</span>
+                                <span class="fin-chip-value" id="ind-receita">R$ 0,00</span>
                             </div>
-                            <select id="fin-filter-tipo" onchange="renderExtrato()" style="padding: 7px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size:0.83rem; color:var(--dark); background:white; cursor:pointer; height:40px;">
-                                <option value="">Tipo: Todos</option>
-                                <option value="receita">Receitas</option>
-                                <option value="despesa">Despesas</option>
-                            </select>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Despesas Totais</span>
+                                <span class="fin-chip-value" id="ind-despesas" style="color:#EF4444;">R$ 0,00</span>
+                            </div>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Lucro</span>
+                                <span class="fin-chip-value" id="ind-lucro" style="color:#10B981;">R$ 0,00</span>
+                            </div>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Margem de Lucro</span>
+                                <span class="fin-chip-value" id="ind-margem" style="color:#4F46E5;">0%</span>
+                            </div>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Ticket Médio</span>
+                                <span class="fin-chip-value" id="ind-ticket">R$ 0,00</span>
+                            </div>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Valor Recebido</span>
+                                <span class="fin-chip-value" id="ind-recebido" style="color:#16A34A;">R$ 0,00</span>
+                            </div>
+                            <div class="fin-chip">
+                                <span class="fin-chip-label">Valor Pendente</span>
+                                <span class="fin-chip-value" id="ind-pendente" style="color:#D97706;">R$ 0,00</span>
+                            </div>
                         </div>
-                        <!-- Linha 2: Filtros de data -->
-                        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
-                            <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-right:4px;">Período:</span>
-                            <button class="fin-filter-btn active" onclick="setFiltroData('hoje', this)">Hoje</button>
-                            <button class="fin-filter-btn" onclick="setFiltroData('semana', this)">Esta Semana</button>
-                            <button class="fin-filter-btn" onclick="setFiltroData('mes', this)">Este Mês</button>
-                            <button class="fin-filter-btn" onclick="setFiltroData('30dias', this)">30 dias</button>
-                            <button class="fin-filter-btn" onclick="setFiltroData('ano', this)">Este Ano</button>
-                            <button class="fin-filter-btn" onclick="setFiltroData('todos', this)">Todos</button>
-                        </div>
-                    </div>
+                    </div> <!-- End Visao Geral -->
 
-                    <!-- Tabela Extrato -->
-                    <div style="background:white; border-radius:14px; border:1px solid var(--border-soft); box-shadow:0 2px 12px rgba(0,0,0,0.04); overflow-x:auto;">
-                        <table class="fin-table" id="table-financeiro-v2">
-                            <thead>
-                                <tr>
-                                    <th>Data</th>
-                                    <th>Descrição / Cliente</th>
-                                    <th>Categoria</th>
-                                    <th>Pagamento</th>
-                                    <th>Valor</th>
-                                    <th>Status</th>
-                                    <th style="text-align:right;">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-financeiro">
-                                <tr id="fin-empty-state">
-                                    <td colspan="7" style="text-align:center; padding:4rem 2rem; color:var(--text-muted);">
-                                        <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-                                            <i data-lucide="receipt" style="width:48px; height:48px; opacity:0.12;"></i>
-                                            <h4 style="font-weight:700; color:var(--dark); margin:0;">Nenhum lançamento ainda</h4>
-                                            <p style="font-size:0.85rem; margin:0;">Use os botões acima para registrar receitas e despesas.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- TRANSAÇÕES TAB CONTENT -->
+                    <div id="fin-tab-transacoes-content"
+                        style="display:none; flex-direction:column; gap:1.25rem; animation: fadeIn 0.3s ease;">
+                        <!-- Toolbar: Busca + Filtros -->
+                        <div
+                            style="background:white; border-radius:14px; border:1px solid var(--border-soft); box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:1.25rem 1.5rem; display:flex; flex-direction:column; gap:0.75rem;">
+                            <!-- Linha 1: Busca + Tipo -->
+                            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+                                <div class="search-command-modern" style="flex:1; min-width:200px; height:40px;">
+                                    <i data-lucide="search" style="width:14px; color:#6B7280;"></i>
+                                    <input type="text" id="fin-search"
+                                        placeholder="Buscar por cliente, valor, categoria..." oninput="renderExtrato()"
+                                        style="font-size:0.85rem;">
+                                </div>
+                                <select id="fin-filter-tipo" onchange="renderExtrato()"
+                                    style="padding: 7px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size:0.83rem; color:var(--dark); background:white; cursor:pointer; height:40px;">
+                                    <option value="">Tipo: Todos</option>
+                                    <option value="receita">Receitas</option>
+                                    <option value="despesa">Despesas</option>
+                                </select>
+                            </div>
+                            <!-- Linha 2: Filtros de data -->
+                            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+                                <span
+                                    style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-right:4px;">Período:</span>
+                                <button class="fin-filter-btn active"
+                                    onclick="setFiltroData('hoje', this)">Hoje</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('semana', this)">Esta
+                                    Semana</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('mes', this)">Este Mês</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('30dias', this)">30 dias</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('ano', this)">Este Ano</button>
+                                <button class="fin-filter-btn" onclick="setFiltroData('todos', this)">Todos</button>
+                            </div>
+                        </div>
+
+                        <!-- Tabela Extrato -->
+                        <div
+                            style="background:white; border-radius:14px; border:1px solid var(--border-soft); box-shadow:0 2px 12px rgba(0,0,0,0.04); overflow-x:auto;">
+                            <table class="fin-table" id="table-financeiro-v2">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Descrição / Cliente</th>
+                                        <th>Categoria</th>
+                                        <th>Pagamento</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                        <th style="text-align:right;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-financeiro">
+                                    <tr id="fin-empty-state">
+                                        <td colspan="7"
+                                            style="text-align:center; padding:4rem 2rem; color:var(--text-muted);">
+                                            <div
+                                                style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                                                <i data-lucide="receipt"
+                                                    style="width:48px; height:48px; opacity:0.12;"></i>
+                                                <h4 style="font-weight:700; color:var(--dark); margin:0;">Nenhum
+                                                    lançamento
+                                                    ainda</h4>
+                                                <p style="font-size:0.85rem; margin:0;">Use os botões acima para
+                                                    registrar
+                                                    receitas e despesas.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- End Transacoes Content -->
 
                 </section>
 
@@ -1371,31 +2393,39 @@
                     <div class="fin-modal">
                         <div class="fin-modal-header">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="background:#DCFCE7; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                                <div
+                                    style="background:#DCFCE7; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
                                     <i data-lucide="arrow-up-circle" style="color:#16A34A; width:18px;"></i>
                                 </div>
                                 <div>
                                     <h3 style="margin:0; font-size:1.05rem; font-weight:800;">Nova Receita</h3>
-                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma entrada no caixa</p>
+                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma
+                                        entrada no caixa</p>
                                 </div>
                             </div>
-                            <button onclick="fecharModais()" style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x" style="width:20px; color:#6B7280;"></i></button>
+                            <button onclick="fecharModais()"
+                                style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x"
+                                    style="width:20px; color:#6B7280;"></i></button>
                         </div>
                         <div class="fin-modal-body">
                             <div class="fin-form-row">
                                 <div class="form-group">
                                     <label class="label-sm">Cliente</label>
-                                    <input type="text" id="rec-cliente" class="input-base" list="fin-clientes-list" placeholder="Nome do cliente...">
+                                    <input type="text" id="rec-cliente" class="input-base" list="fin-clientes-list"
+                                        placeholder="Nome do cliente...">
                                     <datalist id="fin-clientes-list"></datalist>
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Valor (R$)</label>
-                                    <input type="text" id="rec-valor" class="input-base" placeholder="0,00" inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)" style="font-size:1.15rem; font-weight:700; color:#10B981;">
+                                    <input type="text" id="rec-valor" class="input-base" placeholder="0,00"
+                                        inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)"
+                                        style="font-size:1.15rem; font-weight:700; color:#10B981;">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="label-sm">Descrição</label>
-                                <input type="text" id="rec-desc" class="input-base" placeholder="Ex: Mensalidade Julho, Avaliação Física...">
+                                <input type="text" id="rec-desc" class="input-base"
+                                    placeholder="Ex: Mensalidade Julho, Avaliação Física...">
                             </div>
                             <div class="fin-form-row">
                                 <div class="form-group">
@@ -1411,7 +2441,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Centro de Custo</label>
-                                    <input type="text" id="rec-centro" class="input-base" placeholder="Ex: Pilates, Estética...">
+                                    <input type="text" id="rec-centro" class="input-base"
+                                        placeholder="Ex: Pilates, Estética...">
                                 </div>
                             </div>
                             <div class="fin-form-row">
@@ -1442,15 +2473,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Conta Bancária</label>
-                                    <input type="text" id="rec-conta" class="input-base" placeholder="Ex: Bradesco, Nubank...">
+                                    <input type="text" id="rec-conta" class="input-base"
+                                        placeholder="Ex: Bradesco, Nubank...">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="label-sm">Observações</label>
-                                <textarea id="rec-obs" class="input-base" rows="2" placeholder="Notas adicionais..." style="resize:none;"></textarea>
+                                <textarea id="rec-obs" class="input-base" rows="2" placeholder="Notas adicionais..."
+                                    style="resize:none;"></textarea>
                             </div>
-                            <div style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
-                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Receita Recorrente?</span>
+                            <div
+                                style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
+                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Receita
+                                    Recorrente?</span>
                                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
                                     <input type="checkbox" id="rec-recorrente" onchange="toggleRecRecorrencia()">
                                     <span style="font-size:0.82rem; color:var(--text-muted);">Sim, repetir</span>
@@ -1469,8 +2504,11 @@
                             </div>
                         </div>
                         <div class="fin-modal-footer">
-                            <button onclick="fecharModais()" class="btn-outline" style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
-                            <button onclick="salvarLancamento('receita')" style="background:#10B981; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3); font-size:0.9rem;">Salvar Receita</button>
+                            <button onclick="fecharModais()" class="btn-outline"
+                                style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
+                            <button onclick="salvarLancamento('receita')"
+                                style="background:#10B981; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3); font-size:0.9rem;">Salvar
+                                Receita</button>
                         </div>
                     </div>
                 </div>
@@ -1480,30 +2518,38 @@
                     <div class="fin-modal">
                         <div class="fin-modal-header">
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <div style="background:#FEE2E2; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                                <div
+                                    style="background:#FEE2E2; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;">
                                     <i data-lucide="arrow-down-circle" style="color:#DC2626; width:18px;"></i>
                                 </div>
                                 <div>
                                     <h3 style="margin:0; font-size:1.05rem; font-weight:800;">Nova Despesa</h3>
-                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma saída do caixa</p>
+                                    <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">Registrar uma saída
+                                        do caixa</p>
                                 </div>
                             </div>
-                            <button onclick="fecharModais()" style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x" style="width:20px; color:#6B7280;"></i></button>
+                            <button onclick="fecharModais()"
+                                style="background:none; border:none; cursor:pointer; padding:4px;"><i data-lucide="x"
+                                    style="width:20px; color:#6B7280;"></i></button>
                         </div>
                         <div class="fin-modal-body">
                             <div class="fin-form-row">
                                 <div class="form-group">
                                     <label class="label-sm">Fornecedor / Destino</label>
-                                    <input type="text" id="dep-fornecedor" class="input-base" placeholder="Ex: Mega Energia, Locação...">
+                                    <input type="text" id="dep-fornecedor" class="input-base"
+                                        placeholder="Ex: Mega Energia, Locação...">
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Valor (R$)</label>
-                                    <input type="text" id="dep-valor" class="input-base" placeholder="0,00" inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)" style="font-size:1.15rem; font-weight:700; color:#DC2626;">
+                                    <input type="text" id="dep-valor" class="input-base" placeholder="0,00"
+                                        inputmode="numeric" oninput="window.maskCurrency && window.maskCurrency(this)"
+                                        style="font-size:1.15rem; font-weight:700; color:#DC2626;">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="label-sm">Descrição</label>
-                                <input type="text" id="dep-desc" class="input-base" placeholder="Ex: Aluguel, Conta de Luz, Salário...">
+                                <input type="text" id="dep-desc" class="input-base"
+                                    placeholder="Ex: Aluguel, Conta de Luz, Salário...">
                             </div>
                             <div class="fin-form-row">
                                 <div class="form-group">
@@ -1520,7 +2566,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Centro de Custo</label>
-                                    <input type="text" id="dep-centro" class="input-base" placeholder="Ex: Administrativo...">
+                                    <input type="text" id="dep-centro" class="input-base"
+                                        placeholder="Ex: Administrativo...">
                                 </div>
                             </div>
                             <div class="fin-form-row">
@@ -1552,15 +2599,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="label-sm">Conta Bancária</label>
-                                    <input type="text" id="dep-conta" class="input-base" placeholder="Ex: Bradesco, Nubank...">
+                                    <input type="text" id="dep-conta" class="input-base"
+                                        placeholder="Ex: Bradesco, Nubank...">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="label-sm">Observações</label>
-                                <textarea id="dep-obs" class="input-base" rows="2" placeholder="Notas adicionais..." style="resize:none;"></textarea>
+                                <textarea id="dep-obs" class="input-base" rows="2" placeholder="Notas adicionais..."
+                                    style="resize:none;"></textarea>
                             </div>
-                            <div style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
-                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Despesa Recorrente?</span>
+                            <div
+                                style="display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border-radius:10px; padding:0.75rem 1rem;">
+                                <span style="font-size:0.85rem; font-weight:600; color:var(--dark);">Despesa
+                                    Recorrente?</span>
                                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
                                     <input type="checkbox" id="dep-recorrente" onchange="toggleDepRecorrencia()">
                                     <span style="font-size:0.82rem; color:var(--text-muted);">Sim, repetir</span>
@@ -1579,8 +2630,11 @@
                             </div>
                         </div>
                         <div class="fin-modal-footer">
-                            <button onclick="fecharModais()" class="btn-outline" style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
-                            <button onclick="salvarLancamento('despesa')" style="background:#DC2626; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(220,38,38,0.3); font-size:0.9rem;">Salvar Despesa</button>
+                            <button onclick="fecharModais()" class="btn-outline"
+                                style="border-radius:99px; padding: 0.6rem 1.5rem;">Cancelar</button>
+                            <button onclick="salvarLancamento('despesa')"
+                                style="background:#DC2626; color:white; border:none; border-radius:99px; padding: 0.6rem 1.75rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 12px rgba(220,38,38,0.3); font-size:0.9rem;">Salvar
+                                Despesa</button>
                         </div>
                     </div>
                 </div>
@@ -1588,7 +2642,7 @@
 
 
                 <!-- Visão Prontuário -->
-                <section id="view-prontuario" class="view hidden fade-in">
+                <section id="view-prontuario" class="view hidden fade-in" style="padding: 1rem 1.5rem 3rem 1.75rem;">
                     <div class="panel-header"
                         style="margin-bottom: 1rem; padding: 0 0 1rem 0; border: none; display:flex; justify-content:space-between; align-items:flex-end;">
                         <div>
@@ -1681,7 +2735,7 @@
                                             style="background: #E0E7FF; color: #4338CA; padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display:flex; align-items:center; gap: 4px;">
                                             <i data-lucide="droplet" style="width:14px;"></i>
                                             <select id="ipt-pront-sangue"
-                                                style="background: transparent; color: #4338CA; border: none; font-weight: 600; font-size: 0.8rem; outline: none; cursor:pointer; -webkit-appearance: none;">
+                                                style="background: transparent; color: #4338CA; border: none; font-weight: 600; font-size: 0.8rem; outline: none; cursor:pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none;">
                                                 <option value="A+">Sangue: A+</option>
                                                 <option value="A-">Sangue: A-</option>
                                                 <option value="B+">Sangue: B+</option>
@@ -2229,6 +3283,139 @@
                     </div>
                 </section>
 
+                <!-- Visão Suporte IA (Maya) -->
+                <section id="view-suporte" class="view hidden fade-in">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-left: 28px; padding-top: 16px;">
+                        <div>
+                            <h3
+                                style="font-size: 1.5rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; margin: 0;">
+                                <i data-lucide="help-circle" style="color: #10B981; width:26px; height:26px;"></i>
+                                Central de Ajuda & IA
+                            </h3>
+                            <p class="text-muted text-sm" style="margin: 4px 0 0 4px; font-weight: 500;">Suporte</p>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; height: calc(100vh - 220px); min-height: 500px; align-items: stretch;">
+                        <!-- Coluna Esquerda: FAQs & Status -->
+                        <div
+                            style="display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; padding-right: 4px;">
+                            <div class="card"
+                                style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                                <h4
+                                    style="font-size: 0.95rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    <i data-lucide="sparkles" style="color: #10B981; width:16px;"></i> Perguntas
+                                    Frequentes
+                                </h4>
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <button class="btn-outline faq-btn"
+                                        style="text-align: left; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-soft); background: white; transition: all 0.2s;"
+                                        data-q="Como posso cadastrar um aluno?">Como cadastrar um aluno?</button>
+                                    <button class="btn-outline faq-btn"
+                                        style="text-align: left; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-soft); background: white; transition: all 0.2s;"
+                                        data-q="Como faço para lançar uma venda na Lojinha?">Como lançar uma venda na
+                                        Lojinha?</button>
+                                    <button class="btn-outline faq-btn"
+                                        style="text-align: left; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-soft); background: white; transition: all 0.2s;"
+                                        data-q="Como controlo despesas e receitas do financeiro?">Como controlar
+                                        despesas/receitas?</button>
+                                    <button class="btn-outline faq-btn"
+                                        style="text-align: left; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-soft); background: white; transition: all 0.2s;"
+                                        data-q="Quantos alunos/clientes temos ativos no momento?">Quantos alunos
+                                        cadastrados temos?</button>
+                                    <button class="btn-outline faq-btn"
+                                        style="text-align: left; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border-soft); background: white; transition: all 0.2s;"
+                                        data-q="Qual é o faturamento total acumulado do mês?">Qual o faturamento do
+                                        mês?</button>
+                                </div>
+                            </div>
+
+                            <div class="card"
+                                style="padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; background: #F8FAFC;">
+                                <h4
+                                    style="font-size: 0.9rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    <i data-lucide="activity" style="color: #10B981; width:16px;"></i> Integridade do
+                                    Sistema
+                                </h4>
+                                <div
+                                    style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--text-muted);">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <span>Banco de Dados Local:</span>
+                                        <span
+                                            style="color:#10B981; font-weight:700; display:flex; align-items:center; gap:4px;"><span
+                                                style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+                                            Online (Local)</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <span>Faturamento Sincronizado:</span>
+                                        <span
+                                            style="color:#10B981; font-weight:700; display:flex; align-items:center; gap:4px;"><span
+                                                style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#10B981;"></span>
+                                            Ativo (v2)</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <span>Versão da Maya AI:</span>
+                                        <span style="font-weight:600; color:var(--dark);">v2.4 (Ativa)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna Direita: Conversa do Workspace -->
+                        <div class="card" style="display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+                            <!-- Header do Workspace Chat -->
+                            <div
+                                style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-soft); display: flex; align-items: center; gap: 12px; background: rgba(16,185,129,0.03);">
+                                <div style="position: relative;">
+                                    <img src="avatar-maya.png" alt="Maya"
+                                        style="width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                    <span
+                                        style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; border-radius: 50%; background: #10B981; border: 2px solid white;"></span>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 700; color: var(--dark); font-size: 14px;">Maya (IA
+                                        Assistente)</div>
+                                    <div style="font-size: 11px; color: #10B981; font-weight: 600;">Respondendo dúvidas
+                                        do seu sistema</div>
+                                </div>
+                            </div>
+
+                            <!-- Area do Feed de Msg -->
+                            <div id="suporte-chat-feed"
+                                style="flex: 1; padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #F8FAFC;">
+                                <!-- Iniciado dinamicamente via JS -->
+                            </div>
+
+                            <!-- Pills de Atalhos -->
+                            <div
+                                style="padding: 0.5rem 1rem; display: flex; gap: 8px; overflow-x: auto; background: #F8FAFC; border-top: 1px solid rgba(0,0,0,0.02); flex-shrink:0;">
+                                <button class="suporte-pill" data-msg="Quantos alunos cadastrados?"
+                                    style="flex-shrink:0; padding: 6px 12px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 12px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Alunos
+                                    cadastrados?</button>
+                                <button class="suporte-pill" data-msg="Como está o faturamento da loja?"
+                                    style="flex-shrink:0; padding: 6px 12px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 12px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Faturamento
+                                    de Vendas?</button>
+                                <button class="suporte-pill" data-msg="Quais produtos estão sem estoque?"
+                                    style="flex-shrink:0; padding: 6px 12px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 12px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Produtos
+                                    esgotados?</button>
+                            </div>
+
+                            <!-- Form de Envio -->
+                            <div
+                                style="padding: 1rem; border-top: 1px solid var(--border-soft); display: flex; gap: 10px; background: white;">
+                                <input type="text" id="ipt-suporte-msg" class="input-base"
+                                    placeholder="Pergunte ao Mayaflow AI..." style="flex: 1; margin: 0; height: 42px;">
+                                <button id="btn-suporte-enviar" class="btn btn-primary"
+                                    style="height: 42px; border-radius: 8px; padding: 0 1rem; font-weight: 600; display:flex; align-items:center; justify-content:center; cursor: pointer;">
+                                    <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Ficha do Aluno / CRM Completo -->
                 <section id="view-ficha-aluno" class="view hidden fade-in"
                     style="background:#F8FAFC; overflow-y: auto; overflow-x: hidden; width: 100%; padding: 0 0 8rem 0; display:flex; flex-direction:column;">
@@ -2636,7 +3823,7 @@
                                     estúdio no TotalPass.<br>
                                     2. Insira as credenciais à esquerda e ligue o switch de ativação.<br>
                                     3. O sistema receberá as validações de passes de alunos e registrará na lista de
-                                    check-ins automáticos do MovClin.
+                                    check-ins automáticos do Mayaflow.
                                 </p>
                             </div>
                             <div class="card" style="padding: 1.25rem;">
@@ -3057,10 +4244,11 @@
                 <button class="btn-icon close-slide-produto"><i data-lucide="x"></i></button>
             </div>
 
-            <div class="slide-content" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="slide-content custom-scrollbar"
+                style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; overflow-y:auto; max-height: calc(100vh - 150px);">
                 <input type="hidden" id="ipt-prod-id">
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom:0;">
                     <label class="label-sm">Foto do Produto</label>
                     <div class="file-upload-wrapper"
                         style="border: 2px dashed var(--border-soft); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer; position: relative; background: #FAFAFA; transition: border 0.3s;">
@@ -3076,14 +4264,42 @@
                     </div>
                     <input type="hidden" id="ipt-prod-foto-base64">
                 </div>
-                <div class="form-group">
+
+                <div class="form-group" style="margin-bottom:0;">
                     <label class="label-sm">Nome do Produto</label>
                     <input type="text" id="ipt-prod-nome" class="input-base" placeholder="Ex: Meia de Pilates Rosa">
                 </div>
-                <div class="form-group">
-                    <label class="label-sm">Preço de Venda (R$)</label>
-                    <input type="text" id="ipt-prod-preco" class="input-base" placeholder="0,00"
-                        oninput="window.maskCurrency(this)">
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="label-sm">Preço de Venda (R$)</label>
+                        <input type="text" id="ipt-prod-preco" class="input-base" placeholder="0,00"
+                            oninput="window.maskCurrency(this)">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="label-sm">Categoria</label>
+                        <select id="ipt-prod-categoria" class="input-base">
+                            <option value="Roupas">Roupas</option>
+                            <option value="Acessórios">Acessórios</option>
+                            <option value="Equipamentos">Equipamentos</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="label-sm">Estoque Inicial</label>
+                        <input type="number" id="ipt-prod-estoque" class="input-base" placeholder="Ex: 10" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="label-sm">Variações (Separadas por vírgula)</label>
+                    <input type="text" id="ipt-prod-variacoes" class="input-base"
+                        placeholder="Ex: P, M, G ou Azul, Verde">
+                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Deixe em branco para
+                        tamanho Único</div>
                 </div>
             </div>
 
@@ -3117,14 +4333,27 @@
                     </div>
                 </div>
 
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; border-top: 1px dashed var(--border-soft); padding-top: 1.5rem;">
+                    <div class="form-group" id="form-group-venda-variacao" style="display: none;">
+                        <label class="label-sm">Variação / Tamanho</label>
+                        <select id="ipt-venda-variacao" class="input-base"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="label-sm">Quantidade</label>
+                        <input type="number" id="ipt-venda-quantidade" class="input-base" value="1" min="1"
+                            style="font-weight: 700;">
+                    </div>
+                </div>
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group">
                         <label class="label-sm">Situação</label>
                         <input type="hidden" id="ipt-venda-status" value="Pago">
                         <div style="display:flex; background:#F3F4F6; border-radius:8px; padding:4px;">
-                            <button type="button" class="status-btn" data-val="Pago"
+                            <button type="button" class="venda-status-btn" data-val="Pago"
                                 style="flex:1; padding:0.4rem; border:none; background:white; color:#10B981; border-radius:6px; font-size:0.8rem; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,0.1); cursor:pointer; transition:all 0.2s;">Pago</button>
-                            <button type="button" class="status-btn" data-val="Não Pago"
+                            <button type="button" class="venda-status-btn" data-val="Não Pago"
                                 style="flex:1; padding:0.4rem; border:none; background:transparent; color:#6B7280; border-radius:6px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Não
                                 Pago</button>
                         </div>
@@ -3658,7 +4887,7 @@
                     <label
                         style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; padding:10px 14px; border:1px solid #E2E8F0; border-radius:8px; transition:all 0.2s; background:#F8FAFC;">
                         <span
-                            style="font-size:0.85rem; font-weight:600; color:var(--dark); display:flex; align-items:center; gap:8px;">MovClin
+                            style="font-size:0.85rem; font-weight:600; color:var(--dark); display:flex; align-items:center; gap:8px;">Mayaflow
                             Pay</span>
                         <div style="position:relative; display:inline-block; width:36px; height:20px;">
                             <input type="checkbox"
@@ -3842,7 +5071,7 @@
     <script src="app.js?v=5"></script>
     <script>
         window.onerror = function (msg, url, lineNo, columnNo, error) {
-            alert("MovClin Debug - Erro: " + msg + " (Linha: " + lineNo + "). Print isso para o suporte.");
+            alert("Mayaflow Debug - Erro: " + msg + " (Linha: " + lineNo + "). Print isso para o suporte.");
             return false;
         };
 
@@ -3860,7 +5089,7 @@
                 e.target.nextElementSibling.style.backgroundColor = isVisible ? '#10B981' : '#ccc';
             }
         }
-        function iniciarTourMovClin() {
+        function iniciarTourMayaflow() {
             const driver = window.driver.js.driver;
             const driverObj = driver({
                 showProgress: true,
@@ -4175,6 +5404,78 @@
             }
         }
     </script>
+
+    <!-- Floating Maya AI Chat Widget -->
+    <div id="maya-floating-widget"
+        style="position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; font-family: inherit;">
+        <!-- Card Do Chat Widget (Inicialmente Oculto) -->
+        <div id="maya-chat-card"
+            style="width: 360px; height: 480px; background: white; border-radius: 16px; border: 1px solid var(--border-soft); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; margin-bottom: 12px; transform: scale(0.9); transform-origin: bottom right; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; pointer-events: none; height: 0;">
+            <!-- Header do Widget -->
+            <div
+                style="padding: 1rem; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; display: flex; justify-content: space-between; align-items: center; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="position: relative;">
+                        <img src="avatar-maya.png" alt="Maya"
+                            style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                        <span
+                            style="position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background: #10B981; border: 1.5px solid white;"></span>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 13px;">Maya (IA Assistente)</div>
+                        <div style="font-size: 10px; opacity: 0.9;">Atendimento Online</div>
+                    </div>
+                </div>
+                <button type="button" id="btn-minimizar-maya"
+                    style="background: transparent; border: none; color: white; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center;"><i
+                        data-lucide="minus" style="width: 16px; height: 16px;"></i></button>
+            </div>
+
+            <!-- Feed de Msg Widget -->
+            <div id="maya-widget-feed"
+                style="flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #F8FAFC; font-size: 13px;">
+                <!-- Iniciado dinamicamente -->
+            </div>
+
+            <!-- Widget Atalhos -->
+            <div
+                style="padding: 0.4rem 0.75rem; display: flex; gap: 6px; overflow-x: auto; background: #F8FAFC; border-top: 1px solid rgba(0,0,0,0.02); flex-shrink:0;">
+                <button class="maya-widget-pill" data-msg="Como cadastrar um aluno?"
+                    style="flex-shrink:0; padding: 4px 10px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 11px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Novo
+                    Aluno?</button>
+                <button class="maya-widget-pill" data-msg="Como vender?"
+                    style="flex-shrink:0; padding: 4px 10px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 11px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Vendas
+                    Lojinha?</button>
+                <button class="maya-widget-pill" data-msg="Status financeiro"
+                    style="flex-shrink:0; padding: 4px 10px; border-radius: 99px; border: 1px solid #E5E7EB; background: white; font-size: 11px; font-weight: 600; color: #4B5563; cursor: pointer; transition: all 0.2s;">Faturamento?</button>
+            </div>
+
+            <!-- Form Envio Widget -->
+            <div
+                style="padding: 0.75rem; border-top: 1px solid var(--border-soft); display: flex; gap: 8px; background: white; flex-shrink:0;">
+                <input type="text" id="ipt-maya-widget-msg" class="input-base" placeholder="Pergunte à Maya..."
+                    style="flex: 1; margin: 0; height: 36px; font-size: 13px; border-radius: 8px; padding: 0 12px;">
+                <button type="button" id="btn-maya-widget-enviar" class="btn btn-primary"
+                    style="height: 36px; border-radius: 8px; padding: 0 10px; font-weight: 600; cursor: pointer; min-width:36px; display:flex; align-items:center; justify-content:center;">
+                    <i data-lucide="send" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Botão Redondo/Avatar Trigger -->
+        <button id="btn-maya-trigger"
+            style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(16,185,129,0.3); display: flex; align-items: center; justify-content: center; color: white; position: relative; transition: all 0.2s; outline:none; border: 2px solid white;">
+            <!-- Avatar da Maya overlay -->
+            <img src="avatar-maya.png" alt="Maya"
+                style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; position: absolute; top: 0; left: 0; transition: all 0.2s;">
+            <!-- Icone Alternativo / Indicador Nova Msg -->
+            <div id="maya-trigger-badge"
+                style="position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; border-radius: 50%; background: #EF4444; border: 2px solid white; display:none;">
+            </div>
+            <i data-lucide="message-square" id="maya-trigger-icon"
+                style="width: 26px; height: 26px; display: none; position: relative; z-index: 2;"></i>
+        </button>
+    </div>
 </body>
 
 </html>

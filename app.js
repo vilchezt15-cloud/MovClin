@@ -450,6 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update KPIs
                 const lblAlunos = document.getElementById('kpi-alunos');
                 if (lblAlunos) lblAlunos.innerText = clientes.length;
+                window.lastAlunosCount = clientes.length;
 
                 if (window.growthChartInstance) {
                     let counts = [0, 0, 0, 0, 0, 0];
@@ -2432,6 +2433,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const slideProduto = document.getElementById('slide-over-produto');
     const slideVenda = document.getElementById('slide-over-venda');
 
+    window.currentLojaFilter = 'todos';
+    window.currentLojaVendaFilter = 'todas';
+    window.currentLojaTab = 'produtos';
+
+    window.switchLojaTab = (tab) => {
+        window.currentLojaTab = tab;
+        document.querySelectorAll('#view-loja .tab-btn').forEach(btn => {
+            if (btn.getAttribute('data-lojatab') === tab) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        document.querySelectorAll('#view-loja .tab-panel').forEach(panel => {
+            if (panel.id === `loja-tab-${tab}`) {
+                panel.classList.add('active');
+            } else {
+                panel.classList.remove('active');
+            }
+        });
+        window.loadLojinha();
+    };
+
+    window.setLojaFilter = (filter, el) => {
+        window.currentLojaFilter = filter;
+        if (el) {
+            document.querySelectorAll('#loja-filters-cat .filter-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+        window.loadLojinha();
+    };
+
+    window.setLojaVendaFilter = (filter, el) => {
+        window.currentLojaVendaFilter = filter;
+        if (el) {
+            document.querySelectorAll('#loja-tab-vendas .filter-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+        window.loadLojinha();
+    };
+
     window.loadLojinha = async () => {
         let produtos = [];
         try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
@@ -2447,60 +2489,210 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) { }
         }
 
-        const grid = document.getElementById('store-grid');
+        // Seeder inicial se a loja estiver vazia
+        if (produtos.length === 0) {
+            produtos = [
+                {
+                    id: 'p1',
+                    localId: 'p1',
+                    nome: 'Calça Legging Cross',
+                    categoria: 'Roupas',
+                    preco: 89.90,
+                    variacoes: 'P, M, G',
+                    variacoesStock: { 'P': 8, 'M': 5, 'G': 2 },
+                    vendas: []
+                },
+                {
+                    id: 'p2',
+                    localId: 'p2',
+                    nome: 'Meia de Pilates Antiderrapante',
+                    categoria: 'Acessórios',
+                    preco: 29.90,
+                    variacoes: '',
+                    estoque: 15,
+                    vendas: []
+                },
+                {
+                    id: 'p3',
+                    localId: 'p3',
+                    nome: 'Camiseta Dry Fit Feminina',
+                    categoria: 'Roupas',
+                    preco: 49.90,
+                    variacoes: 'P, M, G',
+                    variacoesStock: { 'P': 2, 'M': 0, 'G': 1 },
+                    vendas: []
+                },
+                {
+                    id: 'p4',
+                    localId: 'p4',
+                    nome: 'Tapete de Yoga 6mm',
+                    categoria: 'Acessórios',
+                    preco: 119.90,
+                    variacoes: '',
+                    estoque: 0,
+                    vendas: []
+                }
+            ];
+            localStorage.setItem('movia_loja', JSON.stringify(produtos));
+        }
+
+        window.updateLojinhaKPIs(produtos);
+
+        if (window.currentLojaTab === 'produtos') {
+            window.renderLojinhaProdutos(produtos);
+        } else if (window.currentLojaTab === 'vendas') {
+            window.renderLojinhaVendas(produtos);
+        } else if (window.currentLojaTab === 'estoque') {
+            window.renderLojinhaEstoque(produtos);
+        }
+    };
+
+    window.updateLojinhaKPIs = (produtos) => {
+        let faturamento = 0;
+        let qtdPagas = 0;
+        let qtdAtivos = produtos.length;
+        let qtdBaixoEstoque = 0;
+        let qtdPendentesVal = 0;
+
+        produtos.forEach(p => {
+            let isLow = false;
+            if (p.variacoes) {
+                const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                list.forEach(v => {
+                    const qty = p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0;
+                    if (qty <= 3) isLow = true;
+                });
+            } else {
+                const qty = Number(p.estoque || 0);
+                if (qty <= 3) isLow = true;
+            }
+            if (isLow) qtdBaixoEstoque++;
+
+            if (p.vendas) {
+                p.vendas.forEach(v => {
+                    const val = Number(v.total) || Number(v.valor) || Number(p.preco || 0);
+                    if (v.status === 'Pago') {
+                        faturamento += val;
+                        qtdPagas++;
+                    } else {
+                        qtdPendentesVal++;
+                    }
+                });
+            }
+        });
+
+        const elFat = document.getElementById('lojinha-kpi-fat') || document.getElementById('loja-kpi-fat');
+        const elFatSub = document.getElementById('lojinha-kpi-fat-sub') || document.getElementById('loja-kpi-fat-sub');
+        const elAtivos = document.getElementById('lojinha-kpi-ativos') || document.getElementById('loja-kpi-ativos');
+        const elBaixo = document.getElementById('lojinha-kpi-baixo') || document.getElementById('loja-kpi-baixo');
+        const elPendentes = document.getElementById('lojinha-kpi-pendentes') || document.getElementById('loja-kpi-pendentes');
+
+        if (elFat) elFat.innerText = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
+        if (elFatSub) elFatSub.innerText = qtdPagas;
+        if (elAtivos) elAtivos.innerText = qtdAtivos;
+        if (elBaixo) elBaixo.innerText = qtdBaixoEstoque;
+        if (elPendentes) elPendentes.innerText = qtdPendentesVal;
+    };
+
+    window.renderLojinhaProdutos = (produtos) => {
+        if (!produtos) {
+            try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e) { produtos = []; }
+        }
+        const grid = document.getElementById('store-grid') || document.getElementById('loja-product-grid');
         const empty = document.getElementById('empty-state-loja');
         if (!grid) return;
 
         grid.innerHTML = '';
-        if (produtos.length === 0) {
-            empty.style.display = 'block';
+        grid.style.cssText = 'display: flex; flex-direction: column; gap: 8px; width: 100%;';
+
+        const searchVal = (document.getElementById('loja-global-search') ? document.getElementById('loja-global-search').value : '').toLowerCase().trim();
+
+        const filtered = produtos.filter(p => {
+            if (searchVal && !p.nome.toLowerCase().includes(searchVal) && !(p.categoria || '').toLowerCase().includes(searchVal)) {
+                return false;
+            }
+
+            const catFilter = window.currentLojaFilter;
+            if (catFilter === 'todos') return true;
+
+            const categoryName = (p.categoria || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (catFilter === 'roupas') return categoryName.includes('roupa') || categoryName.includes('vestuario') || categoryName.includes('calcado');
+            if (catFilter === 'acessorios') return categoryName.includes('acessorio') || categoryName.includes('equipamento') || categoryName.includes('objeto');
+            
+            if (catFilter === 'baixo') {
+                if (p.variacoes) {
+                    const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                    return list.some(v => (p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0) <= 3);
+                } else {
+                    return Number(p.estoque || 0) <= 3;
+                }
+            }
+            if (catFilter === 'esgotados') {
+                if (p.variacoes) {
+                    const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                    return list.every(v => (p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0) === 0);
+                } else {
+                    return Number(p.estoque || 0) === 0;
+                }
+            }
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            if (empty) empty.style.display = 'block';
         } else {
-            empty.style.display = 'none';
-            produtos.forEach(p => {
-                const fotoOffset = p.fotoOffset !== undefined ? p.fotoOffset : 50;
-                const fotoStr = p.foto ? `<img src="${p.foto}" title="Arraste para ajustar o enquadramento" style="width:100%; height:100%; object-fit:cover; object-position: 50% ${fotoOffset}%; cursor: ns-resize;" draggable="false" class="card-img-draggable" data-id="${p.id || p.localId}">` : `<i data-lucide="image" style="width:40px; height:40px; color:#9CA3AF; opacity:0.5;"></i>`;
-
-                const card = document.createElement('div');
-                card.style.cssText = 'background: white; border: 1px solid var(--border-soft); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);';
-                let badgesHtml = '';
-                if (p.vendas && p.vendas.length > 0) {
-                    badgesHtml = `<div style="display:flex; flex-direction:column; gap:6px; margin-bottom: 16px; max-height: 90px; overflow-y:auto;" class="custom-scrollbar">`;
-                    p.vendas.forEach(v => {
-                        const isPago = v.status === 'Pago';
-                        const bgParams = isPago
-                            ? 'background: rgba(16, 185, 129, 0.1); color: #065F46; border: none;'
-                            : 'background: transparent; border: 1px solid #E5E7EB; color: #6B7280; padding: 3px 7px;';
-
-                        const icone = isPago ? `<i data-lucide="check" style="width:12px; min-width:12px; margin-right:6px; color: #10B981;"></i>` : `<i data-lucide="clock" style="width:12px; min-width:12px; margin-right:6px;"></i>`;
-
-                        let dataFormatada = 'Pendente';
-                        if (v.data_venda) {
-                            const partes = v.data_venda.split('-');
-                            if (partes.length === 3) dataFormatada = `${partes[2]}/${partes[1]}`;
-                        }
-                        const prefixo = isPago ? 'Pago' : dataFormatada;
-
-                        badgesHtml += `<div style="display:flex; align-items:center; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; ${bgParams}" title="${prefixo} - ${v.cliente}">
-                            ${icone}
-                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${prefixo} - <strong>${v.cliente}</strong></span>
-                        </div>`;
-                    });
-                    badgesHtml += `</div>`;
+            if (empty) empty.style.display = 'none';
+            filtered.forEach(p => {
+                let varStockHtml = '';
+                let totalEstoque = 0;
+                if (p.variacoes) {
+                    const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                    if (list.length > 0) {
+                        varStockHtml = `<div style="display:flex; gap:6px; flex-wrap:wrap;">`;
+                        list.forEach(v => {
+                            const qty = p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0;
+                            totalEstoque += qty;
+                            const isLow = qty > 0 && qty <= 3;
+                            const isOut = qty === 0;
+                            const badgeColor = isOut ? 'background:#FEE2E2; color:#991B1B;' : (isLow ? 'background:#FEF3C7; color:#92400E;' : 'background:#F0FDF4; color:#166534;');
+                            varStockHtml += `<span style="padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; ${badgeColor}">${v}: ${qty} un</span>`;
+                        });
+                        varStockHtml += `</div>`;
+                    }
+                } else {
+                    totalEstoque = Number(p.estoque || 0);
+                    const isLow = totalEstoque > 0 && totalEstoque <= 3;
+                    const isOut = totalEstoque === 0;
+                    const badgeColor = isOut ? 'background:#FEE2E2; color:#991B1B;' : (isLow ? 'background:#FEF3C7; color:#92400E;' : 'background:#F0FDF4; color:#166534;');
+                    varStockHtml = `<span style="padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600; ${badgeColor}">Único: ${totalEstoque} un</span>`;
                 }
 
+                const card = document.createElement('div');
+                card.style.cssText = 'background: white; border: 1px solid var(--border-soft); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; gap: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); transition: all 0.2s;';
                 card.innerHTML = `
-                    <div style="height: 180px; background: #F9FAFB; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #F3F4F6;">
-                        ${fotoStr}
-                        <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px;">
-                            <button class="btn-icon btn-edit-prod" data-id="${p.id || p.localId}" style="width: 32px; height: 32px; border-radius: 8px; background: white; border: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer;"><i data-lucide="pencil" style="width: 14px; color: #4B5563; pointer-events:none;"></i></button>
-                            <button class="btn-icon btn-del-prod" data-id="${p.id || p.localId}" style="width: 32px; height: 32px; border-radius: 8px; background: white; border: 1px solid #FECACA; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer;"><i data-lucide="trash-2" style="width: 14px; color: #DC2626; pointer-events:none;"></i></button>
+                    <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
+                        <div style="width:34px; height:34px; border-radius:6px; background:#F0FDF4; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i data-lucide="tag" style="width:16px; height:16px; color:#10B981;"></i>
+                        </div>
+                        <div style="min-width:0; flex:1;">
+                            <div style="font-weight:600; font-size:14px; color:var(--text-dark); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.nome}</div>
+                            <div style="font-size:11px; color:#6B7280; margin-top:2px;">Categoria: ${p.categoria || 'Outros'}</div>
                         </div>
                     </div>
-                    <div style="padding: 1.25rem; flex: 1; display: flex; flex-direction: column;">
-                        <h4 style="margin:0 0 4px 0; font-size: 0.95rem; font-weight: 600; color: var(--dark); line-height:1.2;">${p.nome}</h4>
-                        <div style="font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 16px;">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
-                        ${badgesHtml}
-                        <button class="btn-outline btn-abrir-venda" data-id="${p.id || p.localId}" data-nome="${p.nome}" data-preco="${p.preco}" style="margin-top:auto; width: 100%; border-radius: 6px; font-weight:600; color: #374151; border: 1px solid #E5E7EB; background: white; padding: 0.6rem; transition: background 0.2s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='white'"><i data-lucide="shopping-bag" style="width:14px; margin-right:6px; pointer-events:none; color: #9CA3AF;"></i> Vender</button>
+                    
+                    <div style="flex:1.5; display:flex; align-items:center; justify-content:flex-start; min-width:0;">
+                        ${varStockHtml}
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                        <div style="font-weight:700; color:#10B981; font-size:15px; min-width:80px; text-align:right;">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
+                        
+                        <button class="btn btn-primary btn-abrir-venda" data-id="${p.id || p.localId}" data-nome="${p.nome}" data-preco="${p.preco}" style="height:32px; font-size:12px; padding:0 12px; font-weight:600; border-radius:6px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;" ${totalEstoque === 0 ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+                            <i data-lucide="shopping-bag" style="width:13px; height:13px;"></i> Vender
+                        </button>
+                        
+                        <button class="btn-icon btn-edit-prod" data-id="${p.id || p.localId}" style="width:32px; height:32px; border-radius:6px; background:#fff; border:1px solid #E5E7EB; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i data-lucide="pencil" style="width:13px; height:13px; color:#4B5563; pointer-events:none;"></i></button>
+                        <button class="btn-icon btn-del-prod" data-id="${p.id || p.localId}" style="width:32px; height:32px; border-radius:6px; background:#fff; border:1px solid #FECACA; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width:13px; height:13px; color:#DC2626; pointer-events:none;"></i></button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -2512,12 +2704,74 @@ document.addEventListener('DOMContentLoaded', () => {
                     const id = e.currentTarget.dataset.id;
                     const nome = e.currentTarget.dataset.nome;
                     const preco = e.currentTarget.dataset.preco;
+                    const p = produtos.find(item => (item.id == id || item.localId == id));
 
                     document.getElementById('venda-prod-nome').innerText = nome;
                     document.getElementById('venda-prod-nome').dataset.prodId = id;
                     document.getElementById('venda-prod-preco').innerText = `R$ ${parseFloat(preco).toFixed(2).replace('.', ',')}`;
                     document.getElementById('venda-prod-preco').dataset.valorRaw = preco;
                     document.getElementById('ipt-venda-cliente').value = '';
+
+                    const hdnStatusInput = document.getElementById('ipt-venda-status');
+                    if (hdnStatusInput) hdnStatusInput.value = 'Pago';
+                    document.querySelectorAll('.venda-status-btn').forEach(b => {
+                        if (b.getAttribute('data-val') === 'Pago') {
+                            b.style.background = 'white';
+                            b.style.color = '#10B981';
+                            b.style.fontWeight = '700';
+                            b.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                        } else {
+                            b.style.background = 'transparent';
+                            b.style.color = '#6B7280';
+                            b.style.fontWeight = '600';
+                            b.style.boxShadow = 'none';
+                        }
+                    });
+                    
+                    const qtyInput = document.getElementById('ipt-venda-quantidade');
+                    if (qtyInput) {
+                        qtyInput.value = 1;
+                        qtyInput.min = 1;
+                        if (p) {
+                            const maxQty = p.variacoes ? 100 : Number(p.estoque || 0);
+                            qtyInput.max = maxQty;
+                        }
+                    }
+
+                    const confirmBtn = document.getElementById('btn-confirmar-venda');
+                    if (confirmBtn) {
+                        delete confirmBtn.dataset.editSaleId;
+                        delete confirmBtn.dataset.editProdId;
+                        delete confirmBtn.dataset.oldVar;
+                        delete confirmBtn.dataset.oldStatus;
+                        delete confirmBtn.dataset.oldCliente;
+                        delete confirmBtn.dataset.oldQty;
+                        confirmBtn.innerHTML = 'Confirmar a Compra';
+                    }
+
+                    const selectVar = document.getElementById('ipt-venda-variacao');
+                    const formGroupVar = document.getElementById('form-group-venda-variacao');
+                    if (selectVar && formGroupVar) {
+                        selectVar.innerHTML = '';
+                        if (p && p.variacoes) {
+                            const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                            if (list.length > 0) {
+                                list.forEach(v => {
+                                    const qty = p.variacoesStock && p.variacoesStock[v] !== undefined ? p.variacoesStock[v] : 0;
+                                    const opt = document.createElement('option');
+                                    opt.value = v;
+                                    opt.text = `${v} (${qty > 0 ? `${qty} un` : 'Esgotado'})`;
+                                    if (qty <= 0) opt.disabled = true;
+                                    selectVar.appendChild(opt);
+                                });
+                                formGroupVar.style.display = 'block';
+                            } else {
+                                formGroupVar.style.display = 'none';
+                            }
+                        } else {
+                            formGroupVar.style.display = 'none';
+                        }
+                    }
 
                     const elData = document.getElementById('ipt-venda-data');
                     if (elData) elData.value = new Date().toISOString().split('T')[0];
@@ -2537,7 +2791,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('ipt-prod-nome').value = p.nome;
                         document.getElementById('ipt-prod-preco').value = parseFloat(p.preco).toFixed(2).replace('.', ',');
                         document.getElementById('ipt-prod-foto-base64').value = p.foto || '';
-                        document.getElementById('foto-preview-text').innerText = p.foto ? 'Foto carrega. Clique para trocar' : 'Clique ou arraste para subir a foto';
+                        document.getElementById('ipt-prod-categoria').value = p.categoria || 'Outros';
+                        document.getElementById('ipt-prod-estoque').value = p.estoque || 0;
+                        document.getElementById('ipt-prod-variacoes').value = p.variacoes || '';
+                        document.getElementById('foto-preview-text').innerText = p.foto ? 'Foto carregada. Clique para trocar' : 'Clique ou arraste para subir a foto';
 
                         slideProduto.classList.remove('hidden-overlay');
                         setTimeout(() => slideProduto.classList.add('open'), 10);
@@ -2561,6 +2818,385 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    window.renderLojinhaVendas = (produtos) => {
+        const tbody = document.getElementById('loja-vendas-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const searchVal = (document.getElementById('loja-vendas-search') ? document.getElementById('loja-vendas-search').value : '').toLowerCase().trim();
+        const salesFilter = window.currentLojaVendaFilter;
+
+        let allSales = [];
+        produtos.forEach(p => {
+            if (p.vendas) {
+                p.vendas.forEach(v => {
+                    allSales.push({
+                        ...v,
+                        prodId: p.id || p.localId,
+                        prodNome: p.nome,
+                        prodPreco: p.preco
+                    });
+                });
+            }
+        });
+
+        allSales.sort((a, b) => {
+            const timeA = Number(a.id_venda) || 0;
+            const timeB = Number(b.id_venda) || 0;
+            return timeB - timeA;
+        });
+
+        const filteredSales = allSales.filter(s => {
+            if (searchVal && !s.prodNome.toLowerCase().includes(searchVal) && !s.cliente.toLowerCase().includes(searchVal)) {
+                return false;
+            }
+            if (salesFilter === 'pagas') return s.status === 'Pago';
+            if (salesFilter === 'pendentes') return s.status === 'Não Pago';
+            return true;
+        });
+
+        if (filteredSales.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1.5rem; color:#9CA3AF;">Nenhuma venda registrada.</td></tr>`;
+            return;
+        }
+
+        filteredSales.forEach(s => {
+            const dataFmt = s.data_venda ? s.data_venda.split('-').reverse().join('/') : '---';
+            const totalVal = Number(s.total) || (Number(s.quantidade || 1) * Number(s.prodPreco));
+            const isPago = s.status === 'Pago';
+            
+            const badgeColor = isPago 
+                ? 'background:rgba(16,185,129,0.1); color:#065F46; border-radius:6px; padding:4px 8px; font-weight:600; font-size:11px; display:inline-block;' 
+                : 'background:rgba(245,158,11,0.1); color:#92400E; border-radius:6px; padding:4px 8px; font-weight:600; font-size:11px; display:inline-block;';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td style="font-weight:600;">${s.prodNome} ${s.variacao && s.variacao !== 'Único' ? `<span style="font-size:11px; color:#6B7280;">(${s.variacao})</span>` : ''} <span style="color:#6B7280; font-weight:400; font-size:12px;">x${s.quantidade || 1}</span></td>
+                    <td>${s.cliente || 'Avulso'}</td>
+                    <td>${dataFmt}</td>
+                    <td style="font-weight:700; color:#10B981;">R$ ${totalVal.toFixed(2).replace('.', ',')}</td>
+                    <td><span style="${badgeColor} cursor:pointer;" class="loja-venda-status-badge" data-sale-id="${s.id_venda}" data-prod-id="${s.prodId}" title="Clique para alternar">${s.status}</span></td>
+                    <td style="text-align:right;">
+                        <button class="btn-icon btn-edit-venda" data-sale-id="${s.id_venda}" data-prod-id="${s.prodId}" style="width:28px; height:28px; border-radius:6px; background:#fff; border:1px solid #E5E7EB; cursor:pointer;" title="Editar"><i data-lucide="pencil" style="width:12px; height:12px; color:#4B5563;"></i></button>
+                        <button class="btn-icon btn-del-venda" data-sale-id="${s.id_venda}" data-prod-id="${s.prodId}" style="width:28px; height:28px; border-radius:6px; background:#fff; border:1px solid #FECACA; cursor:pointer;" title="Excluir"><i data-lucide="trash-2" style="width:12px; height:12px; color:#DC2626;"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        document.querySelectorAll('.btn-edit-venda').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const saleId = e.currentTarget.dataset.saleId;
+                const prodId = e.currentTarget.dataset.prodId;
+                const p = produtos.find(item => (item.id === prodId || item.localId === prodId));
+                if (!p || !p.vendas) return;
+                const sale = p.vendas.find(v => v.id_venda === saleId);
+                if (!sale) return;
+
+                document.getElementById('venda-prod-nome').innerText = p.nome;
+                document.getElementById('venda-prod-nome').dataset.prodId = p.id || p.localId;
+                document.getElementById('venda-prod-preco').innerText = `R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}`;
+                document.getElementById('venda-prod-preco').dataset.valorRaw = p.preco;
+                document.getElementById('ipt-venda-cliente').value = sale.cliente || '';
+                
+                const qtyInput = document.getElementById('ipt-venda-quantidade');
+                if (qtyInput) {
+                    qtyInput.value = sale.quantidade || 1;
+                    qtyInput.min = 1;
+                    const maxQty = p.variacoes ? 100 : Number(p.estoque || 0) + Number(sale.quantidade || 0);
+                    qtyInput.max = maxQty;
+                }
+
+                const selectVar = document.getElementById('ipt-venda-variacao');
+                const formGroupVar = document.getElementById('form-group-venda-variacao');
+                if (selectVar && formGroupVar) {
+                    selectVar.innerHTML = '';
+                    if (p.variacoes) {
+                        const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                        if (list.length > 0) {
+                            list.forEach(v => {
+                                const currentQty = p.variacoesStock && p.variacoesStock[v] !== undefined ? p.variacoesStock[v] : 0;
+                                const originalQty = sale.variacao === v ? Number(sale.quantidade || 0) : 0;
+                                const totalAvailable = currentQty + originalQty;
+                                const opt = document.createElement('option');
+                                opt.value = v;
+                                opt.text = `${v} (${totalAvailable > 0 ? `${totalAvailable} un` : 'Esgotado'})`;
+                                if (totalAvailable <= 0) opt.disabled = true;
+                                if (sale.variacao === v) opt.selected = true;
+                                selectVar.appendChild(opt);
+                            });
+                            formGroupVar.style.display = 'block';
+                        } else {
+                            formGroupVar.style.display = 'none';
+                        }
+                    } else {
+                        formGroupVar.style.display = 'none';
+                    }
+                }
+
+                const toggleLayoutBtnPago = document.querySelector('#slide-over-venda BUTTON[data-val="Pago"]');
+                const toggleLayoutBtnPendente = document.querySelector('#slide-over-venda BUTTON[data-val="Não Pago"]');
+                const hdnStatusInput = document.getElementById('ipt-venda-status');
+                if (hdnStatusInput) hdnStatusInput.value = sale.status;
+
+                if (sale.status === 'Pago') {
+                    if (toggleLayoutBtnPago) {
+                        toggleLayoutBtnPago.style.background = 'white';
+                        toggleLayoutBtnPago.style.color = '#10B981';
+                        toggleLayoutBtnPago.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                    }
+                    if (toggleLayoutBtnPendente) {
+                        toggleLayoutBtnPendente.style.background = 'transparent';
+                        toggleLayoutBtnPendente.style.color = '#6B7280';
+                        toggleLayoutBtnPendente.style.boxShadow = 'none';
+                    }
+                } else {
+                    if (toggleLayoutBtnPago) {
+                        toggleLayoutBtnPago.style.background = 'transparent';
+                        toggleLayoutBtnPago.style.color = '#6B7280';
+                        toggleLayoutBtnPago.style.boxShadow = 'none';
+                    }
+                    if (toggleLayoutBtnPendente) {
+                        toggleLayoutBtnPendente.style.background = 'white';
+                        toggleLayoutBtnPendente.style.color = '#6B7280';
+                        toggleLayoutBtnPendente.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                    }
+                }
+
+                const selectForma = document.getElementById('ipt-venda-forma');
+                if (selectForma && sale.forma_pagamento) selectForma.value = sale.forma_pagamento;
+
+                const confirmBtn = document.getElementById('btn-confirmar-venda');
+                if (confirmBtn) {
+                    confirmBtn.dataset.editSaleId = sale.id_venda;
+                    confirmBtn.dataset.editProdId = p.id || p.localId;
+                    confirmBtn.dataset.oldVar = sale.variacao || 'Único';
+                    confirmBtn.dataset.oldQty = sale.quantidade || 1;
+                    confirmBtn.dataset.oldStatus = sale.status;
+                    confirmBtn.dataset.oldCliente = sale.cliente || 'Avulso';
+                    confirmBtn.innerHTML = 'Salvar Alterações';
+                }
+
+                const elData = document.getElementById('ipt-venda-data');
+                if (elData) elData.value = sale.data_venda || new Date().toISOString().split('T')[0];
+
+                slideVenda.classList.remove('hidden-overlay');
+                setTimeout(() => slideVenda.classList.add('open'), 10);
+            });
+        });
+
+        document.querySelectorAll('.btn-del-venda').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (!confirm('Deseja realmente remover esta venda? O estoque retornará ao produto e o registro financeiro correspondente será cancelado.')) return;
+                const saleId = e.currentTarget.dataset.saleId;
+                const prodId = e.currentTarget.dataset.prodId;
+                
+                let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
+                const pIndex = agendaLocal.findIndex(item => (item.id === prodId || item.localId === prodId));
+                if (pIndex !== -1) {
+                    const p = agendaLocal[pIndex];
+                    const saleIndex = p.vendas ? p.vendas.findIndex(v => v.id_venda === saleId) : -1;
+                    if (saleIndex !== -1) {
+                        const sale = p.vendas[saleIndex];
+                        const qtyToReturn = Number(sale.quantidade || 1);
+                        const varName = sale.variacao || 'Único';
+
+                        if (p.variacoes && varName !== 'Único') {
+                            if (!p.variacoesStock) p.variacoesStock = {};
+                            p.variacoesStock[varName] = (Number(p.variacoesStock[varName]) || 0) + qtyToReturn;
+                        } else {
+                            p.estoque = (Number(p.estoque) || 0) + qtyToReturn;
+                        }
+
+                        p.vendas.splice(saleIndex, 1);
+
+                        let financeiroLocal = [];
+                        try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
+                        
+                        const financeDescription = 'Venda Lojinha: ' + p.nome + (varName !== 'Único' ? ' (' + varName + ')' : '') + ' x' + qtyToReturn;
+                        const finIndex = financeiroLocal.findIndex(f => 
+                            f.descricao === financeDescription && 
+                            f.pessoa === (sale.cliente || 'Avulso') && 
+                            f.valor == (Number(sale.total) || (qtyToReturn * Number(p.preco)))
+                        );
+                        if (finIndex !== -1) {
+                            financeiroLocal.splice(finIndex, 1);
+                            localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
+                        }
+
+                        localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
+                        
+                        if (supabase) {
+                            supabase.from('lojinha').update({
+                                estoque: p.estoque,
+                                variacoesStock: p.variacoesStock,
+                                vendas: p.vendas
+                            }).eq('id', prodId).then().catch(() => { });
+                        }
+
+                        if (window.loadFinanceiro) window.loadFinanceiro();
+                        window.loadLojinha();
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.loja-venda-status-badge').forEach(badge => {
+            badge.addEventListener('click', (e) => {
+                const saleId = e.currentTarget.dataset.saleId;
+                const prodId = e.currentTarget.dataset.prodId;
+                
+                let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
+                const p = agendaLocal.find(item => (item.id === prodId || item.localId === prodId));
+                if (!p || !p.vendas) return;
+                const sale = p.vendas.find(v => v.id_venda === saleId);
+                if (!sale) return;
+
+                const oldStatus = sale.status;
+                const newStatus = oldStatus === 'Pago' ? 'Não Pago' : 'Pago';
+                sale.status = newStatus;
+
+                let financeiroLocal = [];
+                try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
+                const varName = sale.variacao || 'Único';
+                const qty = Number(sale.quantidade || 1);
+                const valTotal = Number(sale.total) || (qty * Number(p.preco));
+                const financeDescription = 'Venda Lojinha: ' + p.nome + (varName !== 'Único' ? ' (' + varName + ')' : '') + ' x' + qty;
+
+                if (newStatus === 'Pago') {
+                    const transPay = {
+                        id: 'venda_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                        tipo: 'receita',
+                        valor: valTotal,
+                        descricao: financeDescription,
+                        data_lancamento: sale.data_venda || new Date().toISOString().split('T')[0],
+                        categoria: 'Vendas Loja',
+                        pessoa: sale.cliente || 'Avulso',
+                        status: 'Pago',
+                        forma_pagamento: sale.forma_pagamento || 'Pix'
+                    };
+                    financeiroLocal.push(transPay);
+                } else {
+                    const findIdx = financeiroLocal.findIndex(f => 
+                        f.descricao === financeDescription && 
+                        f.pessoa === (sale.cliente || 'Avulso') && 
+                        f.status === 'Pago'
+                    );
+                    if (findIdx !== -1) financeiroLocal.splice(findIdx, 1);
+                }
+
+                localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
+                localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
+                
+                if (window.loadFinanceiro) window.loadFinanceiro();
+                window.loadLojinha();
+            });
+        });
+
+        if (window.lucide) window.lucide.createIcons();
+    };
+
+    window.renderLojinhaEstoque = (produtos) => {
+        const tbody = document.getElementById('loja-estoque-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (produtos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:#9CA3AF;">Nenhum produto em estoque.</td></tr>`;
+            return;
+        }
+
+        produtos.forEach(p => {
+            if (p.variacoes) {
+                const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                list.forEach(v => {
+                    const qty = p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0;
+                    const statusText = qty === 0 ? 'Sem estoque' : (qty <= 3 ? 'Estoque Baixo' : 'Em estoque');
+                    const badgeColor = qty === 0 
+                        ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                        : (qty <= 3 
+                            ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                            : 'background:#F0FDF4; color:#166534; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;');
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="font-weight:600;">${p.nome}</td>
+                            <td><strong style="color:var(--purple); font-size:13px;">${v}</strong></td>
+                            <td style="font-weight:700;">${qty} un</td>
+                            <td><span style="${badgeColor}">${statusText}</span></td>
+                            <td style="text-align:right;">
+                                <button class="btn-outline btn-ajustar-estoque" data-prod-id="${p.id || p.localId}" data-var="${v}" style="height:28px; font-size:11px; padding:0 8px; font-weight:600; border-radius:6px;">Ajustar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } else {
+                const qty = Number(p.estoque || 0);
+                const statusText = qty === 0 ? 'Sem estoque' : (qty <= 3 ? 'Estoque Baixo' : 'Em estoque');
+                const badgeColor = qty === 0 
+                    ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                    : (qty <= 3 
+                        ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                        : 'background:#F0FDF4; color:#166534; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600;">${p.nome}</td>
+                        <td><span style="color:#6B7280; font-size:12px;">Único</span></td>
+                        <td style="font-weight:700;">${qty} un</td>
+                        <td><span style="${badgeColor}">${statusText}</span></td>
+                        <td style="text-align:right;">
+                            <button class="btn-outline btn-ajustar-estoque" data-prod-id="${p.id || p.localId}" data-var="Único" style="height:28px; font-size:11px; padding:0 8px; font-weight:600; border-radius:6px;">Ajustar</button>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+
+        document.querySelectorAll('.btn-ajustar-estoque').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const prodId = e.currentTarget.dataset.prodId;
+                const varName = e.currentTarget.dataset.var;
+                
+                let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
+                const pIndex = agendaLocal.findIndex(item => (item.id === prodId || item.localId === prodId));
+                if (pIndex !== -1) {
+                    const p = agendaLocal[pIndex];
+                    const currentQty = varName === 'Único' 
+                        ? Number(p.estoque || 0) 
+                        : (p.variacoesStock && p.variacoesStock[varName] !== undefined ? Number(p.variacoesStock[varName]) : 0);
+
+                    const newValStr = prompt(`Informe a nova quantidade em estoque para o produto "${p.nome}" (Variação: ${varName}):`, currentQty);
+                    if (newValStr === null) return;
+                    const newVal = Number(newValStr);
+                    if (isNaN(newVal) || newVal < 0) {
+                        alert('Valor inválido.');
+                        return;
+                    }
+
+                    if (varName === 'Único') {
+                        p.estoque = newVal;
+                    } else {
+                        if (!p.variacoesStock) p.variacoesStock = {};
+                        p.variacoesStock[varName] = newVal;
+                    }
+
+                    localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
+                    
+                    if (supabase) {
+                        supabase.from('lojinha').update({
+                            estoque: p.estoque,
+                            variacoesStock: p.variacoesStock
+                        }).eq('id', prodId).then().catch(() => { });
+                    }
+                    window.loadLojinha();
+                }
+            });
+        });
+
+        if (window.lucide) window.lucide.createIcons();
+    };
+ 
     // Fechar slideovers Lojinha
     document.querySelectorAll('.close-slide-produto').forEach(b => b.addEventListener('click', () => {
         slideProduto.classList.remove('open'); setTimeout(() => slideProduto.classList.add('hidden-overlay'), 300);
@@ -2612,6 +3248,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const fotoVal = document.getElementById('ipt-prod-foto-base64').value;
             btnSalvarProd.innerHTML = 'Salvando...';
 
+            const categoria = document.getElementById('ipt-prod-categoria').value;
+            const estoque = Number(document.getElementById('ipt-prod-estoque').value) || 0;
+            const variacoes = document.getElementById('ipt-prod-variacoes').value.trim();
+
             let agendaLocal = [];
             try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
 
@@ -2619,21 +3259,74 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Modo Edição
                 agendaLocal = agendaLocal.map(p => {
                     if (p.id == editId || p.localId == editId) {
-                        return { ...p, nome: nome, preco: parseFloat(precoStr), foto: fotoVal };
+                        const updated = { 
+                            ...p, 
+                            nome: nome, 
+                            preco: parseFloat(precoStr), 
+                            foto: fotoVal,
+                            categoria: categoria,
+                            estoque: estoque,
+                            variacoes: variacoes
+                        };
+                        if (variacoes !== p.variacoes) {
+                            let newStock = {};
+                            const list = variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                            list.forEach(v => {
+                                if (p.variacoesStock && p.variacoesStock[v] !== undefined) {
+                                    newStock[v] = p.variacoesStock[v];
+                                } else {
+                                    newStock[v] = estoque;
+                                }
+                            });
+                            updated.variacoesStock = newStock;
+                        }
+                        return updated;
                     }
                     return p;
                 });
-                if (supabase) supabase.from('lojinha').update({ nome, preco: parseFloat(precoStr), foto: fotoVal }).eq('id', editId).then().catch(() => { });
+                if (supabase) {
+                    supabase.from('lojinha').update({ 
+                        nome: nome, 
+                        preco: parseFloat(precoStr), 
+                        foto: fotoVal,
+                        categoria: categoria,
+                        estoque: estoque,
+                        variacoes: variacoes
+                    }).eq('id', editId).then().catch(() => { });
+                }
             } else {
                 // Modo Novo Cadastro
+                let variacoesStock = {};
+                if (variacoes) {
+                    const list = variacoes.split(',').map(v => v.trim()).filter(Boolean);
+                    list.forEach(v => {
+                        variacoesStock[v] = estoque;
+                    });
+                }
                 const payload = {
                     nome: nome,
                     preco: parseFloat(precoStr),
                     foto: fotoVal,
+                    categoria: categoria,
+                    estoque: estoque,
+                    variacoes: variacoes,
+                    variacoesStock: variacoesStock,
+                    vendas: [],
                     localId: Date.now().toString()
                 };
                 agendaLocal.push(payload);
-                if (supabase) supabase.from('lojinha').insert([{ nome: payload.nome, preco: payload.preco, foto: payload.foto }]).then().catch(() => { });
+                if (supabase) {
+                    supabase.from('lojinha').insert([{ 
+                        nome: payload.nome, 
+                        preco: payload.preco, 
+                        foto: payload.foto,
+                        categoria: payload.categoria,
+                        estoque: payload.estoque,
+                        variacoes: payload.variacoes,
+                        variacoesStock: payload.variacoesStock,
+                        vendas: []
+                    }]).then().catch(() => { });
+                }
             }
 
             localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
@@ -2645,62 +3338,203 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Confirmar Venda (Integração com Financeiro)
+    // Confirmar Venda (Integração com Financeiro e Estoque)
     const btnConfirmarVenda = document.getElementById('btn-confirmar-venda');
     if (btnConfirmarVenda) {
         btnConfirmarVenda.addEventListener('click', async () => {
             const nomeProd = document.getElementById('venda-prod-nome').innerText;
             const prodId = document.getElementById('venda-prod-nome').dataset.prodId;
-            const valor = parseFloat(document.getElementById('venda-prod-preco').dataset.valorRaw);
+            const unitPrice = parseFloat(document.getElementById('venda-prod-preco').dataset.valorRaw);
             const forma = document.getElementById('ipt-venda-forma').value;
             const cliente = document.getElementById('ipt-venda-cliente').value;
             const statusVenda = document.getElementById('ipt-venda-status').value;
             const dataVenda = document.getElementById('ipt-venda-data') ? document.getElementById('ipt-venda-data').value : new Date().toISOString().split('T')[0];
+            
+            const quantity = Number(document.getElementById('ipt-venda-quantidade').value) || 1;
+            const selectVarEl = document.getElementById('ipt-venda-variacao');
+            const selectVarGroup = document.getElementById('form-group-venda-variacao');
+            const selectedVar = (selectVarEl && selectVarGroup && selectVarGroup.style.display !== 'none') ? selectVarEl.value : 'Único';
 
-            const payload = {
-                tipo: 'receita',
-                valor: valor,
-                descricao: 'Venda Lojinha: ' + nomeProd,
-                data_lancamento: dataVenda || new Date().toISOString().split('T')[0],
-                categoria: 'Vendas Loja',
-                pessoa: cliente || null,
-                status: statusVenda,
-                forma_pagamento: forma
-            };
+            const valorTotal = unitPrice * quantity;
 
-            btnConfirmarVenda.innerHTML = 'Salvando...';
+            let produtos = [];
+            try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
 
-            // Salva de forma assíncrona (não boqueia a interface)
-            if (supabase) {
-                supabase.from('financeiro').insert([payload]).then().catch(() => { });
+            const p = produtos.find(item => (item.id == prodId || item.localId == prodId));
+            if (!p) {
+                alert('Produto não localizado.');
+                return;
             }
 
-            // Atualizar o histórico de vendas do produto na vitrine
-            let agendaLocal = [];
-            try { agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { }
-            agendaLocal = agendaLocal.map(p => {
-                if (p.id == prodId || p.localId == prodId) {
-                    const novaVenda = { cliente: cliente || 'Avulso', status: statusVenda, data_venda: dataVenda };
-                    return { ...p, vendas: p.vendas ? [...p.vendas, novaVenda] : [novaVenda] };
+            const editSaleId = btnConfirmarVenda.dataset.editSaleId;
+
+            // Se estiver em modo edição, reverter estoque anterior e remover registro financeiro de antes
+            if (editSaleId) {
+                const oldVar = btnConfirmarVenda.dataset.oldVar || 'Único';
+                const oldQty = Number(btnConfirmarVenda.dataset.oldQty) || 1;
+                const oldStatus = btnConfirmarVenda.dataset.oldStatus;
+                const oldCliente = btnConfirmarVenda.dataset.oldCliente;
+
+                if (p.variacoes && oldVar !== 'Único') {
+                    if (!p.variacoesStock) p.variacoesStock = {};
+                    p.variacoesStock[oldVar] = (Number(p.variacoesStock[oldVar]) || 0) + oldQty;
+                } else {
+                    p.estoque = (Number(p.estoque) || 0) + oldQty;
                 }
-                return p;
-            });
-            localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
+
+                // Deletar do caixa antigo se estava Pago
+                if (oldStatus === 'Pago') {
+                    let financeiroLocal = [];
+                    try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
+                    const oldDescription = 'Venda Lojinha: ' + p.nome + (oldVar !== 'Único' ? ' (' + oldVar + ')' : '') + ' x' + oldQty;
+                    const oldTotalVal = unitPrice * oldQty;
+                    const oldFinIndex = financeiroLocal.findIndex(f => 
+                        f.descricao === oldDescription && 
+                        f.pessoa === oldCliente && 
+                        f.valor == oldTotalVal
+                    );
+                    if (oldFinIndex !== -1) {
+                        financeiroLocal.splice(oldFinIndex, 1);
+                        localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
+                    }
+                }
+            }
+
+            // Validar stock disponível
+            if (p.variacoes && selectedVar !== 'Único') {
+                const available = p.variacoesStock && p.variacoesStock[selectedVar] !== undefined ? Number(p.variacoesStock[selectedVar]) : 0;
+                if (quantity > available) {
+                    alert(`Estoque insuficiente da variação "${selectedVar}". Quantidade disponível: ${available} un.`);
+                    // Se em edição, recarregar para restaurar alterações
+                    window.loadLojinha();
+                    return;
+                }
+                // Decrementar estoque da variação
+                p.variacoesStock[selectedVar] = available - quantity;
+            } else {
+                const available = Number(p.estoque || 0);
+                if (quantity > available) {
+                    alert(`Estoque insuficiente. Quantidade disponível: ${available} un.`);
+                    window.loadLojinha();
+                    return;
+                }
+                // Decrementar estoque único
+                p.estoque = available - quantity;
+            }
+
+            btnConfirmarVenda.innerHTML = 'Cancelando...'; // Evitar clicks múltiplos
+
+            // Registrar Venda
+            if (editSaleId) {
+                // Atualizar venda existente
+                if (p.vendas) {
+                    p.vendas = p.vendas.map(v => {
+                        if (v.id_venda === editSaleId) {
+                            return {
+                                ...v,
+                                cliente: cliente || 'Avulso',
+                                variacao: selectedVar,
+                                quantidade: quantity,
+                                status: statusVenda,
+                                data_venda: dataVenda,
+                                total: valorTotal,
+                                forma_pagamento: forma
+                            };
+                        }
+                        return v;
+                    });
+                }
+            } else {
+                // Nova venda
+                const novaVenda = {
+                    id_venda: Date.now().toString(),
+                    cliente: cliente || 'Avulso',
+                    variacao: selectedVar,
+                    quantidade: quantity,
+                    status: statusVenda,
+                    data_venda: dataVenda,
+                    total: valorTotal,
+                    forma_pagamento: forma
+                };
+                p.vendas = p.vendas ? [...p.vendas, novaVenda] : [novaVenda];
+            }
+
+            localStorage.setItem('movia_loja', JSON.stringify(produtos));
 
             if (supabase) {
-                // Atualização json em supabase ficaria aqui, ou relacional numa tabela de 'vendas'
-                // Para não quebrar por schema, apenas silenciamos caso a coluna não exista.
-                supabase.from('lojinha').update({ ultimo_vendido_para: cliente || 'Avulso' }).eq('id', prodId).then().catch(() => { });
+                supabase.from('lojinha').update({
+                    estoque: p.estoque,
+                    variacoesStock: p.variacoesStock,
+                    vendas: p.vendas
+                }).eq('id', prodId).then().catch(() => { });
+            }
+
+            // Sync financeiro local v2 se Pago
+            if (statusVenda === 'Pago') {
+                let financeiroLocal = [];
+                try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
+                
+                const financeDescription = 'Venda Lojinha: ' + p.nome + (selectedVar !== 'Único' ? ' (' + selectedVar + ')' : '') + ' x' + quantity;
+                const trans = {
+                    id: 'venda_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                    tipo: 'receita',
+                    valor: valorTotal,
+                    descricao: financeDescription,
+                    data_lancamento: dataVenda,
+                    categoria: 'Vendas Loja',
+                    pessoa: cliente || 'Avulso',
+                    status: 'Pago',
+                    forma_pagamento: forma
+                };
+                financeiroLocal.push(trans);
+                localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
+                
+                if (supabase) {
+                    supabase.from('financeiro').insert([trans]).then().catch(() => { });
+                }
             }
 
             slideVenda.classList.remove('open');
             setTimeout(() => slideVenda.classList.add('hidden-overlay'), 300);
 
-            // Reloada a aba de financeiro em background
             if (window.loadFinanceiro) window.loadFinanceiro();
             window.loadLojinha();
 
             btnConfirmarVenda.innerHTML = 'Confirmar a Compra';
+            delete btnConfirmarVenda.dataset.editSaleId;
+            delete btnConfirmarVenda.dataset.editProdId;
+            delete btnConfirmarVenda.dataset.oldVar;
+            delete btnConfirmarVenda.dataset.oldStatus;
+            delete btnConfirmarVenda.dataset.oldCliente;
+            delete btnConfirmarVenda.dataset.oldQty;
+        });
+    }
+
+    const vendaStatusBtns = document.querySelectorAll('.venda-status-btn');
+    const iptVendaStatus = document.getElementById('ipt-venda-status');
+    if (vendaStatusBtns && iptVendaStatus) {
+        vendaStatusBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                vendaStatusBtns.forEach(b => {
+                    b.style.background = 'transparent';
+                    b.style.boxShadow = 'none';
+                    b.style.color = '#6B7280';
+                    b.style.fontWeight = '600';
+                });
+                const tgt = e.currentTarget;
+                tgt.style.background = 'white';
+                tgt.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                tgt.style.fontWeight = '700';
+
+                const val = tgt.getAttribute('data-val');
+                iptVendaStatus.value = val;
+
+                if (val === 'Pago') {
+                    tgt.style.color = '#10B981';
+                } else {
+                    tgt.style.color = '#EF4444';
+                }
+            });
         });
     }
 
@@ -3522,24 +4356,24 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const target = item.dataset.target;
-            
+
             // Controle de visual (Sidebar Active)
             document.querySelectorAll('.sidebar-fixed .nav-item, .sidebar-slim .nav-item').forEach(n => n.classList.remove('active'));
             document.querySelectorAll(`.nav-item[data-target="${target}"]`).forEach(n => n.classList.add('active'));
-            
+
             // Controle de visual (Telas)
-            if(target) {
+            if (target) {
                 document.querySelectorAll('main.main-surface > .view').forEach(v => v.classList.add('hidden'));
                 const viewEl = document.getElementById(`view-${target}`);
-                if(viewEl) viewEl.classList.remove('hidden');
+                if (viewEl) viewEl.classList.remove('hidden');
             }
 
             // Inicializadores condicionais
-            if(target === 'loja' && window.loadLojinha) window.loadLojinha();
-            if(target === 'prontuario' && window.loadProntuarios) window.loadProntuarios();
-            if(target === 'clientes' && typeof loadClientes === 'function') loadClientes();
-            if(target === 'agenda') {
-                setTimeout(() => { if(typeof renderCalendar === 'function') renderCalendar(); else if(window.renderCalendar) window.renderCalendar(); }, 100);
+            if (target === 'loja' && window.loadLojinha) window.loadLojinha();
+            if (target === 'prontuario' && window.loadProntuarios) window.loadProntuarios();
+            if (target === 'clientes' && typeof loadClientes === 'function') loadClientes();
+            if (target === 'agenda') {
+                setTimeout(() => { if (typeof renderCalendar === 'function') renderCalendar(); else if (window.renderCalendar) window.renderCalendar(); }, 100);
             }
         });
     });
@@ -3578,9 +4412,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-// MÓDULO FINANCEIRO PREMIUM — MovClin
+// MÓDULO FINANCEIRO PREMIUM — Mayaflow
 // ============================================================
-(function() {
+(function () {
     'use strict';
 
     const LS_KEY = 'movia_financeiro_v2';
@@ -3596,13 +4430,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat(String(str).replace(/\./g, '').replace(',', '.')) || 0;
     };
     const hoje = () => new Date().toISOString().slice(0, 10);
-    const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
     function loadDados() {
-        try { finDados = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch(e) { finDados = []; }
+        try { finDados = JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch (e) { finDados = []; }
     }
     function saveDados() {
-        try { localStorage.setItem(LS_KEY, JSON.stringify(finDados)); } catch(e) { console.warn('LS Financeiro error', e); }
+        try { localStorage.setItem(LS_KEY, JSON.stringify(finDados)); } catch (e) { console.warn('LS Financeiro error', e); }
     }
     function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
 
@@ -3614,18 +4448,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const d = item.data || '';
             if (!d) return false;
             const dt = new Date(d + 'T00:00:00');
-            switch(periodo) {
+            switch (periodo) {
                 case 'hoje': return d === todayStr;
                 case 'semana': {
-                    const ini = new Date(now); ini.setDate(now.getDate() - now.getDay()); ini.setHours(0,0,0,0);
+                    const ini = new Date(now); ini.setDate(now.getDate() - now.getDay()); ini.setHours(0, 0, 0, 0);
                     return dt >= ini;
                 }
-                case 'mes': return d.slice(0,7) === todayStr.slice(0,7);
+                case 'mes': return d.slice(0, 7) === todayStr.slice(0, 7);
                 case '30dias': {
-                    const ago = new Date(now); ago.setDate(now.getDate() - 30); ago.setHours(0,0,0,0);
+                    const ago = new Date(now); ago.setDate(now.getDate() - 30); ago.setHours(0, 0, 0, 0);
                     return dt >= ago;
                 }
-                case 'ano': return d.slice(0,4) === todayStr.slice(0,4);
+                case 'ano': return d.slice(0, 4) === todayStr.slice(0, 4);
                 case 'todos': default: return true;
             }
         });
@@ -3633,15 +4467,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- KPI Calc ----
     function calcKPIs(arr) {
-        const mesAtual = hoje().slice(0,7);
-        const doMes = arr.filter(i => (i.data||'').slice(0,7) === mesAtual);
-        const entradas = doMes.filter(i => i.tipo === 'receita').reduce((s,i) => s + parseValor(i.valor), 0);
-        const saidas = doMes.filter(i => i.tipo === 'despesa').reduce((s,i) => s + parseValor(i.valor), 0);
-        const pendentes = arr.filter(i => i.tipo === 'receita' && (i.status === 'Pendente' || i.status === 'Agendado')).reduce((s,i) => s + parseValor(i.valor), 0);
-        const apagar = arr.filter(i => i.tipo === 'despesa' && (i.status === 'Pendente' || i.status === 'Agendado')).reduce((s,i) => s + parseValor(i.valor), 0);
-        const recebido = arr.filter(i => i.tipo === 'receita' && i.status === 'Pago').reduce((s,i) => s + parseValor(i.valor), 0);
-        const totalRec = arr.filter(i => i.tipo === 'receita').reduce((s,i) => s + parseValor(i.valor), 0);
-        const totalDep = arr.filter(i => i.tipo === 'despesa').reduce((s,i) => s + parseValor(i.valor), 0);
+        const mesAtual = hoje().slice(0, 7);
+        const doMes = arr.filter(i => (i.data || '').slice(0, 7) === mesAtual);
+        const entradas = doMes.filter(i => i.tipo === 'receita').reduce((s, i) => s + parseValor(i.valor), 0);
+        const saidas = doMes.filter(i => i.tipo === 'despesa').reduce((s, i) => s + parseValor(i.valor), 0);
+        const pendentes = arr.filter(i => i.tipo === 'receita' && (i.status === 'Pendente' || i.status === 'Agendado')).reduce((s, i) => s + parseValor(i.valor), 0);
+        const apagar = arr.filter(i => i.tipo === 'despesa' && (i.status === 'Pendente' || i.status === 'Agendado')).reduce((s, i) => s + parseValor(i.valor), 0);
+        const recebido = arr.filter(i => i.tipo === 'receita' && i.status === 'Pago').reduce((s, i) => s + parseValor(i.valor), 0);
+        const totalRec = arr.filter(i => i.tipo === 'receita').reduce((s, i) => s + parseValor(i.valor), 0);
+        const totalDep = arr.filter(i => i.tipo === 'despesa').reduce((s, i) => s + parseValor(i.valor), 0);
         const lucro = entradas - saidas;
         const margem = entradas > 0 ? Math.round((lucro / entradas) * 100) : 0;
         const nRec = doMes.filter(i => i.tipo === 'receita').length;
@@ -3649,19 +4483,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // hoje
         const tdStr = hoje();
-        const tdEntradas = arr.filter(i => i.data === tdStr && i.tipo === 'receita').reduce((s,i) => s + parseValor(i.valor), 0);
-        const tdSaidas = arr.filter(i => i.data === tdStr && i.tipo === 'despesa').reduce((s,i) => s + parseValor(i.valor), 0);
+        const tdEntradas = arr.filter(i => i.data === tdStr && i.tipo === 'receita').reduce((s, i) => s + parseValor(i.valor), 0);
+        const tdSaidas = arr.filter(i => i.data === tdStr && i.tipo === 'despesa').reduce((s, i) => s + parseValor(i.valor), 0);
         const tdCobrancas = arr.filter(i => i.data === tdStr && i.status === 'Pendente').length;
         const tdAtrasadas = arr.filter(i => i.data < tdStr && i.status === 'Pendente').length;
 
-        return { entradas, saidas, saldo: entradas - saidas, receber: pendentes, apagar, lucro, margem,
+        return {
+            entradas, saidas, saldo: entradas - saidas, receber: pendentes, apagar, lucro, margem,
             ticket, recebido, pendente: pendentes, totalRec, totalDep,
-            tdEntradas, tdSaidas, tdCobrancas, tdAtrasadas };
+            tdEntradas, tdSaidas, tdCobrancas, tdAtrasadas
+        };
     }
 
     function updateKPIs() {
         const k = calcKPIs(finDados);
-        const s = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+        const s = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
         s('kpi-fin-entradas', fmtBRL(k.entradas));
         s('kpi-fin-saidas', fmtBRL(k.saidas));
         s('kpi-fin-saldo', fmtBRL(k.saldo));
@@ -3677,10 +4513,10 @@ document.addEventListener('DOMContentLoaded', () => {
         s('ind-pendente', fmtBRL(k.pendente));
         // Saldo color
         const sEl = document.getElementById('kpi-fin-saldo');
-        if(sEl) sEl.style.color = k.saldo >= 0 ? 'white' : '#FCA5A5';
+        if (sEl) sEl.style.color = k.saldo >= 0 ? 'white' : '#FCA5A5';
         // lucro color
         const lEl = document.getElementById('kpi-fin-lucro');
-        if(lEl) lEl.style.color = k.lucro >= 0 ? '#10B981' : '#EF4444';
+        if (lEl) lEl.style.color = k.lucro >= 0 ? '#10B981' : '#EF4444';
         // Hoje
         s('today-entradas', fmtBRL(k.tdEntradas));
         s('today-saidas', fmtBRL(k.tdSaidas));
@@ -3689,22 +4525,39 @@ document.addEventListener('DOMContentLoaded', () => {
         s('today-previsto', fmtBRL(k.tdEntradas));
         // Date label
         const dtEl = document.getElementById('fin-date-today');
-        if(dtEl) {
+        if (dtEl) {
             const d = new Date();
-            dtEl.textContent = d.toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+            dtEl.textContent = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
         }
     }
 
+    // ---- Tabs Financeiro ----
+    window.switchFinTab = function (tabId, btn) {
+        // Handle Active Button States
+        document.querySelectorAll('.fin-tab-link').forEach(b => {
+            b.classList.remove('active');
+            b.classList.add('text-muted');
+            b.style.borderBottomColor = 'transparent';
+        });
+        btn.classList.add('active');
+        btn.classList.remove('text-muted');
+        btn.style.borderBottomColor = '#10B981';
+
+        // Toggle Content Views
+        document.getElementById('fin-tab-visao-content').style.display = (tabId === 'visao') ? 'flex' : 'none';
+        document.getElementById('fin-tab-transacoes-content').style.display = (tabId === 'transacoes') ? 'flex' : 'none';
+    };
+
     // ---- Gráfico ----
-    window.initGraficoFluxo = function(dias, btn) {
+    window.initGraficoFluxo = function (dias, btn) {
         // Toggle active button
-        if(btn) {
+        if (btn) {
             document.querySelectorAll('.fin-chart-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
         const canvas = document.getElementById('chart-fluxo');
-        if(!canvas) return;
-        if(chartFluxo) { chartFluxo.destroy(); chartFluxo = null; }
+        if (!canvas) return;
+        if (chartFluxo) { chartFluxo.destroy(); chartFluxo = null; }
 
         loadDados();
         const labels = [];
@@ -3712,13 +4565,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataSaidas = [];
         const dataSaldo = [];
 
-        for(let i = dias - 1; i >= 0; i--) {
+        for (let i = dias - 1; i >= 0; i--) {
             const d = new Date();
             d.setDate(d.getDate() - i);
-            const dStr = d.toISOString().slice(0,10);
-            labels.push(dias <= 30 ? `${d.getDate()}/${d.getMonth()+1}` : `${meses[d.getMonth()]} ${d.getFullYear().toString().slice(2)}`);
-            const ent = finDados.filter(x => x.data === dStr && x.tipo === 'receita').reduce((s,x) => s + parseValor(x.valor), 0);
-            const sai = finDados.filter(x => x.data === dStr && x.tipo === 'despesa').reduce((s,x) => s + parseValor(x.valor), 0);
+            const dStr = d.toISOString().slice(0, 10);
+            labels.push(dias <= 30 ? `${d.getDate()}/${d.getMonth() + 1}` : `${meses[d.getMonth()]} ${d.getFullYear().toString().slice(2)}`);
+            const ent = finDados.filter(x => x.data === dStr && x.tipo === 'receita').reduce((s, x) => s + parseValor(x.valor), 0);
+            const sai = finDados.filter(x => x.data === dStr && x.tipo === 'despesa').reduce((s, x) => s + parseValor(x.valor), 0);
             dataEntradas.push(ent);
             dataSaidas.push(sai);
             dataSaldo.push(ent - sai);
@@ -3727,11 +4580,11 @@ document.addEventListener('DOMContentLoaded', () => {
         chartFluxo = new Chart(canvas, {
             type: 'bar',
             data: {
-                labels: dias > 30 ? labels.filter((_,i) => i % Math.ceil(dias/20) === 0) : labels,
+                labels: dias > 30 ? labels.filter((_, i) => i % Math.ceil(dias / 20) === 0) : labels,
                 datasets: [
-                    { label: 'Entradas', data: dias > 30 ? dataEntradas.filter((_,i) => i % Math.ceil(dias/20) === 0) : dataEntradas, backgroundColor: 'rgba(16,185,129,0.18)', borderColor: '#10B981', borderWidth: 2, borderRadius: 6 },
-                    { label: 'Saídas', data: dias > 30 ? dataSaidas.filter((_,i) => i % Math.ceil(dias/20) === 0) : dataSaidas, backgroundColor: 'rgba(239,68,68,0.15)', borderColor: '#EF4444', borderWidth: 2, borderRadius: 6 },
-                    { label: 'Saldo', data: dias > 30 ? dataSaldo.filter((_,i) => i % Math.ceil(dias/20) === 0) : dataSaldo, type: 'line', borderColor: '#4F46E5', borderWidth: 2.5, fill: false, pointRadius: 3, tension: 0.4 }
+                    { label: 'Entradas', data: dias > 30 ? dataEntradas.filter((_, i) => i % Math.ceil(dias / 20) === 0) : dataEntradas, backgroundColor: 'rgba(16,185,129,0.18)', borderColor: '#10B981', borderWidth: 2, borderRadius: 6 },
+                    { label: 'Saídas', data: dias > 30 ? dataSaidas.filter((_, i) => i % Math.ceil(dias / 20) === 0) : dataSaidas, backgroundColor: 'rgba(239,68,68,0.15)', borderColor: '#EF4444', borderWidth: 2, borderRadius: 6 },
+                    { label: 'Saldo', data: dias > 30 ? dataSaldo.filter((_, i) => i % Math.ceil(dias / 20) === 0) : dataSaldo, type: 'line', borderColor: '#4F46E5', borderWidth: 2.5, fill: false, pointRadius: 3, tension: 0.4 }
                 ]
             },
             options: {
@@ -3739,7 +4592,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 plugins: { legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, padding: 20 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtBRL(ctx.raw)}` } } },
                 scales: {
                     x: { grid: { display: false }, ticks: { font: { size: 10 }, maxTicksLimit: 12 } },
-                    y: { grid: { color: '#F3F4F6' }, ticks: { callback: v => 'R$' + (v/1000 >= 1 ? (v/1000).toFixed(1)+'k' : v.toFixed(0)), font: { size: 11 } } }
+                    y: { grid: { color: '#F3F4F6' }, ticks: { callback: v => 'R$' + (v / 1000 >= 1 ? (v / 1000).toFixed(1) + 'k' : v.toFixed(0)), font: { size: 11 } } }
                 }
             }
         });
@@ -3759,42 +4612,42 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const pgtoIcons = { 'PIX': '⚡', 'Cartão de Crédito': '💳', 'Cartão de Débito': '💳', 'Dinheiro': '💵', 'Boleto': '🏦', 'Transferência': '🔄' };
 
-    window.renderExtrato = function() {
+    window.renderExtrato = function () {
         const tbody = document.getElementById('tbody-financeiro');
         const emptyRow = document.getElementById('fin-empty-state');
-        if(!tbody) return;
+        if (!tbody) return;
 
         loadDados();
         let arr = filtrarPorPeriodo(finDados, filtroAtual);
 
         // Busca
         const search = (document.getElementById('fin-search') || {}).value || '';
-        if(search) {
+        if (search) {
             const q = search.toLowerCase();
             arr = arr.filter(i =>
-                (i.desc||'').toLowerCase().includes(q) ||
-                (i.cliente||'').toLowerCase().includes(q) ||
-                (i.fornecedor||'').toLowerCase().includes(q) ||
-                (i.cat||'').toLowerCase().includes(q) ||
-                String(i.valor||'').includes(q)
+                (i.desc || '').toLowerCase().includes(q) ||
+                (i.cliente || '').toLowerCase().includes(q) ||
+                (i.fornecedor || '').toLowerCase().includes(q) ||
+                (i.cat || '').toLowerCase().includes(q) ||
+                String(i.valor || '').includes(q)
             );
         }
 
         // Filtro tipo
         const tipoFiltro = (document.getElementById('fin-filter-tipo') || {}).value || '';
-        if(tipoFiltro) arr = arr.filter(i => i.tipo === tipoFiltro);
+        if (tipoFiltro) arr = arr.filter(i => i.tipo === tipoFiltro);
 
         // Ordenar: mais recente primeiro
-        arr = [...arr].sort((a, b) => (b.data||'').localeCompare(a.data||''));
+        arr = [...arr].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
         // Limpar linhas dinâmicas
         Array.from(tbody.querySelectorAll('tr:not(#fin-empty-state)')).forEach(r => r.remove());
 
-        if(arr.length === 0) {
-            if(emptyRow) emptyRow.style.display = '';
+        if (arr.length === 0) {
+            if (emptyRow) emptyRow.style.display = '';
             return;
         }
-        if(emptyRow) emptyRow.style.display = 'none';
+        if (emptyRow) emptyRow.style.display = 'none';
 
         arr.forEach(item => {
             const cat = item.cat || 'Outros';
@@ -3807,7 +4660,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataFmt = item.data ? item.data.split('-').reverse().join('/') : '—';
             const valorFmt = fmtBRL(parseValor(item.valor));
             const valorColor = isReceita ? '#10B981' : '#EF4444';
-            const initials = nome !== '—' ? nome.slice(0,2).toUpperCase() : '??';
+            const initials = nome !== '—' ? nome.slice(0, 2).toUpperCase() : '??';
             const avatarBg = isReceita ? '#DCFCE7' : '#FEE2E2';
             const avatarColor = isReceita ? '#16A34A' : '#DC2626';
 
@@ -3827,7 +4680,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><span class="cat-badge" style="background:${catStyle.bg}; color:${catStyle.color};">${cat}</span></td>
                 <td style="font-size:0.82rem; color:#6B7280;">${pgto} ${item.pagamento || '—'}</td>
                 <td><span style="font-weight:800; font-size:0.9rem; color:${valorColor};">${isReceita ? '+' : '-'}${valorFmt}</span></td>
-                <td><span class="status-badge ${statusClass}">${statusDot} ${item.status||'—'}</span></td>
+                <td><span class="status-badge ${statusClass}">${statusDot} ${item.status || '—'}</span></td>
                 <td>
                     <div style="display:flex; gap:4px; justify-content:flex-end;">
                         <button onclick='editarLancamento(${JSON.stringify(item.id)})' title="Editar" style="padding:5px 8px; background:#EEF2FF; color:#4F46E5; border:none; border-radius:6px; cursor:pointer; font-size:0.8rem;">✏️</button>
@@ -3840,55 +4693,55 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---- Filtro Data ----
-    window.setFiltroData = function(periodo, btn) {
+    window.setFiltroData = function (periodo, btn) {
         filtroAtual = periodo;
         document.querySelectorAll('.fin-filter-btn').forEach(b => b.classList.remove('active'));
-        if(btn) btn.classList.add('active');
+        if (btn) btn.classList.add('active');
         renderExtrato();
         updateKPIs();
     };
 
     // ---- Modais ----
-    window.abrirModalReceita = function() {
+    window.abrirModalReceita = function () {
         editId = null;
         preencherClientesList();
         const d = document.getElementById('rec-data');
-        if(d && !d.value) d.value = hoje();
+        if (d && !d.value) d.value = hoje();
         document.getElementById('modal-receita').classList.add('open');
     };
-    window.abrirModalDespesa = function() {
+    window.abrirModalDespesa = function () {
         editId = null;
         const d = document.getElementById('dep-data');
-        if(d && !d.value) d.value = hoje();
+        if (d && !d.value) d.value = hoje();
         document.getElementById('modal-despesa').classList.add('open');
     };
-    window.fecharModais = function() {
+    window.fecharModais = function () {
         document.querySelectorAll('.fin-modal-overlay').forEach(m => m.classList.remove('open'));
         editId = null;
     };
-    window.toggleRecRecorrencia = function() {
+    window.toggleRecRecorrencia = function () {
         const el = document.getElementById('rec-recorrencia-opts');
         const chk = document.getElementById('rec-recorrente');
-        if(el) el.style.display = chk && chk.checked ? 'block' : 'none';
+        if (el) el.style.display = chk && chk.checked ? 'block' : 'none';
     };
-    window.toggleDepRecorrencia = function() {
+    window.toggleDepRecorrencia = function () {
         const el = document.getElementById('dep-recorrencia-opts');
         const chk = document.getElementById('dep-recorrente');
-        if(el) el.style.display = chk && chk.checked ? 'block' : 'none';
+        if (el) el.style.display = chk && chk.checked ? 'block' : 'none';
     };
 
     // Close on overlay click
     document.addEventListener('click', e => {
-        if(e.target.classList.contains('fin-modal-overlay')) fecharModais();
+        if (e.target.classList.contains('fin-modal-overlay')) fecharModais();
     });
 
     // ---- Salvar ----
-    window.salvarLancamento = function(tipo) {
+    window.salvarLancamento = function (tipo) {
         loadDados();
         let item;
-        if(tipo === 'receita') {
+        if (tipo === 'receita') {
             const valor = parseValor(document.getElementById('rec-valor').value);
-            if(!valor) { alert('Informe o valor.'); return; }
+            if (!valor) { alert('Informe o valor.'); return; }
             item = {
                 id: editId || uid(), tipo, editado: !!editId,
                 cliente: document.getElementById('rec-cliente').value,
@@ -3905,14 +4758,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 criadoEm: new Date().toISOString()
             };
             // Limpa form
-            ['rec-cliente','rec-valor','rec-desc','rec-centro','rec-conta','rec-obs'].forEach(id => {
-                const el = document.getElementById(id); if(el) el.value='';
+            ['rec-cliente', 'rec-valor', 'rec-desc', 'rec-centro', 'rec-conta', 'rec-obs'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.value = '';
             });
             document.getElementById('rec-recorrente').checked = false;
             toggleRecRecorrencia();
         } else {
             const valor = parseValor(document.getElementById('dep-valor').value);
-            if(!valor) { alert('Informe o valor.'); return; }
+            if (!valor) { alert('Informe o valor.'); return; }
             item = {
                 id: editId || uid(), tipo, editado: !!editId,
                 fornecedor: document.getElementById('dep-fornecedor').value,
@@ -3928,16 +4781,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 recorrencia: document.getElementById('dep-recorrencia').value,
                 criadoEm: new Date().toISOString()
             };
-            ['dep-fornecedor','dep-valor','dep-desc','dep-centro','dep-conta','dep-obs'].forEach(id => {
-                const el = document.getElementById(id); if(el) el.value='';
+            ['dep-fornecedor', 'dep-valor', 'dep-desc', 'dep-centro', 'dep-conta', 'dep-obs'].forEach(id => {
+                const el = document.getElementById(id); if (el) el.value = '';
             });
             document.getElementById('dep-recorrente').checked = false;
             toggleDepRecorrencia();
         }
 
-        if(editId) {
+        if (editId) {
             const idx = finDados.findIndex(i => i.id === editId);
-            if(idx >= 0) finDados[idx] = item; else finDados.push(item);
+            if (idx >= 0) finDados[idx] = item; else finDados.push(item);
         } else {
             finDados.push(item);
         }
@@ -3949,8 +4802,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---- Deletar ----
-    window.deletarLancamento = function(id) {
-        if(!confirm('Excluir este lançamento?')) return;
+    window.deletarLancamento = function (id) {
+        if (!confirm('Excluir este lançamento?')) return;
         loadDados();
         finDados = finDados.filter(i => i.id !== id);
         saveDados();
@@ -3960,10 +4813,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---- Duplicar ----
-    window.duplicarLancamento = function(id) {
+    window.duplicarLancamento = function (id) {
         loadDados();
         const orig = finDados.find(i => i.id === id);
-        if(!orig) return;
+        if (!orig) return;
         const clone = { ...orig, id: uid(), data: hoje(), criadoEm: new Date().toISOString() };
         finDados.push(clone);
         saveDados();
@@ -3973,20 +4826,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---- Editar ----
-    window.editarLancamento = function(id) {
+    window.editarLancamento = function (id) {
         loadDados();
         const item = finDados.find(i => i.id === id);
-        if(!item) return;
+        if (!item) return;
         editId = id;
-        if(item.tipo === 'receita') {
-            const sv = (eid, val) => { const el = document.getElementById(eid); if(el) el.value = val || ''; };
+        if (item.tipo === 'receita') {
+            const sv = (eid, val) => { const el = document.getElementById(eid); if (el) el.value = val || ''; };
             sv('rec-cliente', item.cliente); sv('rec-valor', item.valor);
             sv('rec-desc', item.desc); sv('rec-cat', item.cat); sv('rec-centro', item.centro);
             sv('rec-data', item.data); sv('rec-forma', item.pagamento); sv('rec-conta', item.conta);
             sv('rec-status', item.status); sv('rec-obs', item.obs);
             document.getElementById('modal-receita').classList.add('open');
         } else {
-            const sv = (eid, val) => { const el = document.getElementById(eid); if(el) el.value = val || ''; };
+            const sv = (eid, val) => { const el = document.getElementById(eid); if (el) el.value = val || ''; };
             sv('dep-fornecedor', item.fornecedor); sv('dep-valor', item.valor);
             sv('dep-desc', item.desc); sv('dep-cat', item.cat); sv('dep-centro', item.centro);
             sv('dep-data', item.data); sv('dep-forma', item.pagamento); sv('dep-conta', item.conta);
@@ -3998,7 +4851,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- Preencher lista de clientes ----
     function preencherClientesList() {
         const dl = document.getElementById('fin-clientes-list');
-        if(!dl) return;
+        if (!dl) return;
         dl.innerHTML = '';
         try {
             const alunos = JSON.parse(localStorage.getItem('movia_alunos') || '[]');
@@ -4007,15 +4860,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 opt.value = a.nome || '';
                 dl.appendChild(opt);
             });
-        } catch(e) {}
+        } catch (e) { }
     }
 
     // ---- Integração com Loja (hook) ----
-    window.registrarVendaFinanceiro = function(desc, valor, cliente) {
+    window.registrarVendaFinanceiro = function (desc, valor, cliente) {
         loadDados();
-        finDados.push({ id: uid(), tipo: 'receita', desc: 'Venda Loja: ' + (desc||''), cliente: cliente||'', cat: 'Venda de Produtos', valor, data: hoje(), pagamento: 'PIX', status: 'Pago', criadoEm: new Date().toISOString() });
+        finDados.push({ id: uid(), tipo: 'receita', desc: 'Venda Loja: ' + (desc || ''), cliente: cliente || '', cat: 'Venda de Produtos', valor, data: hoje(), pagamento: 'PIX', status: 'Pago', criadoEm: new Date().toISOString() });
         saveDados();
-        if(document.getElementById('view-financeiro') && !document.getElementById('view-financeiro').classList.contains('hidden')) { renderExtrato(); updateKPIs(); }
+        if (document.getElementById('view-financeiro') && !document.getElementById('view-financeiro').classList.contains('hidden')) { renderExtrato(); updateKPIs(); }
     };
 
     // ---- Init ao navegar para aba ----
@@ -4034,10 +4887,301 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         // Se já está na aba (ex: reload)
         const vf = document.getElementById('view-financeiro');
-        if(vf && !vf.classList.contains('hidden')) initFinanceiro();
+        if (vf && !vf.classList.contains('hidden')) initFinanceiro();
+    });
+
+    // ---- Suporte IA Maya (Workspace/Widget) ----
+    let suporteMayaInitialized = false;
+    function initSuporteMaya() {
+        if (suporteMayaInitialized) {
+            const chatFeed = document.getElementById('suporte-chat-feed');
+            const widgetFeed = document.getElementById('maya-widget-feed');
+            if (chatFeed) chatFeed.scrollTop = chatFeed.scrollHeight;
+            if (widgetFeed) widgetFeed.scrollTop = widgetFeed.scrollHeight;
+            return;
+        }
+        suporteMayaInitialized = true;
+
+        const chatFeed = document.getElementById('suporte-chat-feed');
+        const widgetFeed = document.getElementById('maya-widget-feed');
+        const iptMsg = document.getElementById('ipt-suporte-msg');
+        const iptWidgetMsg = document.getElementById('ipt-maya-widget-msg');
+        const btnEnviar = document.getElementById('btn-suporte-enviar');
+        const btnWidgetEnviar = document.getElementById('btn-maya-widget-enviar');
+        
+        // Widget Floating Toggles
+        const btnTrigger = document.getElementById('btn-maya-trigger');
+        const chatCard = document.getElementById('maya-chat-card');
+        const btnMinimizar = document.getElementById('btn-minimizar-maya');
+        const triggerBadge = document.getElementById('maya-trigger-badge');
+
+        if (btnTrigger && chatCard) {
+            btnTrigger.addEventListener('click', () => {
+                const isClosed = chatCard.style.opacity !== '1' || chatCard.style.height === '0px' || !chatCard.style.height;
+                if (isClosed) {
+                    // Abrir
+                    chatCard.style.opacity = '1';
+                    chatCard.style.pointerEvents = 'auto';
+                    chatCard.style.transform = 'scale(1)';
+                    chatCard.style.height = '480px';
+                    if (triggerBadge) triggerBadge.style.display = 'none';
+                    if (widgetFeed) widgetFeed.scrollTop = widgetFeed.scrollHeight;
+                } else {
+                    // Fechar
+                    chatCard.style.opacity = '0';
+                    chatCard.style.pointerEvents = 'none';
+                    chatCard.style.transform = 'scale(0.9)';
+                    chatCard.style.height = '0';
+                }
+            });
+        }
+
+        if (btnMinimizar && chatCard) {
+            btnMinimizar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                chatCard.style.opacity = '0';
+                chatCard.style.pointerEvents = 'none';
+                chatCard.style.transform = 'scale(0.9)';
+                chatCard.style.height = '0';
+            });
+        }
+
+        // Welcome Messages Initializer
+        if (chatFeed && chatFeed.children.length === 0) {
+            appendChatBubble(chatFeed, 'assistant', 'Olá, Thiago! Sou a **Maya**, sua assistente virtual. Posso te dar suporte completo, ensinar caminhos do sistema ou analisar dados em tempo real.<br><br>💡 Tente perguntar: *Quantos alunos temos cadastrados?*, *Como está o faturamento?* ou escolha um dos atalhos!');
+        }
+        if (widgetFeed && widgetFeed.children.length === 0) {
+            appendChatBubble(widgetFeed, 'assistant', 'Olá! Sou a **Maya**. Como posso te ajudar hoje no sistema?');
+        }
+
+        // Helpers
+        function appendChatBubble(feed, sender, text) {
+            if (!feed) return;
+            const wrap = document.createElement('div');
+            wrap.style.display = 'flex';
+            wrap.style.gap = '10px';
+            wrap.style.margin = '8px 0';
+            wrap.style.width = '100%';
+            wrap.style.alignItems = 'flex-start';
+
+            if (sender === 'user') {
+                wrap.style.justifyContent = 'flex-end';
+                wrap.innerHTML = `
+                    <div style="max-width: 80%; background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; padding: 10px 14px; border-radius: 12px 12px 0 12px; font-size: 13px; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.05); line-height: 1.4;">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                wrap.style.justifyContent = 'flex-start';
+                wrap.innerHTML = `
+                    <img src="avatar-maya.png" alt="Maya" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 1.5px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0;">
+                    <div style="max-width: 80%; background: white; border: 1px solid var(--border-soft); color: var(--dark); padding: 10px 14px; border-radius: 0 12px 12px 12px; font-size: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); line-height: 1.4;">
+                        ${text}
+                    </div>
+                `;
+            }
+            feed.appendChild(wrap);
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function appendTypingIndicator(feed) {
+            if (!feed) return null;
+            const wrap = document.createElement('div');
+            wrap.id = 'typing-indicator-' + feed.id;
+            wrap.style.display = 'flex';
+            wrap.style.gap = '10px';
+            wrap.style.margin = '8px 0';
+            wrap.style.width = '100%';
+            wrap.style.alignItems = 'center';
+            wrap.innerHTML = `
+                <img src="avatar-maya.png" alt="Maya" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink:0;">
+                <div style="background: rgba(0,0,0,0.04); padding: 10px 14px; border-radius: 12px; font-size: 12px; font-weight:500; color: #6B7280; display:flex; align-items:center; gap:6px;">
+                    Maya está digitando
+                    <span class="typing-dot" style="width:4px; height:4px; border-radius:50%; background:#9CA3AF; display:inline-block; animation: bounce 1.4s infinite ease-in-out both;"></span>
+                    <span class="typing-dot" style="width:4px; height:4px; border-radius:50%; background:#9CA3AF; display:inline-block; animation: bounce 1.4s infinite ease-in-out both; animation-delay: 0.2s;"></span>
+                    <span class="typing-dot" style="width:4px; height:4px; border-radius:50%; background:#9CA3AF; display:inline-block; animation: bounce 1.4s infinite ease-in-out both; animation-delay: 0.4s;"></span>
+                </div>
+            `;
+            feed.appendChild(wrap);
+            feed.scrollTop = feed.scrollHeight;
+            return wrap;
+        }
+
+        function getBotResponse(userMsg) {
+            const raw = userMsg.toLowerCase().trim();
+
+            // Analytics variables
+            let countAlunos = 0;
+            if (typeof window.lastAlunosCount === 'number') {
+                countAlunos = window.lastAlunosCount;
+            } else {
+                const crmRows = document.querySelectorAll('.crm-row');
+                if (crmRows.length > 0) {
+                    countAlunos = crmRows.length;
+                } else {
+                    const lblAlunos = document.getElementById('kpi-alunos');
+                    if (lblAlunos) {
+                        countAlunos = parseInt(lblAlunos.innerText || '0');
+                    }
+                }
+            }
+            if (!countAlunos) {
+                try {
+                    countAlunos = JSON.parse(localStorage.getItem('movia_alunos') || localStorage.getItem('movia_pacientes') || '[]').length;
+                } catch (e) {}
+            }
+
+            let countProds = 0;
+            let lowStock = [];
+            try {
+                const prods = JSON.parse(localStorage.getItem('movia_loja') || '[]');
+                countProds = prods.length;
+                prods.forEach(p => {
+                    let total = 0;
+                    if (p.variacoesStock) {
+                        Object.values(p.variacoesStock).forEach(v => total += Number(v));
+                    } else {
+                        total = Number(p.estoque || 0);
+                    }
+                    if (total <= 2) {
+                        lowStock.push(`${p.nome} (${total} un)`);
+                    }
+                });
+            } catch (e) {}
+
+            let faturamento = 0;
+            let totalVendas = 0;
+            try {
+                const fin = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]');
+                fin.forEach(f => {
+                    if (f.tipo === 'receita') {
+                        faturamento += parseFloat(f.valor || 0);
+                    }
+                    if (f.desc && f.desc.toLowerCase().includes('venda')) {
+                        totalVendas++;
+                    }
+                });
+            } catch (e) {}
+
+            // Keyword Matching Router
+            if (raw.includes('crm') || raw.includes('funcionamento do crm') || raw.includes('como funciona o crm') || raw.includes('funil') || raw.includes('leads')) {
+                return `**Como funciona o CRM (Funil de Vendas e Leads) no Mayaflow:**<br><br>O módulo CRM (Pipeline) foi desenhado para organizar o fluxo comercial e as pessoas que entram em contato com o seu negócio.<br>1. **Adicionar Leads:** Clique em '+ Novo Lead' para incluir prospects que demonstraram interesse.<br>2. **Mover no Funil (Kanban):** Arraste o card do Lead entre as colunas "🎯 Novo Lead", "💬 Em Contato", "🏋️ Aula Experimental" e "✅ Fechou Plano".<br>3. **Fechamento:** Ao mover para "Fechou Plano", a venda ganha dados financeiros e o prospect pode ser efetivado como aluno do sistema!`;
+            }
+            if (raw.includes('dashboard') || raw.includes('painel principal') || raw.includes('acesso rápido')) {
+                return `**Dashboard Inicial:**<br><br>O Dashboard é o coração do Mayaflow. Nele você encontra:<br>- **Acesso Rápido:** Botões coloridos para saltar direto para Cadastros, Dinheiro de Entrada ou Nova Venda.<br>- **Métricas em Evolução:** Gráficos que te mostram rapidamente quantos novos clientes entraram nos últimos meses.<br>- **Atualizações do ecossistema:** Avisos rápidos de relatórios, pendências e chamadas de ação para o bem do seu estúdio.`;
+            }
+            if (raw.includes('agenda') || raw.includes('agendar') || raw.includes('agendamento') || raw.includes('turmas') || raw.includes('horários')) {
+                return `**Gestão de Agenda e Turmas:**<br><br>Na aba **Agenda**, você pode mapear os horários de fluxo de clínica ou estúdio marcando eventos em um calendário linear. Você pode:<br>1. Cadastrar aulas limitando quantidade de assentos.<br>2. Atrelar o nome aos alunos do seu CRM (auto-completar inteligente).<br>3. Emitir check-in de presenças com Integração a assinaturas do Wellhub (Gympass) ou TotalPass.`;
+            }
+            if (raw.includes('prontuário') || raw.includes('anamnese') || raw.includes('fichas médicas') || raw.includes('evoluções')) {
+                return `**Prontuários e Anamneses:**<br><br>Na aba correspondente, você elabora formulários vitais do paciente:<br>- **Prontuários Eletrônicos:** Arquiva os encontros na clínica, podendo imprimir e até exportar como PDF preenchido com seu CRM.<br>- **Anamnese (Triagem Inicial):** Questionários para registrar se há lesões, hipertenções, queixas, restrições ou limitações. Ficam no perfil vitalício.`;
+            }
+            if (raw.includes('aluno') || raw.includes('cliente') || raw.includes('paciente')) {
+                return `Você tem atualmente **${countAlunos} alunos/clientes** cadastrados no sistema.<br><br>💡 **Para cadastrar um novo aluno:**<br>1. Acesse o menu **Alunos / Clientes** no painel lateral.<br>2. Clique em **+ Novo Aluno** no canto superior direito.<br>3. Preencha os campos e salve!`;
+            }
+            if (raw.includes('venda') || raw.includes('vender') || raw.includes('loja') || raw.includes('lojinha')) {
+                return `Atualmente existem **${countProds} produtos** cadastrados, com **${totalVendas} vendas** registradas financeiramente.<br><br>🛒 **Como registrar vendas rápidas:**<br>1. Vá na aba de navegação da **Lojinha**.<br>2. Na lista de produtos cadastrados, clique em **Vender** correspondente ao item desejado.<br>3. Selecione o tamanho/variação, informe a quantidade e confirme a transação. O sistema reduz o estoque automaticamente e gera o extrato de fluxo de caixa!`;
+            }
+            if (raw.includes('faturamento') || raw.includes('caixa) ') || raw.includes('receita') || raw.includes('despesa') || raw.includes('relatório') || raw.includes('financeiro')) {
+                return `O faturamento bruto acumulado de receitas registradas (incluindo vendas e mensalidades) é de **R$ ${faturamento.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}**.<br><br>💰 **Para gerenciar lançamentos:**<br>1. Acesse a aba **Financeiro**.<br>2. Clique nos botões **+ Receita** ou **+ Despesa** no painel superior para registrar novos fluxos de caixa.<br>3. Visualize o balanço mensal pelo gráfico e controle o fluxo pelo extrato detalhado.`;
+            }
+            if (raw.includes('estoque') || raw.includes('baixo') || raw.includes('esgotado') || raw.includes('quantidade')) {
+                let stockText = `Temos um catálogo cadastrado de **${countProds} itens**.<br>`;
+                if (lowStock.length > 0) {
+                    stockText += `<br>⚠️ **Itens esgotados ou com baixo estoque (2 un ou menos):**<br>${lowStock.map(l => '• ' + l).join('<br>')}`;
+                } else {
+                    stockText += `<br>✅ Todos os seus produtos possuem estoque regular.`;
+                }
+                stockText += `<br><br>📦 **Para ajustar estoques:**<br>1. Vá em **Lojinha** e selecione a sub-aba **Estoque**.<br>2. Clique no número indicador de estoque para ajustar a quantidade correspondente de tamanhos/variações.`;
+                return stockText;
+            }
+            if (raw.includes('cadastro') || raw.includes('cadastrar') || raw.includes('novo')) {
+                return `Você pode estender seus registros clicando nos botões rápidos correspondentes:<br>• **Alunos:** Clique em '+ Novo Aluno' na aba de Alunos.<br>• **Produtos:** Clique em '+ Novo Produto' na aba de Lojinha.<br>• **Agenda:** Clique na Agenda para lançar novas turmas ou atendimentos.`;
+            }
+            if (raw.includes('oi') || raw.includes('olá') || raw.includes('ola') || raw.includes('ajuda') || raw.includes('como funciona') || raw.includes('suporte')) {
+                return `Olá! Sou a **Maya**, a inteligência de suporte do Mayaflow. Estou aqui para ajudar você a dominar todos os módulos do sistema!<br><br>Sinta-se à vontade para perguntar como funciona qualquer tela, como:<br>• *Como funciona o CRM?*<br>• *Como funcionam os Prontuários e Anamneses?*<br>• *Como utilizar a Lojinha ou a Agenda?*<br>• *Quais são os nossos números (faturamento, alunos e estoque)?*`;
+            }
+
+            return `Entendi a sua mensagem! Como assistente virtual do Mayaflow, estou em treinamento contínuo.<br><br>Mas já consigo te dar um panorama enorme sobre o funcionamento das seguintes áreas:<br>🔹 **CRM e Alunos**<br>🔹 **Lojinha Vendas e Estoque**<br>🔹 **Dashboard e Financeiro**<br>🔹 **Agenda e Prontuários Eletrônicos**<br><br>Se preferir, pergunte diretamente: *Como funciona a Agenda?* ou *Quantos clientes temos?*`;
+        }
+
+        // Submitting Messages
+        function handleUserSubmit(inputEl, feedEl) {
+            if (!inputEl || !feedEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+
+            // Append User msg
+            appendChatBubble(feedEl, 'user', text);
+            inputEl.value = '';
+
+            // Loading Typing Indicator
+            const typingIndicator = appendTypingIndicator(feedEl);
+
+            // Fetch and Send Bot msg
+            setTimeout(() => {
+                if (typingIndicator) typingIndicator.remove();
+                const reply = getBotResponse(text);
+                appendChatBubble(feedEl, 'assistant', reply);
+            }, 800);
+        }
+
+        // Actions hooks
+        if (btnEnviar && iptMsg && chatFeed) {
+            btnEnviar.addEventListener('click', () => handleUserSubmit(iptMsg, chatFeed));
+            iptMsg.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleUserSubmit(iptMsg, chatFeed);
+            });
+        }
+        if (btnWidgetEnviar && iptWidgetMsg && widgetFeed) {
+            btnWidgetEnviar.addEventListener('click', () => handleUserSubmit(iptWidgetMsg, widgetFeed));
+            iptWidgetMsg.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleUserSubmit(iptWidgetMsg, widgetFeed);
+            });
+        }
+
+        // Suggestions pills
+        document.querySelectorAll('.suporte-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                if (iptMsg) {
+                    iptMsg.value = pill.dataset.msg;
+                    handleUserSubmit(iptMsg, chatFeed);
+                }
+            });
+        });
+        document.querySelectorAll('.maya-widget-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                if (iptWidgetMsg) {
+                    iptWidgetMsg.value = pill.dataset.msg;
+                    handleUserSubmit(iptWidgetMsg, widgetFeed);
+                }
+            });
+        });
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (iptMsg) {
+                    iptMsg.value = btn.dataset.q;
+                    handleUserSubmit(iptMsg, chatFeed);
+                }
+            });
+        });
+    }
+
+    // Dom Load Hook
+    document.addEventListener('DOMContentLoaded', () => {
+        initSuporteMaya();
+        
+        // Watch nav Support clicks
+        document.querySelectorAll('.nav-item[data-target="suporte"]').forEach(el => {
+            el.addEventListener('click', () => {
+                setTimeout(initSuporteMaya, 50);
+            });
+        });
     });
 
     // Expor para outros módulos
     window.initFinanceiro = initFinanceiro;
+    window.initSuporteMaya = initSuporteMaya;
 
 })();
+
