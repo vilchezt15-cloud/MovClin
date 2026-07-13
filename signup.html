@@ -167,7 +167,9 @@
                         </div>
                         <div class="form-group" style="flex: 1;">
                             <label for="city">Cidade</label>
-                            <input type="text" id="city" placeholder="Sua cidade" required>
+                            <select id="city" required disabled>
+                                <option value="">Selecione o estado primeiro...</option>
+                            </select>
                         </div>
                     </div>
 
@@ -380,6 +382,41 @@
             document.querySelector(`input[name="selectedPlan"][value="teste"]`).checked = true;
         }
         updatePlanSelection();
+
+        // Lógica da API do IBGE para cidades automáticas
+        const ufSelect = document.getElementById('uf');
+        const citySelect = document.getElementById('city');
+
+        ufSelect.addEventListener('change', async (e) => {
+            const uf = e.target.value;
+            citySelect.innerHTML = '<option value="">Carregando...</option>';
+            citySelect.disabled = true;
+
+            if (!uf) {
+                citySelect.innerHTML = '<option value="">Selecione o estado primeiro...</option>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`);
+                const cities = await res.json();
+                
+                // Ordenar alfabeticamente
+                cities.sort((a, b) => a.nome.localeCompare(b.nome));
+
+                citySelect.innerHTML = '<option value="">Selecione a cidade...</option>';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.nome;
+                    option.textContent = city.nome;
+                    citySelect.appendChild(option);
+                });
+                citySelect.disabled = false;
+            } catch (error) {
+                console.error("Erro ao carregar cidades", error);
+                citySelect.innerHTML = '<option value="">Erro ao carregar</option>';
+            }
+        });
 
         // Configuração do Supabase
         // IMPORTANTE: Insira sua URL do Supabase gerada no painel! (ex: https://abcedf.supabase.co)
