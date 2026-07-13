@@ -432,8 +432,8 @@
                 const phone = document.getElementById('phone').value;
                 const uf = document.getElementById('uf').value;
                 const city = document.getElementById('city').value;
-                const source = document.getElementById('source').value;
-                const promo = document.getElementById('promo').value;
+                const source = document.getElementById('source')?.value || null;
+                const promo = document.getElementById('promo')?.value || null;
                 // Persist registration data locally for quick access or debugging
                 const clientData = {
                     email,
