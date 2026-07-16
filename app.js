@@ -7,6 +7,83 @@ document.addEventListener('DOMContentLoaded', () => {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 
+    // 1.5 Carregar Identidade do Usuário
+    setTimeout(async () => {
+        let userName = '';
+        
+        if (window.supabase) {
+            try {
+                const { data: { session } } = await window.supabase.auth.getSession();
+                if (session && session.user) {
+                    const { data: ud } = await window.supabase
+                        .from('usuarios_clinica')
+                        .select('nome')
+                        .eq('id', session.user.id)
+                        .single();
+                    if (ud && ud.nome) userName = ud.nome;
+                    else if (session.user.email) userName = session.user.email.split('@')[0];
+                }
+            } catch(e) {}
+        }
+        
+        if (!userName) {
+            let recentLogin = localStorage.getItem('movia_recent_login');
+            let rawData = localStorage.getItem('movia_signup_data') || localStorage.getItem('movia_remember');
+            
+            if (rawData) {
+                try {
+                    const ud = JSON.parse(rawData);
+                    if (ud.name) userName = ud.name;
+                    else if (ud.email) userName = ud.email.split('@')[0];
+                } catch(e) {}
+            }
+            
+            if (!userName && recentLogin) {
+                userName = recentLogin.split('@')[0];
+            }
+        }
+        
+        if (!userName) userName = 'Usuário';
+        
+        const firstName = userName.split(' ')[0];
+        
+        const elBanner = document.getElementById('user-name-banner');
+        if (elBanner) elBanner.innerText = firstName;
+        
+        const elSidebar = document.getElementById('user-name-sidebar');
+        if (elSidebar) elSidebar.innerText = firstName;
+        
+        const elDrop = document.getElementById('user-name-dropdown');
+        if (elDrop) elDrop.innerText = firstName + ' Admin';
+        
+        let avUrl = localStorage.getItem('movia_user_avatar');
+        if(!avUrl) avUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}&background=2563EB&color=fff&rounded=true&font-size=0.45&bold=true`;
+        
+        const avSide = document.getElementById('user-avatar-sidebar');
+        if (avSide) avSide.src = avUrl;
+        
+        const avTop = document.getElementById('topbar-user-avatar');
+        if (avTop) avTop.src = avUrl;
+
+        // Custom Profile Photo Logic
+        const topbarUploadInput = document.getElementById('ipt-avatar-upload');
+        if(topbarUploadInput) {
+            topbarUploadInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = (rev) => {
+                        const newUrl = rev.target.result;
+                        localStorage.setItem('movia_user_avatar', newUrl);
+                        if(avSide) avSide.src = newUrl;
+                        if(avTop) avTop.src = newUrl;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }, 100);
+
     // --- Funções Globais (Ações de Tabela) ---
     window.deletarCliente = async (id, element) => {
         if (!confirm('Tem certeza que deseja excluir permanentemente este cliente?')) return;
@@ -533,6 +610,9 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('movia_last_tab', targetId);
             const targetView = document.getElementById('view-' + targetId);
             if (targetView) targetView.classList.remove('hidden');
+            
+            const wsc = document.querySelector('.views-wrapper');
+            if (wsc) wsc.scrollTop = 0;
 
             const breadcrumbCurrent = document.querySelector('.breadcrumb span');
             if (breadcrumbCurrent) {
@@ -582,6 +662,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const targetView = document.getElementById('view-' + targetId);
             if (targetView) targetView.classList.remove('hidden');
+
+            const wsc = document.querySelector('.views-wrapper');
+            if (wsc) wsc.scrollTop = 0;
 
             const breadcrumbCurrent = document.querySelector('.breadcrumb span');
             if (breadcrumbCurrent) {
@@ -2596,7 +2679,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.renderLojinhaProdutos = (produtos) => {
         if (!produtos) {
-            try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch(e) { produtos = []; }
+            try { produtos = JSON.parse(localStorage.getItem('movia_loja') || '[]'); } catch (e) { produtos = []; }
         }
         const grid = document.getElementById('store-grid') || document.getElementById('loja-product-grid');
         const empty = document.getElementById('empty-state-loja');
@@ -2618,7 +2701,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const categoryName = (p.categoria || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             if (catFilter === 'roupas') return categoryName.includes('roupa') || categoryName.includes('vestuario') || categoryName.includes('calcado');
             if (catFilter === 'acessorios') return categoryName.includes('acessorio') || categoryName.includes('equipamento') || categoryName.includes('objeto');
-            
+
             if (catFilter === 'baixo') {
                 if (p.variacoes) {
                     const list = p.variacoes.split(',').map(v => v.trim()).filter(Boolean);
@@ -2727,7 +2810,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             b.style.boxShadow = 'none';
                         }
                     });
-                    
+
                     const qtyInput = document.getElementById('ipt-venda-quantidade');
                     if (qtyInput) {
                         qtyInput.value = 1;
@@ -2864,9 +2947,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataFmt = s.data_venda ? s.data_venda.split('-').reverse().join('/') : '---';
             const totalVal = Number(s.total) || (Number(s.quantidade || 1) * Number(s.prodPreco));
             const isPago = s.status === 'Pago';
-            
-            const badgeColor = isPago 
-                ? 'background:rgba(16,185,129,0.1); color:#065F46; border-radius:6px; padding:4px 8px; font-weight:600; font-size:11px; display:inline-block;' 
+
+            const badgeColor = isPago
+                ? 'background:rgba(16,185,129,0.1); color:#065F46; border-radius:6px; padding:4px 8px; font-weight:600; font-size:11px; display:inline-block;'
                 : 'background:rgba(245,158,11,0.1); color:#92400E; border-radius:6px; padding:4px 8px; font-weight:600; font-size:11px; display:inline-block;';
 
             tbody.innerHTML += `
@@ -2898,7 +2981,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('venda-prod-preco').innerText = `R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}`;
                 document.getElementById('venda-prod-preco').dataset.valorRaw = p.preco;
                 document.getElementById('ipt-venda-cliente').value = sale.cliente || '';
-                
+
                 const qtyInput = document.getElementById('ipt-venda-quantidade');
                 if (qtyInput) {
                     qtyInput.value = sale.quantidade || 1;
@@ -2990,7 +3073,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!confirm('Deseja realmente remover esta venda? O estoque retornará ao produto e o registro financeiro correspondente será cancelado.')) return;
                 const saleId = e.currentTarget.dataset.saleId;
                 const prodId = e.currentTarget.dataset.prodId;
-                
+
                 let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
                 const pIndex = agendaLocal.findIndex(item => (item.id === prodId || item.localId === prodId));
                 if (pIndex !== -1) {
@@ -3012,11 +3095,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         let financeiroLocal = [];
                         try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
-                        
+
                         const financeDescription = 'Venda Lojinha: ' + p.nome + (varName !== 'Único' ? ' (' + varName + ')' : '') + ' x' + qtyToReturn;
-                        const finIndex = financeiroLocal.findIndex(f => 
-                            f.descricao === financeDescription && 
-                            f.pessoa === (sale.cliente || 'Avulso') && 
+                        const finIndex = financeiroLocal.findIndex(f =>
+                            f.descricao === financeDescription &&
+                            f.pessoa === (sale.cliente || 'Avulso') &&
                             f.valor == (Number(sale.total) || (qtyToReturn * Number(p.preco)))
                         );
                         if (finIndex !== -1) {
@@ -3025,7 +3108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-                        
+
                         if (supabase) {
                             supabase.from('lojinha').update({
                                 estoque: p.estoque,
@@ -3045,7 +3128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.addEventListener('click', (e) => {
                 const saleId = e.currentTarget.dataset.saleId;
                 const prodId = e.currentTarget.dataset.prodId;
-                
+
                 let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
                 const p = agendaLocal.find(item => (item.id === prodId || item.localId === prodId));
                 if (!p || !p.vendas) return;
@@ -3077,9 +3160,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
                     financeiroLocal.push(transPay);
                 } else {
-                    const findIdx = financeiroLocal.findIndex(f => 
-                        f.descricao === financeDescription && 
-                        f.pessoa === (sale.cliente || 'Avulso') && 
+                    const findIdx = financeiroLocal.findIndex(f =>
+                        f.descricao === financeDescription &&
+                        f.pessoa === (sale.cliente || 'Avulso') &&
                         f.status === 'Pago'
                     );
                     if (findIdx !== -1) financeiroLocal.splice(findIdx, 1);
@@ -3087,7 +3170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
                 localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-                
+
                 if (window.loadFinanceiro) window.loadFinanceiro();
                 window.loadLojinha();
             });
@@ -3112,10 +3195,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 list.forEach(v => {
                     const qty = p.variacoesStock && p.variacoesStock[v] !== undefined ? Number(p.variacoesStock[v]) : 0;
                     const statusText = qty === 0 ? 'Sem estoque' : (qty <= 3 ? 'Estoque Baixo' : 'Em estoque');
-                    const badgeColor = qty === 0 
-                        ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
-                        : (qty <= 3 
-                            ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                    const badgeColor = qty === 0
+                        ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;'
+                        : (qty <= 3
+                            ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;'
                             : 'background:#F0FDF4; color:#166534; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;');
 
                     tbody.innerHTML += `
@@ -3133,10 +3216,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const qty = Number(p.estoque || 0);
                 const statusText = qty === 0 ? 'Sem estoque' : (qty <= 3 ? 'Estoque Baixo' : 'Em estoque');
-                const badgeColor = qty === 0 
-                    ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
-                    : (qty <= 3 
-                        ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;' 
+                const badgeColor = qty === 0
+                    ? 'background:#FEE2E2; color:#991B1B; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;'
+                    : (qty <= 3
+                        ? 'background:#FEF3C7; color:#92400E; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;'
                         : 'background:#F0FDF4; color:#166534; border-radius:6px; padding:3px 8px; font-weight:600; font-size:11px;');
 
                 tbody.innerHTML += `
@@ -3157,13 +3240,13 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 const prodId = e.currentTarget.dataset.prodId;
                 const varName = e.currentTarget.dataset.var;
-                
+
                 let agendaLocal = JSON.parse(localStorage.getItem('movia_loja') || '[]');
                 const pIndex = agendaLocal.findIndex(item => (item.id === prodId || item.localId === prodId));
                 if (pIndex !== -1) {
                     const p = agendaLocal[pIndex];
-                    const currentQty = varName === 'Único' 
-                        ? Number(p.estoque || 0) 
+                    const currentQty = varName === 'Único'
+                        ? Number(p.estoque || 0)
                         : (p.variacoesStock && p.variacoesStock[varName] !== undefined ? Number(p.variacoesStock[varName]) : 0);
 
                     const newValStr = prompt(`Informe a nova quantidade em estoque para o produto "${p.nome}" (Variação: ${varName}):`, currentQty);
@@ -3182,7 +3265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     localStorage.setItem('movia_loja', JSON.stringify(agendaLocal));
-                    
+
                     if (supabase) {
                         supabase.from('lojinha').update({
                             estoque: p.estoque,
@@ -3196,7 +3279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (window.lucide) window.lucide.createIcons();
     };
- 
+
     // Fechar slideovers Lojinha
     document.querySelectorAll('.close-slide-produto').forEach(b => b.addEventListener('click', () => {
         slideProduto.classList.remove('open'); setTimeout(() => slideProduto.classList.add('hidden-overlay'), 300);
@@ -3259,10 +3342,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Modo Edição
                 agendaLocal = agendaLocal.map(p => {
                     if (p.id == editId || p.localId == editId) {
-                        const updated = { 
-                            ...p, 
-                            nome: nome, 
-                            preco: parseFloat(precoStr), 
+                        const updated = {
+                            ...p,
+                            nome: nome,
+                            preco: parseFloat(precoStr),
                             foto: fotoVal,
                             categoria: categoria,
                             estoque: estoque,
@@ -3285,9 +3368,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     return p;
                 });
                 if (supabase) {
-                    supabase.from('lojinha').update({ 
-                        nome: nome, 
-                        preco: parseFloat(precoStr), 
+                    supabase.from('lojinha').update({
+                        nome: nome,
+                        preco: parseFloat(precoStr),
                         foto: fotoVal,
                         categoria: categoria,
                         estoque: estoque,
@@ -3316,9 +3399,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 agendaLocal.push(payload);
                 if (supabase) {
-                    supabase.from('lojinha').insert([{ 
-                        nome: payload.nome, 
-                        preco: payload.preco, 
+                    supabase.from('lojinha').insert([{
+                        nome: payload.nome,
+                        preco: payload.preco,
                         foto: payload.foto,
                         categoria: payload.categoria,
                         estoque: payload.estoque,
@@ -3349,7 +3432,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cliente = document.getElementById('ipt-venda-cliente').value;
             const statusVenda = document.getElementById('ipt-venda-status').value;
             const dataVenda = document.getElementById('ipt-venda-data') ? document.getElementById('ipt-venda-data').value : new Date().toISOString().split('T')[0];
-            
+
             const quantity = Number(document.getElementById('ipt-venda-quantidade').value) || 1;
             const selectVarEl = document.getElementById('ipt-venda-variacao');
             const selectVarGroup = document.getElementById('form-group-venda-variacao');
@@ -3388,9 +3471,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
                     const oldDescription = 'Venda Lojinha: ' + p.nome + (oldVar !== 'Único' ? ' (' + oldVar + ')' : '') + ' x' + oldQty;
                     const oldTotalVal = unitPrice * oldQty;
-                    const oldFinIndex = financeiroLocal.findIndex(f => 
-                        f.descricao === oldDescription && 
-                        f.pessoa === oldCliente && 
+                    const oldFinIndex = financeiroLocal.findIndex(f =>
+                        f.descricao === oldDescription &&
+                        f.pessoa === oldCliente &&
                         f.valor == oldTotalVal
                     );
                     if (oldFinIndex !== -1) {
@@ -3422,7 +3505,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 p.estoque = available - quantity;
             }
 
-            btnConfirmarVenda.innerHTML = 'Cancelando...'; // Evitar clicks múltiplos
+            btnConfirmarVenda.innerHTML = 'Salvando...'; // Evitar clicks múltiplos
 
             // Registrar Venda
             if (editSaleId) {
@@ -3461,8 +3544,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             localStorage.setItem('movia_loja', JSON.stringify(produtos));
 
-            if (supabase) {
-                supabase.from('lojinha').update({
+            if (typeof window !== 'undefined' && window.supabase) {
+                window.supabase.from('lojinha').update({
                     estoque: p.estoque,
                     variacoesStock: p.variacoesStock,
                     vendas: p.vendas
@@ -3473,7 +3556,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (statusVenda === 'Pago') {
                 let financeiroLocal = [];
                 try { financeiroLocal = JSON.parse(localStorage.getItem('movia_financeiro_v2') || '[]'); } catch (ex) { }
-                
+
                 const financeDescription = 'Venda Lojinha: ' + p.nome + (selectedVar !== 'Único' ? ' (' + selectedVar + ')' : '') + ' x' + quantity;
                 const trans = {
                     id: 'venda_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
@@ -3488,9 +3571,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 financeiroLocal.push(trans);
                 localStorage.setItem('movia_financeiro_v2', JSON.stringify(financeiroLocal));
-                
-                if (supabase) {
-                    supabase.from('financeiro').insert([trans]).then().catch(() => { });
+
+                if (typeof window !== 'undefined' && window.supabase) {
+                    window.supabase.from('financeiro').insert([trans]).then().catch(() => { });
                 }
             }
 
@@ -3500,7 +3583,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.loadFinanceiro) window.loadFinanceiro();
             window.loadLojinha();
 
-            btnConfirmarVenda.innerHTML = 'Confirmar a Compra';
+            btnConfirmarVenda.innerHTML = 'Salvar';
             delete btnConfirmarVenda.dataset.editSaleId;
             delete btnConfirmarVenda.dataset.editProdId;
             delete btnConfirmarVenda.dataset.oldVar;
@@ -4908,7 +4991,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const iptWidgetMsg = document.getElementById('ipt-maya-widget-msg');
         const btnEnviar = document.getElementById('btn-suporte-enviar');
         const btnWidgetEnviar = document.getElementById('btn-maya-widget-enviar');
-        
+
         // Widget Floating Toggles
         const btnTrigger = document.getElementById('btn-maya-trigger');
         const chatCard = document.getElementById('maya-chat-card');
@@ -5028,7 +5111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!countAlunos) {
                 try {
                     countAlunos = JSON.parse(localStorage.getItem('movia_alunos') || localStorage.getItem('movia_pacientes') || '[]').length;
-                } catch (e) {}
+                } catch (e) { }
             }
 
             let countProds = 0;
@@ -5047,7 +5130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         lowStock.push(`${p.nome} (${total} un)`);
                     }
                 });
-            } catch (e) {}
+            } catch (e) { }
 
             let faturamento = 0;
             let totalVendas = 0;
@@ -5061,7 +5144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         totalVendas++;
                     }
                 });
-            } catch (e) {}
+            } catch (e) { }
 
             // Keyword Matching Router
             if (raw.includes('crm') || raw.includes('funcionamento do crm') || raw.includes('como funciona o crm') || raw.includes('funil') || raw.includes('leads')) {
@@ -5170,7 +5253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dom Load Hook
     document.addEventListener('DOMContentLoaded', () => {
         initSuporteMaya();
-        
+
         // Watch nav Support clicks
         document.querySelectorAll('.nav-item[data-target="suporte"]').forEach(el => {
             el.addEventListener('click', () => {

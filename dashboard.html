@@ -91,11 +91,11 @@
                             class="icon-ajustes"></i> <span class="nav-label">Ajustes</span></a>
                     <div class="avatar-container-fixed"
                         style="margin-top: 1rem; padding: 0.75rem 1rem; display:flex; align-items:center; gap:12px; border-top: 1px solid rgba(255,255,255,0.06); width:100%;">
-                        <img src="https://ui-avatars.com/api/?name=Thiago&background=2563EB&color=fff&rounded=true"
+                        <img id="user-avatar-sidebar" src="https://ui-avatars.com/api/?name=Admin&background=2563EB&color=fff&rounded=true"
                             alt="Usuário" class="avatar-sm">
                         <div class="avatar-info" style="display:flex; flex-direction:column; overflow:hidden;">
-                            <span class="avatar-name"
-                                style="font-size:0.8rem; font-weight:600; color:#E2E8F0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Thiago</span>
+                            <span id="user-name-sidebar" class="avatar-name"
+                                style="font-size:0.8rem; font-weight:600; color:#E2E8F0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Admin</span>
                             <span class="avatar-role" style="font-size:0.68rem; color:#94A3B8;">Admin</span>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
 
                     <div style="text-align:center; display:flex; flex-direction:column; justify-content:center;">
                         <span style="font-size:0.82rem; color:#6B7280; font-weight:500;">Olá <span
-                                style="color:#2563EB; font-weight:700;">Thiago</span>, vamos impulsionar seus
+                                style="color:#2563EB; font-weight:700;" id="user-name-banner">Thiago</span>, vamos impulsionar seus
                             resultados!</span>
                         <span style="font-size:0.75rem; font-weight:700; color:#111827;"
                             id="topbar-clock">Carregando...</span>
@@ -143,7 +143,7 @@
                                 style="display:none; position:absolute; top:100%; right:0; margin-top:8px; background:white; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.15); border:1px solid #E2E8F0; width:200px; z-index:100; text-align:left; padding:8px 0; overflow:hidden;">
                                 <div
                                     style="padding: 10px 16px; border-bottom: 1px solid #F1F5F9; display:flex; flex-direction:column;">
-                                    <span style="font-weight:700; color:var(--dark); font-size:0.85rem;">Thiago
+                                    <span id="user-name-dropdown" style="font-weight:700; color:var(--dark); font-size:0.85rem;">Thiago
                                         Admin</span>
                                     <input type="file" id="ipt-avatar-upload" accept="image/*" style="display:none;">
                                     <label for="ipt-avatar-upload"
@@ -3681,18 +3681,19 @@
 
                 <!-- Visão Integração Wellhub -->
                 <section id="view-integracao-wellhub" class="view hidden fade-in">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                        <div>
-                            <h3 style="font-size: 1.25rem; font-weight:600; margin-bottom:0.25rem;"><span
-                                    style="color:#F97316;">Wellhub</span> Integração</h3>
-                            <p class="text-muted text-sm" style="margin:0;">Gerencie a conexão e os check-ins do seu
-                                estúdio com a plataforma Wellhub (Gympass).</p>
+                    <div style="max-width: 900px; margin: -2rem auto 2rem auto; padding: 0;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; padding-top:0.5rem;">
+                            <div>
+                                <h3 style="font-size: 1.25rem; font-weight:600; margin-top:0; margin-bottom:0.25rem;"><span
+                                        style="color:#F97316;">Wellhub</span> Integração</h3>
+                                <p class="text-muted text-sm" style="margin:0;">Gerencie a conexão e os check-ins do seu
+                                    estúdio com a plataforma Wellhub (Gympass).</p>
+                            </div>
+                            <span class="badge" id="wellhub-status-badge"
+                                style="background:#6B7280; color:white; padding: 6px 12px; border-radius:99px; font-size:0.75rem; font-weight:700;">Desconectado</span>
                         </div>
-                        <span class="badge" id="wellhub-status-badge"
-                            style="background:#6B7280; color:white; padding: 6px 12px; border-radius:99px; font-size:0.75rem; font-weight:700;">Desconectado</span>
-                    </div>
-
-                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
+    
+                        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
                         <div class="card" style="padding: 1.5rem;">
                             <h4
                                 style="font-size:0.95rem; font-weight:700; color:var(--dark); margin-bottom:1.25rem; border-bottom:1px solid var(--border-soft); padding-bottom:0.5rem;">
@@ -3760,20 +3761,21 @@
 
                 <!-- Visão Integração TotalPass -->
                 <section id="view-integracao-totalpass" class="view hidden fade-in">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                        <div>
-                            <h3 style="font-size: 1.25rem; font-weight:600; margin-bottom:0.25rem;"><span
-                                    style="font-weight:900; font-style:italic; letter-spacing:0.5px; margin-right:8px;"><span
-                                        style="color:#00DF89; margin-right:4px;">TOTAL</span><span
-                                        style="color:var(--dark);">PASS</span></span> Integração</h3>
-                            <p class="text-muted text-sm" style="margin:0;">Ligue o seu estúdio à rede TotalPass
-                                para sincronismo de check-ins de alunos.</p>
+                    <div style="max-width: 900px; margin: -2rem auto 2rem auto; padding: 0;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; padding-top:0.5rem;">
+                            <div>
+                                <h3 style="font-size: 1.25rem; font-weight:600; margin-top:0; margin-bottom:0.25rem;"><span
+                                        style="font-weight:900; font-style:italic; letter-spacing:0.5px; margin-right:8px;"><span
+                                            style="color:#00DF89; margin-right:4px;">TOTAL</span><span
+                                            style="color:var(--dark);">PASS</span></span> Integração</h3>
+                                <p class="text-muted text-sm" style="margin:0;">Ligue o seu estúdio à rede TotalPass
+                                    para sincronismo de check-ins de alunos.</p>
+                            </div>
+                            <span class="badge" id="totalpass-status-badge"
+                                style="background:#6B7280; color:white; padding: 6px 12px; border-radius:99px; font-size:0.75rem; font-weight:700;">Desconectado</span>
                         </div>
-                        <span class="badge" id="totalpass-status-badge"
-                            style="background:#6B7280; color:white; padding: 6px 12px; border-radius:99px; font-size:0.75rem; font-weight:700;">Desconectado</span>
-                    </div>
-
-                    <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
+    
+                        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
                         <div class="card" style="padding: 1.5rem;">
                             <h4
                                 style="font-size:0.95rem; font-weight:700; color:var(--dark); margin-bottom:1.25rem; border-bottom:1px solid var(--border-soft); padding-bottom:0.5rem;">
@@ -3835,8 +3837,8 @@
                                     <div style="text-align:center; padding:1.5rem 0;">Aguardando ativação da
                                         sincronização...</div>
                                 </div>
-                            </div>
                         </div>
+                    </div>
                     </div>
                 </section>
         </div>
@@ -4392,8 +4394,7 @@
                 <button class="btn-outline close-slide-venda"
                     style="height: 44px; border-radius: 99px; font-weight: 600; padding: 0 2rem; color: #6B7280; border: 1px solid #E5E7EB; background: white; cursor: pointer;">Cancelar</button>
                 <button class="btn-primary" id="btn-confirmar-venda"
-                    style="height: 44px; border-radius: 99px; font-weight: 600; padding: 0 2.5rem; background: #10B981; color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">Confirmar
-                    a Compra</button>
+                    style="height: 44px; border-radius: 99px; font-weight: 600; padding: 0 2.5rem; background: #10B981; color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">Salvar</button>
             </div>
         </div>
     </div>

@@ -161,6 +161,10 @@
             const remember = document.getElementById('chk-remember').checked;
             const email = document.getElementById('email').value;
             const pwd = document.getElementById('password').value;
+            
+            // Sempre salvar para o Dashboard identificar o login
+            localStorage.setItem('movia_recent_login', email);
+            
             if (remember) {
                 localStorage.setItem('movia_remember', JSON.stringify({ email, pwd }));
             } else {
